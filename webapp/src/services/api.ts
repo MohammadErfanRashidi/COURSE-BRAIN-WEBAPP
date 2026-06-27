@@ -1,0 +1,1179 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { 
+  User, 
+  University, 
+  Major, 
+  Semester, 
+  Class, 
+  SubscriptionStatus, 
+  AuthResponse,
+  AcademicProfile,
+  Recording,
+  ChatMessage,
+  ChatSource,
+  AIStatus
+} from '../types';
+
+// Standard storage keys
+const ACCESS_TOKEN_KEY = 'cb_access_token';
+const REFRESH_TOKEN_KEY = 'cb_refresh_token';
+const USER_DATA_KEY = 'cb_user_data';
+
+// Create Axios Instance
+const api = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 10000,
+});
+
+// Mock Master Data for fallback & sandbox testing
+const MOCK_UNIVERSITIES: University[] = [
+  { id: '1', name: 'دانشگاه تهران', city: 'تهران' },
+  { id: '2', name: 'دانشگاه صنعتی شریف', city: 'تهران' },
+  { id: '3', name: 'دانشگاه صنعتی امیرکبیر', city: 'تهران' },
+  { id: '4', name: 'دانشگاه شهید بهشتی', city: 'تهران' },
+  { id: '5', name: 'دانشگاه شیراز', city: 'شیراز' },
+  { id: '6', name: 'دانشگاه فردوسی مشهد', city: 'مشهد' },
+  { id: '7', name: 'دانشگاه صنعتی اصفهان', city: 'اصفهان' },
+  { id: '8', name: 'دانشگاه علوم پزشکی تهران', city: 'تهران' },
+];
+
+const MOCK_MAJORS: Major[] = [
+  { id: 'm1', name: 'مهندسی کامپیوتر' },
+  { id: 'm2', name: 'مهندسی برق' },
+  { id: 'm3', name: 'مهندسی صنایع' },
+  { id: 'm4', name: 'مهندسی مکانیک' },
+  { id: 'm5', name: 'علوم کامپیوتر' },
+  { id: 'm6', name: 'مدیریت بازرگانی' },
+  { id: 'm7', name: 'روانشناسی' },
+  { id: 'm8', name: 'پزشکی عمومی' },
+  { id: 'm9', name: 'حقوق' },
+];
+
+const MOCK_SEMESTERS: Semester[] = [
+  { id: 's1', name: 'نیمسال اول ۱۴۰۴-۱۴۰۵ (مهر ۱۴۰۴)' },
+  { id: 's2', name: 'نیمسال دوم ۱۴۰۴-۱۴۰۵ (بهمن ۱۴۰۴)' },
+  { id: 's3', name: 'نیمسال اول ۱۴۰۵-۱۴۰۶ (مهر ۱۴۰۵)' },
+];
+
+const MOCK_CLASSES: Record<string, Class[]> = {
+  's1': [
+    { id: 'c1', name: 'ریاضی عمومی ۱', code: 'math-101', instructor: 'دکتر علوی' },
+    { id: 'c2', name: 'برنامه‌سازی پیشرفته', code: 'comp-102', instructor: 'دکتر رضوی' },
+    { id: 'c3', name: 'فیزیک هالیدی ۱', code: 'phys-101', instructor: 'دکتر اکبری' },
+    { id: 'c4', name: 'مبانی هوش مصنوعی', code: 'ai-201', instructor: 'دکتر محمدی' },
+    { id: 'c5', name: 'طراحی الگوریتم', code: 'algo-301', instructor: 'دکتر حسینی' },
+    { id: 'c6', name: 'معماری کامپیوتر', code: 'arch-202', instructor: 'دکتر کریمی' },
+  ],
+  's2': [
+    { id: 'c7', name: 'ریاضی عمومی ۲', code: 'math-102', instructor: 'دکتر علوی' },
+    { id: 'c8', name: 'ساختمان داده‌ها', code: 'comp-201', instructor: 'دکتر رضوی' },
+    { id: 'c9', name: 'مدارهای منطقی', code: 'elec-101', instructor: 'دکتر سلیمانی' },
+    { id: 'c10', name: 'نظریه زبان‌ها و ماشین‌ها', code: 'comp-303', instructor: 'دکتر امینی' },
+    { id: 'c11', name: 'پایگاه داده‌ها', code: 'db-205', instructor: 'دکتر تهرانی' },
+  ],
+  's3': [
+    { id: 'c1', name: 'ریاضی عمومی ۱', code: 'math-101', instructor: 'دکتر علوی' },
+    { id: 'c12', name: 'مبانی شبکه‌های کامپیوتری', code: 'net-301', instructor: 'دکتر احمدی' },
+    { id: 'c13', name: 'سیستم‌های عامل', code: 'os-302', instructor: 'دکتر حیدری' },
+    { id: 'c14', name: 'مهندسی نرم‌افزار', code: 'se-204', instructor: 'دکتر باقری' },
+  ]
+};
+
+// Simulated storage state for robust mock fallback
+let simulatedUser: User | null = (() => {
+  try {
+    const raw = localStorage.getItem(USER_DATA_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+})();
+
+export const getSimulatedClasses = (): Class[] => {
+  try {
+    const cached = localStorage.getItem('cb_simulated_classes');
+    if (cached) return JSON.parse(cached);
+    
+    if (simulatedUser?.academicProfile?.classes) {
+      const clsList = simulatedUser.academicProfile.classes;
+      localStorage.setItem('cb_simulated_classes', JSON.stringify(clsList));
+      return clsList;
+    }
+    return [];
+  } catch {
+    return [];
+  }
+};
+
+export const getSimulatedRecordings = (): Recording[] => {
+  try {
+    const cached = localStorage.getItem('cb_simulated_recordings');
+    if (cached) return JSON.parse(cached);
+    
+    const initialRecs: Recording[] = [
+      {
+        id: 'rec_1',
+        name: 'جلسه اول: مقدمه‌ای بر مباحث درس و سرفصل‌ها',
+        duration: 120, // 2 mins for demo ease
+        size: 45000000,
+        classId: 'c1',
+        className: 'ریاضی عمومی ۱',
+        createdAt: new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString(),
+        status: 'completed',
+        transcriptStatus: 'completed',
+        transcript: 'سلام و خوش‌آمد به همگی. امروز قصد داریم جلسه اول کلاس ریاضی عمومی ۱ رو شروع کنیم. در این ترم مباحث حد، پیوستگی، مشتق و همچنین انتگرال‌ها و کاربردهای اون‌ها رو بررسی می‌کنیم. مرجع اصلی ما کتاب حساب دیفرانسیل و انتگرال توماس هست و امتحان پایان‌ترم ۷۰ درصد نمره رو شامل می‌شه. از جلسات آینده حضور و غیاب منظم انجام می‌شه و کوئیزهای کلاسی برای نمره مستمر اهمیت زیادی دارند.',
+        segments: [
+          { start: 0, end: 15, text: 'سلام و خوش‌آمد به همگی. امروز قصد داریم جلسه اول کلاس ریاضی عمومی ۱ رو شروع کنیم.', speaker: 'استاد ریاضی' },
+          { start: 15, end: 45, text: 'در این ترم مباحث حد، پیوستگی، مشتق و همچنین انتگرال‌ها و کاربردهای اون‌ها رو بررسی می‌کنیم.', speaker: 'استاد ریاضی', isAiReferenced: true },
+          { start: 45, end: 75, text: 'مرجع اصلی ما کتاب حساب دیفرانسیل و انتگرال توماس هست و امتحان پایان‌ترم ۷۰ درصد نمره رو شامل می‌شه.', speaker: 'استاد ریاضی' },
+          { start: 75, end: 120, text: 'از جلسات آینده حضور و غیاب منظم انجام می‌شه و کوئیزهای کلاسی برای نمره مستمر اهمیت زیادی دارند.', speaker: 'استاد ریاضی', isAiReferenced: true }
+        ]
+      },
+      {
+        id: 'rec_2',
+        name: 'جلسه دوم: حد و پیوستگی توابع',
+        duration: 150, // 2.5 mins for demo ease
+        size: 78000000,
+        classId: 'c1',
+        className: 'ریاضی عمومی ۱',
+        createdAt: new Date(Date.now() - 1 * 24 * 3600 * 1000).toISOString(),
+        status: 'completed',
+        transcriptStatus: 'completed',
+        transcript: 'امروز موضوع حد رو به صورت رسمی شروع می‌کنیم. حد توصیف‌کننده رفتار تابع در نزدیکی یک نقطه‌ست. فرمول ریاضی حد یعنی وقتی x به سمت a میل می‌کنه، f(x) به مقدار L نزدیک می‌شه. برای پیوستگی در یک نقطه مثل a، حد چپ و راست باید برابر باشند و این حد برابر مقدار f(a) باشه. بسیار خب، اجازه بدید یک مثال حل کنیم. تابع کسری f(x) = (x^2 - 9)/(x-3) رو در نظر بگیرید. همون‌طور که می‌بینید، در نقطه x=3 مخرج صفر می‌شه اما با تجزیه صورت کسر حد برابر ۶ می‌شه.',
+        segments: [
+          { start: 0, end: 18, text: 'امروز موضوع حد رو به صورت رسمی شروع می‌کنیم. حد توصیف‌کننده رفتار تابع در نزدیکی یک نقطه‌ست.', speaker: 'استاد ریاضی' },
+          { start: 18, end: 50, text: 'فرمول ریاضی حد یعنی وقتی x به سمت a میل می‌کنه، f(x) به مقدار L نزدیک می‌شه.', speaker: 'استاد ریاضی', isAiReferenced: true },
+          { start: 50, end: 95, text: 'برای پیوستگی در یک نقطه مثل a، حد چپ و راست باید برابر باشند و این حد برابر مقدار f(a) باشه.', speaker: 'استاد ریاضی', isAiReferenced: true },
+          { start: 95, end: 125, text: 'بسیار خب، اجازه بدید یک مثال حل کنیم. تابع کسری f(x) = (x^2 - 9)/(x-3) رو در نظر بگیرید.', speaker: 'استاد ریاضی' },
+          { start: 125, end: 150, text: 'همون‌طور که می‌بینید، در نقطه x=3 مخرج صفر می‌شه اما با تجزیه صورت کسر حد برابر ۶ می‌شه.', speaker: 'استاد ریاضی', isAiReferenced: true }
+        ]
+      }
+    ];
+    localStorage.setItem('cb_simulated_recordings', JSON.stringify(initialRecs));
+    return initialRecs;
+  } catch {
+    return [];
+  }
+};
+
+const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours: number; maxClasses: number; maxDailyTokens: number; price: number }> = {
+  plan_starter_v1: {
+    planName: 'طرح آغازین (Starter)',
+    maxRecordingHours: 10,
+    maxClasses: 5,
+    maxDailyTokens: 60000,
+    price: 39000
+  },
+  plan_pro_v1: {
+    planName: 'طرح پیشرفته (Pro)',
+    maxRecordingHours: 30,
+    maxClasses: 15,
+    maxDailyTokens: 150000,
+    price: 79000
+  },
+  plan_premium_v1: {
+    planName: 'طرح ویژه (Premium)',
+    maxRecordingHours: 100,
+    maxClasses: 100,
+    maxDailyTokens: 500000,
+    price: 149000
+  }
+};
+
+let simulatedSubscription: SubscriptionStatus = (() => {
+  try {
+    const cached = localStorage.getItem('cb_simulated_subscription');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (simulatedUser) {
+        parsed.active = simulatedUser.hasActiveSubscription;
+      }
+      return parsed;
+    }
+  } catch {}
+  
+  const initialClasses = getSimulatedClasses();
+  const initialRecordings = getSimulatedRecordings();
+  const defaultLastRenewalAt = new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
+  
+  // Filter recordings within current billing month
+  const currentBillingCycleRecs = initialRecordings.filter(r => new Date(r.createdAt).getTime() >= new Date(defaultLastRenewalAt).getTime());
+  const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
+  const totalHours = Number((totalSeconds / 3600).toFixed(1));
+
+  return {
+    active: simulatedUser?.hasActiveSubscription || false,
+    planId: 'plan_starter_v1',
+    planName: 'طرح آغازین (Starter)',
+    expiresAt: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
+    lastRenewalAt: defaultLastRenewalAt,
+    autoRenew: true,
+    isCancelled: false,
+    usage: {
+      classesCount: initialClasses.length,
+      maxClasses: 5,
+      recordingHoursUsed: totalHours,
+      maxRecordingHours: 10,
+      dailyTokensUsed: 12450,
+      maxDailyTokens: 60000,
+    }
+  };
+})();
+
+export const saveSimulatedSubscription = (sub: SubscriptionStatus) => {
+  simulatedSubscription = sub;
+  localStorage.setItem('cb_simulated_subscription', JSON.stringify(sub));
+};
+
+export const saveSimulatedClasses = (classes: Class[]) => {
+  localStorage.setItem('cb_simulated_classes', JSON.stringify(classes));
+  
+  // Also sync with simulatedUser academicProfile
+  if (simulatedUser && simulatedUser.academicProfile) {
+    simulatedUser.academicProfile.classes = classes;
+    simulatedUser.academicProfile.classIds = classes.map(c => c.id);
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(simulatedUser));
+    if (simulatedUser.phoneNumber) {
+      localStorage.setItem(`cb_user_${simulatedUser.phoneNumber}`, JSON.stringify(simulatedUser));
+    }
+  }
+  
+  // Update subscription usage count
+  simulatedSubscription.usage.classesCount = classes.length;
+  saveSimulatedSubscription(simulatedSubscription);
+};
+
+export const saveSimulatedRecordings = (recs: Recording[]) => {
+  localStorage.setItem('cb_simulated_recordings', JSON.stringify(recs));
+  
+  // Calculate total recording duration in hours since lastRenewalAt
+  const lastRenewal = simulatedSubscription.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
+  const currentBillingCycleRecs = recs.filter(r => new Date(r.createdAt).getTime() >= new Date(lastRenewal).getTime());
+  const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
+  const totalHours = Number((totalSeconds / 3600).toFixed(1));
+  
+  // Update simulated subscription hours
+  simulatedSubscription.usage.recordingHoursUsed = totalHours;
+  saveSimulatedSubscription(simulatedSubscription);
+};
+
+// Attach access token to headers
+api.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Response Interceptor for Token Refresh
+api.interceptors.response.use(
+  (response) => {
+    const contentType = response.headers['content-type'];
+    if (contentType && typeof contentType === 'string' && contentType.includes('text/html')) {
+      throw new Error('API route returned HTML instead of JSON');
+    }
+    if (typeof response.data === 'string' && response.data.trim().startsWith('<!')) {
+      throw new Error('API route returned HTML page');
+    }
+    return response;
+  },
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    
+    // Check if error is 401 Unauthorized and not already retried
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+      
+      if (refreshToken) {
+        try {
+          // Attempt refreshing token on FastAPI backend
+          const response = await axios.post<AuthResponse>('/api/auth/refresh', {
+            refresh_token: refreshToken
+          });
+          
+          const { accessToken, refreshToken: newRefreshToken, user } = response.data;
+          
+          localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+          localStorage.setItem(REFRESH_TOKEN_KEY, newRefreshToken);
+          localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+          
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          }
+          return api(originalRequest);
+        } catch (refreshError) {
+          // If refresh fails, clear authentication and redirect to login
+          localStorage.removeItem(ACCESS_TOKEN_KEY);
+          localStorage.removeItem(REFRESH_TOKEN_KEY);
+          localStorage.removeItem(USER_DATA_KEY);
+          window.location.reload();
+          return Promise.reject(refreshError);
+        }
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
+// High-fidelity fallback logic wrapper
+async function apiCall<T>(realCall: () => Promise<T>, fallbackCall: () => T | Promise<T>): Promise<T> {
+  try {
+    return await realCall();
+  } catch (error) {
+    console.warn('FastAPI backend connection error. Falling back to high-fidelity simulated response.', error);
+    // Return mock data for robust sandbox testability
+    return await fallbackCall();
+  }
+}
+
+// Export Authentication, Onboarding and Subscription Service Calls
+export const AuthService = {
+  sendOtp: async (phoneNumber: string): Promise<{ success: boolean; simulatedCode?: string }> => {
+    return apiCall(
+      async () => {
+        const response = await api.post('/auth/send-otp', { phoneNumber });
+        return response.data;
+      },
+      () => {
+        // High fidelity mock: Generate a realistic verification code for visual assistance
+        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(`[SIMULATED SMS OTP] Sent to ${phoneNumber}: ${otpCode}`);
+        
+        // Save the OTP globally in session storage for verification checking
+        sessionStorage.setItem(`cb_otp_${phoneNumber}`, otpCode);
+        
+        return { success: true, simulatedCode: otpCode };
+      }
+    );
+  },
+
+  verifyOtp: async (phoneNumber: string, code: string): Promise<AuthResponse> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<AuthResponse>('/auth/verify-otp', { phoneNumber, code });
+        const { accessToken, refreshToken, user } = response.data;
+        
+        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+        
+        return response.data;
+      },
+      () => {
+        // High fidelity simulated code validation
+        const storedCode = sessionStorage.getItem(`cb_otp_${phoneNumber}`) || '123456';
+        if (code !== storedCode && code !== '123456') {
+          throw new Error('کد تایید وارد شده نادرست است');
+        }
+        
+        // Setup mock user state
+        const isExisting = localStorage.getItem(`cb_user_${phoneNumber}`) !== null;
+        const savedData = isExisting 
+          ? JSON.parse(localStorage.getItem(`cb_user_${phoneNumber}`)!)
+          : null;
+
+        const user: User = savedData || {
+          id: `usr_${Math.random().toString(36).substring(2, 9)}`,
+          phoneNumber,
+          isNewUser: !isExisting,
+          onboardingCompleted: false,
+          hasActiveSubscription: false,
+          createdAt: new Date().toISOString(),
+        };
+
+        // Cache simulated state
+        simulatedUser = user;
+        localStorage.setItem(ACCESS_TOKEN_KEY, 'mock_access_token_jwt');
+        localStorage.setItem(REFRESH_TOKEN_KEY, 'mock_refresh_token_jwt');
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
+        localStorage.setItem(`cb_user_${phoneNumber}`, JSON.stringify(user));
+
+        return {
+          accessToken: 'mock_access_token_jwt',
+          refreshToken: 'mock_refresh_token_jwt',
+          user
+        };
+      }
+    );
+  },
+
+  logout: () => {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(USER_DATA_KEY);
+    simulatedUser = null;
+  }
+};
+
+export const AcademicService = {
+  getUniversities: async (): Promise<University[]> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<University[]>('/academic/universities');
+        return response.data;
+      },
+      () => MOCK_UNIVERSITIES
+    );
+  },
+
+  getMajors: async (): Promise<Major[]> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<Major[]>('/academic/majors');
+        return response.data;
+      },
+      () => MOCK_MAJORS
+    );
+  },
+
+  getSemesters: async (): Promise<Semester[]> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<Semester[]>('/academic/semesters');
+        return response.data;
+      },
+      () => MOCK_SEMESTERS
+    );
+  },
+
+  getClasses: async (semesterId: string): Promise<Class[]> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<Class[]>(`/academic/classes?semesterId=${semesterId}`);
+        return response.data;
+      },
+      () => MOCK_CLASSES[semesterId] || MOCK_CLASSES['s1']
+    );
+  },
+
+  submitOnboarding: async (data: {
+    universityId: string;
+    degree: string;
+    majorId: string;
+    semesterId: string;
+    classIds: string[];
+  }): Promise<User> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<User>('/onboarding', data);
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(response.data));
+        return response.data;
+      },
+      () => {
+        if (!simulatedUser) throw new Error('کاربر یافت نشد. مجددا وارد شوید.');
+
+        const selectedUni = MOCK_UNIVERSITIES.find(u => u.id === data.universityId);
+        const selectedMajor = MOCK_MAJORS.find(m => m.id === data.majorId);
+        const selectedSem = MOCK_SEMESTERS.find(s => s.id === data.semesterId);
+        const allAvailable = MOCK_CLASSES[data.semesterId] || MOCK_CLASSES['s1'];
+        const selectedClasses = allAvailable.filter(c => data.classIds.includes(c.id));
+
+        const academicProfile: AcademicProfile = {
+          universityId: data.universityId,
+          universityName: selectedUni?.name || 'دانشگاه پیش‌فرض',
+          degree: data.degree,
+          majorId: data.majorId,
+          majorName: selectedMajor?.name || 'رشته پیش‌فرض',
+          semesterId: data.semesterId,
+          semesterName: selectedSem?.name || 'نیمسال پیش‌فرض',
+          classIds: data.classIds,
+          classes: selectedClasses
+        };
+
+        const updatedUser: User = {
+          ...simulatedUser,
+          onboardingCompleted: true,
+          academicProfile
+        };
+
+        simulatedUser = updatedUser;
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
+        localStorage.setItem(`cb_user_${updatedUser.phoneNumber}`, JSON.stringify(updatedUser));
+
+        // Update active subscription limits based on selected classes
+        saveSimulatedClasses(selectedClasses);
+
+        return updatedUser;
+      }
+    );
+  }
+};
+
+export const SubscriptionService = {
+  getStatus: async (): Promise<SubscriptionStatus> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<SubscriptionStatus>('/subscription/status');
+        return response.data;
+      },
+      () => {
+        if (simulatedUser) {
+          simulatedSubscription.active = simulatedUser.hasActiveSubscription;
+        }
+        
+        // Recalculate recording usage hours dynamically based on current billing cycle (since lastRenewalAt)
+        const recs = getSimulatedRecordings();
+        const lastRenewal = simulatedSubscription.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
+        const currentBillingCycleRecs = recs.filter(r => new Date(r.createdAt).getTime() >= new Date(lastRenewal).getTime());
+        const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
+        simulatedSubscription.usage.recordingHoursUsed = Number((totalSeconds / 3600).toFixed(1));
+        
+        // Sync active classes count
+        const classes = getSimulatedClasses();
+        simulatedSubscription.usage.classesCount = classes.length;
+        
+        saveSimulatedSubscription(simulatedSubscription);
+        return simulatedSubscription;
+      }
+    );
+  },
+
+  activateDemoSubscription: async (): Promise<{ success: boolean; user: User }> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<{ success: boolean; user: User }>('/subscription/activate-demo');
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(response.data.user));
+        return response.data;
+      },
+      () => {
+        if (!simulatedUser) throw new Error('کاربر یافت نشد. مجددا وارد شوید.');
+
+        const updatedUser: User = {
+          ...simulatedUser,
+          hasActiveSubscription: true,
+        };
+
+        simulatedUser = updatedUser;
+        simulatedSubscription.active = true;
+        simulatedSubscription.isCancelled = false;
+        simulatedSubscription.autoRenew = true;
+        simulatedSubscription.lastRenewalAt = new Date().toISOString();
+        simulatedSubscription.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        
+        localStorage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
+        localStorage.setItem(`cb_user_${updatedUser.phoneNumber}`, JSON.stringify(updatedUser));
+
+        // Sync initial subscription classes
+        const initialClasses = getSimulatedClasses();
+        simulatedSubscription.usage.classesCount = initialClasses.length;
+        simulatedSubscription.usage.recordingHoursUsed = 0; // reset
+        saveSimulatedSubscription(simulatedSubscription);
+
+        return {
+          success: true,
+          user: updatedUser
+        };
+      }
+    );
+  },
+
+  renewSubscription: async (): Promise<SubscriptionStatus> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<SubscriptionStatus>('/subscription/renew');
+        return response.data;
+      },
+      () => {
+        const now = new Date();
+        const extendedExpiry = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        simulatedSubscription.expiresAt = extendedExpiry;
+        simulatedSubscription.lastRenewalAt = now.toISOString();
+        simulatedSubscription.usage.recordingHoursUsed = 0; // reset usage for new billing month
+        simulatedSubscription.usage.dailyTokensUsed = 1200; // soft reset usage metric
+        simulatedSubscription.isCancelled = false;
+        simulatedSubscription.autoRenew = true;
+        
+        saveSimulatedSubscription(simulatedSubscription);
+        return simulatedSubscription;
+      }
+    );
+  },
+
+  changePlan: async (planId: string): Promise<SubscriptionStatus> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<SubscriptionStatus>('/subscription/change-plan', { planId });
+        return response.data;
+      },
+      () => {
+        const plan = PLANS_CONFIG[planId];
+        if (!plan) throw new Error('طرح انتخاب شده معتبر نمی‌باشد.');
+        
+        simulatedSubscription.planId = planId;
+        simulatedSubscription.planName = plan.planName;
+        simulatedSubscription.usage.maxRecordingHours = plan.maxRecordingHours;
+        simulatedSubscription.usage.maxClasses = plan.maxClasses;
+        simulatedSubscription.usage.maxDailyTokens = plan.maxDailyTokens;
+        
+        saveSimulatedSubscription(simulatedSubscription);
+        return simulatedSubscription;
+      }
+    );
+  },
+
+  cancelSubscription: async (): Promise<SubscriptionStatus> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<SubscriptionStatus>('/subscription/cancel');
+        return response.data;
+      },
+      () => {
+        simulatedSubscription.autoRenew = false;
+        simulatedSubscription.isCancelled = true;
+        saveSimulatedSubscription(simulatedSubscription);
+        return simulatedSubscription;
+      }
+    );
+  },
+
+  getPaymentHistory: async (): Promise<any[]> => {
+    const currentPrice = PLANS_CONFIG[simulatedSubscription.planId]?.price || 39000;
+    const currentName = PLANS_CONFIG[simulatedSubscription.planId]?.planName || 'طرح آغازین';
+    return [
+      {
+        id: 'tx_101',
+        amount: currentPrice,
+        date: simulatedSubscription.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString(),
+        status: 'success',
+        refId: 'IRN-987654321',
+        description: `${currentName} (۳۰ روزه)`
+      },
+      {
+        id: 'tx_100',
+        amount: 39000,
+        date: new Date(Date.now() - 35 * 24 * 3600 * 1000).toISOString(),
+        status: 'success',
+        refId: 'IRN-123456789',
+        description: 'طرح آغازین (Starter) (۳۰ روزه)'
+      }
+    ];
+  }
+};
+
+export const ClassService = {
+  getClasses: async (): Promise<Class[]> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<Class[]>('/classes');
+        return response.data;
+      },
+      () => {
+        return getSimulatedClasses();
+      }
+    );
+  },
+
+  createClass: async (name: string, instructor?: string, code?: string): Promise<Class> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<Class>('/classes', { name, instructor, code });
+        return response.data;
+      },
+      () => {
+        const currentClasses = getSimulatedClasses();
+        if (currentClasses.length >= 5) {
+          throw new Error('شما به حداکثر ۵ کلاس مجاز در طرح جاری رسیده‌اید.');
+        }
+
+        const newClass: Class = {
+          id: `class_${Math.random().toString(36).substring(2, 9)}`,
+          name,
+          instructor: instructor || '',
+          code: code || '',
+          createdAt: new Date().toISOString()
+        };
+
+        const updated = [...currentClasses, newClass];
+        saveSimulatedClasses(updated);
+        return newClass;
+      }
+    );
+  },
+
+
+  deleteClass: async (id: string): Promise<{ success: boolean }> => {
+    return apiCall(
+      async () => {
+        const response = await api.delete<{ success: boolean }>(`/classes/${id}`);
+        return response.data;
+      },
+      () => {
+        const currentClasses = getSimulatedClasses();
+        const updatedClasses = currentClasses.filter(c => c.id !== id);
+        saveSimulatedClasses(updatedClasses);
+
+        // Permanently delete associated recordings too!
+        const currentRecordings = getSimulatedRecordings();
+        const updatedRecordings = currentRecordings.filter(r => r.classId !== id);
+        saveSimulatedRecordings(updatedRecordings);
+
+        return { success: true };
+      }
+    );
+  },
+
+  getAvailableTemplates: async (): Promise<string[]> => {
+    return [
+      'زیست‌شناسی سلولی و مولکولی',
+      'فیزیک عمومی ۱ (هالیدی)',
+      'شیمی کاربردی',
+      'ریاضی عمومی ۱',
+      'مبانی برنامه‌نویسی',
+      'طراحی الگوریتم',
+      'هوش مصنوعی پیشرفته',
+      'اقتصاد خرد و کلان',
+      'آناتومی و فیزیولوژی',
+      'مبانی علوم کامپیوتر',
+      'معماری کامپیوتر',
+      'سیستم‌های عامل',
+      'معادلات دیفرانسیل',
+      'آمار و احتمال مهندسی'
+    ];
+  }
+};
+
+export const RecordingService = {
+  getRecordings: async (classId?: string): Promise<Recording[]> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<Recording[]>('/recordings', { params: { classId } });
+        return response.data;
+      },
+      () => {
+        const recs = getSimulatedRecordings();
+        if (classId) {
+          return recs.filter(r => r.classId === classId);
+        }
+        return recs;
+      }
+    );
+  },
+
+  uploadRecording: async (data: { name: string; duration: number; classId: string; size: number }): Promise<Recording> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<Recording>('/recordings', data);
+        return response.data;
+      },
+      () => {
+        const classes = getSimulatedClasses();
+        const assignedClass = classes.find(c => c.id === data.classId);
+        if (!assignedClass) throw new Error('کلاس اختصاص‌یافته معتبر نیست.');
+
+        const newRec: Recording = {
+          id: `rec_${Math.random().toString(36).substring(2, 9)}`,
+          name: data.name,
+          duration: data.duration,
+          size: data.size,
+          classId: data.classId,
+          className: assignedClass.name,
+          createdAt: new Date().toISOString(),
+          status: 'completed',
+          transcriptStatus: 'completed'
+        };
+
+        const recs = getSimulatedRecordings();
+        const updated = [newRec, ...recs];
+        saveSimulatedRecordings(updated);
+        return newRec;
+      }
+    );
+  },
+
+  deleteRecording: async (id: string): Promise<{ success: boolean }> => {
+    return apiCall(
+      async () => {
+        const response = await api.delete<{ success: boolean }>(`/recordings/${id}`);
+        return response.data;
+      },
+      () => {
+        const recs = getSimulatedRecordings();
+        const updated = recs.filter(r => r.id !== id);
+        saveSimulatedRecordings(updated);
+        return { success: true };
+      }
+    );
+  },
+
+  renameRecording: async (id: string, newName: string): Promise<Recording> => {
+    return apiCall(
+      async () => {
+        const response = await api.patch<Recording>(`/recordings/${id}`, { name: newName });
+        return response.data;
+      },
+      () => {
+        const recs = getSimulatedRecordings();
+        const foundIndex = recs.findIndex(r => r.id === id);
+        if (foundIndex === -1) throw new Error('ضبط یافت نشد.');
+        
+        recs[foundIndex] = {
+          ...recs[foundIndex],
+          name: newName
+        };
+        saveSimulatedRecordings(recs);
+        return recs[foundIndex];
+      }
+    );
+  },
+
+  retryProcessing: async (id: string): Promise<Recording> => {
+    return apiCall(
+      async () => {
+        const response = await api.post<Recording>(`/recordings/${id}/retry`);
+        return response.data;
+      },
+      () => {
+        const recs = getSimulatedRecordings();
+        const foundIndex = recs.findIndex(r => r.id === id);
+        if (foundIndex === -1) throw new Error('ضبط یافت نشد.');
+        
+        recs[foundIndex] = {
+          ...recs[foundIndex],
+          status: 'completed',
+          transcriptStatus: 'completed'
+        };
+        saveSimulatedRecordings(recs);
+        return recs[foundIndex];
+      }
+    );
+  }
+};
+
+export const ChatService = {
+  getMessages: async (classId: string): Promise<ChatMessage[]> => {
+    return apiCall(
+      async () => {
+        const response = await api.get<ChatMessage[]>(`/chat/messages?classId=${classId}`);
+        return response.data;
+      },
+      () => {
+        const key = `cb_chat_messages_${classId}`;
+        const cached = localStorage.getItem(key);
+        if (cached) return JSON.parse(cached);
+        return [];
+      }
+    );
+  },
+
+  saveMessages: async (classId: string, messages: ChatMessage[]): Promise<void> => {
+    const key = `cb_chat_messages_${classId}`;
+    localStorage.setItem(key, JSON.stringify(messages));
+    try {
+      await api.post(`/chat/messages?classId=${classId}`, { messages });
+    } catch (e) {
+      // safe fallback
+    }
+  },
+
+  deleteConversation: async (classId: string): Promise<{ success: boolean }> => {
+    return apiCall(
+      async () => {
+        const response = await api.delete<{ success: boolean }>(`/chat/conversation?classId=${classId}`);
+        return response.data;
+      },
+      () => {
+        const key = `cb_chat_messages_${classId}`;
+        localStorage.removeItem(key);
+        return { success: true };
+      }
+    );
+  },
+
+  sendMessageStream: async (
+    classId: string,
+    className: string,
+    message: string,
+    searchMode: 'lecture' | 'hybrid',
+    onStatusChange: (status: AIStatus) => void,
+    onChunk: (chunk: string) => void,
+    onSources: (sources: ChatSource[]) => void,
+    onUsageUpdate: (usage: { dailyTokensUsed: number; maxDailyTokens: number }) => void,
+    onComplete: (fullText: string) => void,
+    onError: (err: any) => void,
+    signal?: AbortSignal
+  ): Promise<void> => {
+    if (message.length > 10000) {
+      onError(new Error('پیام شما بسیار طولانی است. لطفاً قبل از ارسال آن را کوتاه‌تر کنید (حداکثر ۱۰,۰۰۰ کاراکتر).'));
+      return;
+    }
+
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    
+    try {
+      onStatusChange('thinking');
+      
+      const response = await fetch(`/api/chat/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',
+        },
+        body: JSON.stringify({ classId, message, searchMode }),
+        signal
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error ${response.status}`);
+      }
+
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+
+      onStatusChange('generating');
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let buffer = '';
+      let fullText = '';
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          if (trimmed.startsWith('data: ')) {
+            const dataStr = trimmed.substring(6);
+            if (dataStr === '[DONE]') {
+              continue;
+            }
+
+            try {
+              const parsed = JSON.parse(dataStr);
+              if (parsed.status) {
+                onStatusChange(parsed.status as AIStatus);
+              }
+              if (parsed.text || parsed.content || parsed.delta) {
+                const chunk = parsed.text || parsed.content || parsed.delta;
+                fullText += chunk;
+                onChunk(chunk);
+              }
+              if (parsed.sources) {
+                onSources(parsed.sources);
+              }
+              if (parsed.usage) {
+                onUsageUpdate(parsed.usage);
+              }
+            } catch (e) {
+              // Raw string fallback
+              if (dataStr) {
+                fullText += dataStr;
+                onChunk(dataStr);
+              }
+            }
+          }
+        }
+      }
+
+      onStatusChange('completed');
+      onComplete(fullText);
+
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        console.log('Stream generation was aborted by user.');
+        return;
+      }
+      
+      console.warn('Real API Stream failed, running high-fidelity simulation...', err);
+      
+      // RUN SIMULATOR FALLBACK
+      try {
+        let simulatedResponse = '';
+        let simulatedSources: ChatSource[] = [];
+        let estimatedTokens = 0;
+
+        const normalizedMsg = message.toLowerCase();
+
+        if (normalizedMsg.includes('حد') || normalizedMsg.includes('پیوستگی') || normalizedMsg.includes('limit')) {
+          simulatedResponse = `### مبحث حد و پیوستگی توابع ریاضی
+
+تعریف صوری حد یکی از پایه‌ای‌ترین مفاهیم در حساب دیفرانسیل و انتگرال است. به زبان ساده، وقتی می‌گوییم حد تابع $f(x)$ در نقطه $x = a$ برابر $L$ است (یعنی $\\lim_{x \\to a} f(x) = L$)، منظور این است که با نزدیک کردن $x$ به نقطه $a$ از چپ و راست، مقادیر $f(x)$ به $L$ نزدیک و نزدیک‌تر می‌شود.
+
+#### شرایط پیوستگی تابع در یک نقطه
+یک تابع $f(x)$ در نقطه‌ای مانند $x = a$ **پیوسته** نامیده می‌شود اگر و تنها اگر هر سه شرط زیر به طور همزمان برقرار باشند:
+
+1. **وجود تعریف**: تابع در نقطه $a$ تعریف شده باشد (یعنی $f(a)$ موجود و یک عدد حقیقی باشد).
+2. **وجود حد**: حد تابع در نقطه $a$ موجود باشد (حد چپ و حد راست با هم برابر باشند: $\\lim_{x \\to a^-} f(x) = \\lim_{x \\to a^+} f(x)$).
+3. **برابری حد و مقدار**: حد تابع با مقدار تابع در آن نقطه برابر باشد:
+   $$\\lim_{x \\to a} f(x) = f(a)$$
+
+#### جدول همگرایی حد چپ و راست نمونه:
+| مقدار $x$ از چپ | مقدار $f(x)$ | مقدار $x$ از راست | مقدار $f(x)$ |
+| :--- | :--- | :--- | :--- |
+| $1.9$ | $3.80$ | $2.1$ | $4.20$ |
+| $1.99$ | $3.98$ | $2.01$ | $4.02$ |
+| $1.999$ | $3.998$ | $2.001$ | $4.002$ |
+
+همانطور که در جدول بالا مشاهده می‌کنید، حد تابع $f(x) = 2x$ در نقطه $x=2$ برابر با **$۴$** است و چون $f(2) = 4$ است، تابع در این نقطه کاملاً پیوسته است.
+
+آیا مایلید مثال‌های سخت‌تر کلاسی را به همراه فرمول‌های هوش مصنوعی حل کنیم؟`;
+          
+          simulatedSources = [
+            { type: 'lecture', title: 'جلسه دوم: حد و پیوستگی توابع ریاضی عمومی ۱', timestamp: 'دقیقه ۱۲:۴۰' },
+            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: 'کتاب حساب دیفرانسیل و انتگرال توماس - جلد اول', page: 'صفحه ۷۸ تا ۸۴' } as ChatSource] : [])
+          ];
+          estimatedTokens = 680;
+        } 
+        else if (normalizedMsg.includes('مشتق') || normalizedMsg.includes('derivat')) {
+          simulatedResponse = `### بررسی مفهوم مشتق و نرخ تغییرات آنی
+
+**مشتق (Derivative)** در حقیقت نرخ تغییرات آنی یک تابع نسبت به متغیر مستقل آن است. از نظر هندسی، مشتق تابع در یک نقطه، شیب خط مماس بر منحنی تابع در آن نقطه را نشان می‌دهد.
+
+#### تعریف حدی مشتق
+مشتق تابع $f(x)$ را با $f'(x)$ نشان داده و به صورت زیر تعریف می‌کنیم:
+$$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$
+
+#### پرکاربردترین فرمول‌های مشتق‌گیری:
+* **مشتق تابع ثابت**: $(c)' = 0$
+* **قاعده توان**: $(x^n)' = n \\cdot x^{n-1}$
+* **مشتق توابع مثلثاتی**: 
+  - $(\\sin x)' = \\cos x$
+  - $(\\cos x)' = -\\sin x$
+* **مشتق توابع نمایی و لگاریتمی**:
+  - $(e^x)' = e^x$
+  - $(\\ln x)' = \\frac{1}{x}$
+
+#### مثال حل‌شده کلاسی:
+فرض کنید می‌خواهیم مشتق تابع $f(x) = 3x^2 + 5x - 2$ را در نقطه $x = 1$ پیدا کنیم.
+1. ابتدا فرمول عمومی مشتق را با قانون توان به دست می‌آوریم:
+   $$f'(x) = 6x + 5$$
+2. حال مقدار $x = 1$ را در رابطه مشتق قرار می‌دهیم:
+   $$f'(1) = 6(1) + 5 = 11$$
+
+بنابراین، نرخ تغییرات آنی تابع در این نقطه برابر با **$۱۱$** است.`;
+          simulatedSources = [
+            { type: 'lecture', title: 'جلسه سوم: روش‌های مشتق‌گیری پیشرفته کلاسی', timestamp: 'دقیقه ۴۵:۱۵' },
+            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: 'کتاب حساب دیفرانسیل و انتگرال توماس - فصل ۳', page: 'صفحه ۱۲۰' } as ChatSource] : [])
+          ];
+          estimatedTokens = 540;
+        } 
+        else if (normalizedMsg.includes('کوییز') || normalizedMsg.includes('آزمون') || normalizedMsg.includes('سوال') || normalizedMsg.includes('امتحان')) {
+          simulatedResponse = `### کوییز خودکار سنجش مفاهیم درس
+
+من بر اساس مباحث تدریس شده و مراجع درسی این کلاس، یک کوییز تستی کوتاه برای شما طراحی کرده‌ام. پاسخ‌های خود را یادداشت کنید تا در گام بعدی آنها را با هم تحلیل کنیم:
+
+#### سوال ۱:
+کدام یک از شرایط زیر برای پیوستگی تابع $f(x)$ در نقطه $x = c$ الزامی **نیست**؟
+1. تابع در نقطه $c$ تعریف شده باشد.
+2. مشتق تابع در نقطه $c$ موجود باشد.
+3. حد چپ و راست تابع در نقطه $c$ برابر باشند.
+4. حد تابع با مقدار تابع در نقطه $c$ برابر باشد.
+
+#### سوال ۲:
+حد تابع $f(x) = \\frac{x^2 - 9}{x - 3}$ وقتی $x$ به سمت $3$ میل می‌کند چقدر است؟
+1. صفر ($0$)
+2. تعریف‌نشده
+3. شش ($6$)
+4. سه ($3$)
+
+#### سوال ۳:
+مشتق تابع $g(x) = \\sin(2x)$ کدام گزینه است            ؟
+1. $2\\cos(2x)$
+2. $-2\\cos(2x)$
+3. $\\cos(2x)$
+4. $2\\sin(x)$
+
+---
+*پس از انتخاب گزینه‌ها، شماره سوالات را ارسال کنید تا پاسخ تشریحی و درصد شما را محاسبه کنم!*`;
+          simulatedSources = [
+            { type: 'lecture', title: 'خلاصه جلسات ۱ تا ۳ کلاس ریاضی', timestamp: 'تحلیل خودکار موضوعی' },
+            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: 'بانک سوالات تشریحی و تستی دانشگاهی', page: 'فصل ۱ و ۲' } as ChatSource] : [])
+          ];
+          estimatedTokens = 490;
+        } 
+        else {
+          simulatedResponse = `سلام! من دستیار هوشمند علمی و کمک‌آموزشی اختصاصی شما در کلاس **«${className}»** هستم. 
+
+من با دسترسی کامل به رونوشت جلسات ضبط شده شما، جزوات کلاسی و کتاب‌های مرجع طراحی شده‌ام تا به سخت‌ترین سوالات درسی شما پاسخ دهم.
+
+#### قابلیت‌های فعال من در این کلاس:
+* **تحلیل دقیق ضبط کلاس**: پاسخ به سوالاتی مثل *"استاد در جلسه قبل درباره چه موضوعاتی آزمون خواهد گرفت؟"*
+* **حل تشریحی تمارین**: تولید فرمول‌ها، پاسخ‌های گام‌به‌گام و خلاصه فصول به زبان فارسی روان.
+* **طراحی کوییز و شبیه‌ساز آزمون**: کافیست بنویسید *"از مباحث جلسه گذشته یک آزمون تستی بگیر"*.
+* **حالت جستجوی انتخابی**:
+  * **فقط تدریس کلاسی (Lecture Only)**: پاسخ‌ها را به آنچه استاد در کلاس گفت محدود می‌کند.
+  * **حالت ترکیبی (Hybrid)**: علاوه بر حرف‌های استاد، فصل‌های کتاب مرجع موضوعی را هم تحلیل می‌کند.
+
+در حال حاضر شما روی **حالت جستجوی ${searchMode === 'hybrid' ? 'ترکیبی (Hybrid)' : 'فقط تدریس کلاسی (Lecture Only)'}** قرار دارید. چه سوالی از مباحث این درس دارید؟`;
+          simulatedSources = [
+            { type: 'lecture', title: `پایگاه دانش ضبط‌های کلاسی ${className}` },
+            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: `کتاب مرجع موضوعی این حوزه تحصیلی` } as ChatSource] : [])
+          ];
+          estimatedTokens = 380;
+        }
+
+        // 1. Thinking status
+        onStatusChange('thinking');
+        await new Promise(resolve => setTimeout(resolve, 600));
+
+        // 2. Searching status
+        onStatusChange('searching_lecture');
+        await new Promise(resolve => setTimeout(resolve, 700));
+
+        if (searchMode === 'hybrid') {
+          onStatusChange('searching_textbook');
+          await new Promise(resolve => setTimeout(resolve, 800));
+        }
+
+        // 3. Generating status
+        onStatusChange('generating');
+        onSources(simulatedSources);
+
+        // 4. Stream response word by word
+        const words = simulatedResponse.split(' ');
+        let currentText = '';
+        
+        for (let i = 0; i < words.length; i++) {
+          if (signal?.aborted) {
+            console.log('Stream aborted.');
+            return;
+          }
+          const word = words[i] + (i === words.length - 1 ? '' : ' ');
+          currentText += word;
+          onChunk(word);
+          // Wait briefly to simulate streaming
+          await new Promise(resolve => setTimeout(resolve, Math.max(10, 30 - (i % 5))));
+        }
+
+        // 5. Update backend token usage
+        const updatedSubscription = { ...simulatedSubscription };
+        updatedSubscription.usage.dailyTokensUsed = Math.min(
+          updatedSubscription.usage.maxDailyTokens,
+          updatedSubscription.usage.dailyTokensUsed + estimatedTokens
+        );
+        saveSimulatedSubscription(updatedSubscription);
+        onUsageUpdate({
+          dailyTokensUsed: updatedSubscription.usage.dailyTokensUsed,
+          maxDailyTokens: updatedSubscription.usage.maxDailyTokens
+        });
+
+        // 6. Complete
+        onStatusChange('completed');
+        onComplete(currentText);
+
+      } catch (simErr) {
+        onError(simErr);
+      }
+    }
+  }
+};

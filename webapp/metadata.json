@@ -1,0 +1,10 @@
+{
+  "name": "Remix: Remix: Remix: COURSE-BRAIN",
+  "description": "سامانه هوشمند کمک‌آموزشی دانشگاهی برای ضبط، پیاده‌سازی و پرسش و پاسخ کلاس‌های درس",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
