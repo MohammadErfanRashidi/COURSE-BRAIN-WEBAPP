@@ -7,10 +7,144 @@ import {
   Clock,
   Target,
   Globe,
-  Link
+  Link,
+  File,
+  Monitor,
+  StickyNote,
+  BookMarked
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChatSource } from '../../types';
+import { ChatSource, SourceType } from '../../types';
+
+const sourceTypeConfig: Record<SourceType, {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  subtitle: string;
+  color: string;
+  bgColor: string;
+  hoverBorder: string;
+  hoverBg: string;
+  iconBg: string;
+  iconBorder: string;
+  iconColor: string;
+  metaColor: string;
+  metaBg: string;
+  deepLinkColor: string;
+  deepLinkHover: string;
+  deepLinkText: string;
+}> = {
+  lecture: {
+    icon: FileText,
+    label: 'تدریس کلاسی',
+    subtitle: 'بخش منتخب تدریس صوتی کلاس',
+    color: 'text-indigo-600',
+    bgColor: 'bg-indigo-50',
+    hoverBorder: 'hover:border-indigo-100/60',
+    hoverBg: 'hover:bg-indigo-50/10',
+    iconBg: 'bg-indigo-50',
+    iconBorder: 'border-indigo-100/60',
+    iconColor: 'text-indigo-600',
+    metaColor: 'text-indigo-600',
+    metaBg: 'bg-indigo-50',
+    deepLinkColor: 'text-indigo-600',
+    deepLinkHover: 'hover:text-indigo-750',
+    deepLinkText: 'پرش به دقیقه تدریس و تحلیل رونوشت',
+  },
+  textbook: {
+    icon: BookOpen,
+    label: 'کتاب مرجع',
+    subtitle: 'بخش استخراج شده از کتاب درسی',
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-50',
+    hoverBorder: 'hover:border-emerald-100/60',
+    hoverBg: 'hover:bg-emerald-50/10',
+    iconBg: 'bg-emerald-50',
+    iconBorder: 'border-emerald-100/60',
+    iconColor: 'text-emerald-600',
+    metaColor: 'text-emerald-600',
+    metaBg: 'bg-emerald-50',
+    deepLinkColor: 'text-emerald-600',
+    deepLinkHover: 'hover:text-emerald-750',
+    deepLinkText: 'نمایش صفحه کتاب در مرجع‌یاب',
+  },
+  pdf: {
+    icon: File,
+    label: 'فایل پی‌دی‌اف',
+    subtitle: 'مستند استخراج شده از فایل پی‌دی‌اف',
+    color: 'text-rose-600',
+    bgColor: 'bg-rose-50',
+    hoverBorder: 'hover:border-rose-100/60',
+    hoverBg: 'hover:bg-rose-50/10',
+    iconBg: 'bg-rose-50',
+    iconBorder: 'border-rose-100/60',
+    iconColor: 'text-rose-600',
+    metaColor: 'text-rose-600',
+    metaBg: 'bg-rose-50',
+    deepLinkColor: 'text-rose-600',
+    deepLinkHover: 'hover:text-rose-750',
+    deepLinkText: 'مشاهده فایل پی‌دی‌اف منبع',
+  },
+  slide: {
+    icon: Monitor,
+    label: 'اسلاید ارائه',
+    subtitle: 'مطلب استخراج شده از اسلاید ارائه',
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-50',
+    hoverBorder: 'hover:border-purple-100/60',
+    hoverBg: 'hover:bg-purple-50/10',
+    iconBg: 'bg-purple-50',
+    iconBorder: 'border-purple-100/60',
+    iconColor: 'text-purple-600',
+    metaColor: 'text-purple-600',
+    metaBg: 'bg-purple-50',
+    deepLinkColor: 'text-purple-600',
+    deepLinkHover: 'hover:text-purple-750',
+    deepLinkText: 'مشاهده اسلاید منبع',
+  },
+  note: {
+    icon: StickyNote,
+    label: 'یادداشت درسی',
+    subtitle: 'یادداشت استخراج شده از جزوه درسی',
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50',
+    hoverBorder: 'hover:border-amber-100/60',
+    hoverBg: 'hover:bg-amber-50/10',
+    iconBg: 'bg-amber-50',
+    iconBorder: 'border-amber-100/60',
+    iconColor: 'text-amber-600',
+    metaColor: 'text-amber-600',
+    metaBg: 'bg-amber-50',
+    deepLinkColor: 'text-amber-600',
+    deepLinkHover: 'hover:text-amber-750',
+    deepLinkText: 'مشاهده یادداشت منبع',
+  },
+  webpage: {
+    icon: Globe,
+    label: 'منبع اینترنتی',
+    subtitle: 'منبع استخراج شده از اینترنت',
+    color: 'text-sky-600',
+    bgColor: 'bg-sky-50',
+    hoverBorder: 'hover:border-sky-100/60',
+    hoverBg: 'hover:bg-sky-50/10',
+    iconBg: 'bg-sky-50',
+    iconBorder: 'border-sky-100/60',
+    iconColor: 'text-sky-600',
+    metaColor: 'text-sky-600',
+    metaBg: 'bg-sky-50',
+    deepLinkColor: 'text-sky-600',
+    deepLinkHover: 'hover:text-sky-750',
+    deepLinkText: 'مشاهده منبع اینترنتی',
+  },
+};
+
+const badgeColors: Record<string, { bg: string; border: string; text: string }> = {
+  lecture: { bg: 'bg-indigo-50', border: 'border-indigo-100/50', text: 'text-indigo-600' },
+  textbook: { bg: 'bg-emerald-50', border: 'border-emerald-100/50', text: 'text-emerald-600' },
+  pdf: { bg: 'bg-rose-50', border: 'border-rose-100/50', text: 'text-rose-600' },
+  slide: { bg: 'bg-purple-50', border: 'border-purple-100/50', text: 'text-purple-600' },
+  note: { bg: 'bg-amber-50', border: 'border-amber-100/50', text: 'text-amber-600' },
+  webpage: { bg: 'bg-sky-50', border: 'border-sky-100/50', text: 'text-sky-600' },
+};
 
 interface ChatMessageSourcesProps {
   sources: ChatSource[];
@@ -26,8 +160,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
 
   if (!sources || sources.length === 0) return null;
 
-  const hasLectures = sources.some(s => s.type === 'lecture');
-  const hasTextbooks = sources.some(s => s.type === 'textbook');
+  const uniqueTypes = [...new Set(sources.map(s => s.type))];
 
   const toPersianDigits = (str: string | number) => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -64,29 +197,28 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
       >
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold flex items-center gap-1.5 text-slate-600 group-hover:text-indigo-600 transition-colors">
+            <BookMarked className="w-3.5 h-3.5" />
             <span>منابع</span>
             <span className="text-[10px] font-black text-slate-400 bg-slate-100 border border-slate-200/40 px-1.5 py-0.2 rounded-full">
               {toPersianDigits(sources.length)}
             </span>
           </span>
 
-          <div className="flex gap-1">
-            {hasLectures && (
-              <span className="text-[9px] font-extrabold bg-indigo-50 border border-indigo-100/50 text-indigo-600 px-1.5 py-0.5 rounded-md">
-                تدریس کلاسی
-              </span>
-            )}
-            {hasTextbooks && (
-              <span className="text-[9px] font-extrabold bg-emerald-50 border border-emerald-100/50 text-emerald-600 px-1.5 py-0.5 rounded-md">
-                کتاب مرجع
-              </span>
-            )}
-            {hasLectures && hasTextbooks && (
-              <span className="text-[9px] font-extrabold bg-purple-50 border border-purple-100/50 text-purple-600 px-1.5 py-0.5 rounded-md">
-                ترکیبی
-              </span>
-            )}
-          </div>
+          {uniqueTypes.length > 0 && (
+            <div className="flex gap-1">
+              {uniqueTypes.map(type => {
+                const badge = badgeColors[type] || badgeColors.webpage;
+                return (
+                  <span
+                    key={type}
+                    className={`text-[9px] font-extrabold ${badge.bg} ${badge.border} ${badge.text} px-1.5 py-0.5 rounded-md border`}
+                  >
+                    {sourceTypeConfig[type]?.label || type}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <motion.div
@@ -113,48 +245,53 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
             <div className="mt-3 space-y-3">
               {sources.map((source, idx) => {
                 const confidence = getConfidenceScore(idx);
-                const isLecture = source.type === 'lecture';
+                const cfg = sourceTypeConfig[source.type] || sourceTypeConfig.webpage;
+                const Icon = cfg.icon;
                 const sourceDomain = source.domain || (source.url ? extractDomain(source.url) : undefined);
 
-                const excerptText = source.excerpt || (isLecture
-                  ? '«... در این قسمت از مبحث کلاس، استاد با تمرکز روی فرآیند مدل‌سازی ریاضی تأکید کردند که تمامی پارامترها باید منطبق با تئوری‌های مطرح شده در کتاب مرجع باشند ...»'
-                  : '«... بر اساس قضایای مرجع، مشخصه اصلی این سیستم‌ها تطابق فاز برداری است که در حل مسائل با روش‌های تخمین کوادراتیک کاربرد اساسی دارد ...»'
-                );
+                const excerptText = source.excerpt || '«... متن مرتبط با منبع انتخاب شده برای پاسخ‌دهی هوشمند ...»';
 
                 return (
                   <div
                     key={idx}
-                    className={`border rounded-2xl p-4 transition-all bg-slate-50/50 text-right ${isLecture ? 'border-slate-200/50 hover:border-indigo-100/60 hover:bg-indigo-50/10' : 'border-slate-200/50 hover:border-emerald-100/60 hover:bg-emerald-50/10'}`}
+                    className={`border rounded-2xl p-4 transition-all bg-slate-50/50 text-right border-slate-200/50 ${cfg.hoverBorder} ${cfg.hoverBg}`}
                   >
                     {/* Source Metadata Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 border-b border-slate-100/50 text-xs font-bold text-slate-800">
                       <div className="flex items-center gap-2 min-w-0">
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${isLecture ? 'bg-indigo-50 border border-indigo-100/60 text-indigo-600' : 'bg-emerald-50 border border-emerald-100/60 text-emerald-600'}`}>
-                          {isLecture ? <FileText className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border ${cfg.iconBg} ${cfg.iconBorder} ${cfg.iconColor}`}>
+                          <Icon className="w-3.5 h-3.5" />
                         </div>
 
                         <div className="text-right min-w-0">
                           <span className="font-black truncate max-w-[200px] block" title={source.title}>
                             {source.title}
                           </span>
-                          <span className="text-[10px] text-slate-450 font-semibold block">
-                            {isLecture ? 'بخش منتخب تدریس صوتی کلاس' : 'بخش استخراج شده از کتاب درسی'}
+                          <span className={`text-[10px] font-semibold block ${cfg.color}`}>
+                            {cfg.subtitle}
                           </span>
                         </div>
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto text-[10px] text-slate-450 font-semibold">
-                        {isLecture && source.timestamp && (
-                          <span className="flex items-center gap-1 text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                        {source.type === 'lecture' && source.timestamp && (
+                          <span className={`flex items-center gap-1 ${cfg.metaBg} px-2 py-0.5 rounded-md ${cfg.metaColor}`}>
                             <Clock className="w-3 h-3" />
                             <span>ثانیه {toPersianDigits(source.timestamp)}</span>
                           </span>
                         )}
 
-                        {!isLecture && source.page && (
-                          <span className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
+                        {(source.type === 'textbook' || source.type === 'pdf') && source.page && (
+                          <span className={`flex items-center gap-1 ${cfg.metaBg} px-2 py-0.5 rounded-md ${cfg.metaColor}`}>
                             <BookOpen className="w-3 h-3" />
                             <span>صفحه {toPersianDigits(source.page)}</span>
+                          </span>
+                        )}
+
+                        {source.type === 'slide' && source.page && (
+                          <span className={`flex items-center gap-1 ${cfg.metaBg} px-2 py-0.5 rounded-md ${cfg.metaColor}`}>
+                            <Monitor className="w-3 h-3" />
+                            <span>اسلاید {toPersianDigits(source.page)}</span>
                           </span>
                         )}
 
@@ -207,9 +344,9 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                       <div className="mt-3 flex justify-end">
                         <button
                           onClick={() => onNavigateToSource(source)}
-                          className={`text-[10px] font-black flex items-center gap-1.5 transition-colors cursor-pointer ${isLecture ? 'text-indigo-600 hover:text-indigo-750' : 'text-emerald-600 hover:text-emerald-750'}`}
+                          className={`text-[10px] font-black flex items-center gap-1.5 transition-colors cursor-pointer ${cfg.deepLinkColor} ${cfg.deepLinkHover}`}
                         >
-                          <span>{isLecture ? 'پرش به دقیقه تدریس و تحلیل رونوشت' : 'نمایش صفحه کتاب در مرجع‌یاب'}</span>
+                          <span>{cfg.deepLinkText}</span>
                           <ExternalLink className="w-3.5 h-3.5" />
                         </button>
                       </div>

@@ -1030,7 +1030,11 @@ export const ChatService = {
           
           simulatedSources = [
             { type: 'lecture', title: 'جلسه دوم: حد و پیوستگی توابع ریاضی عمومی ۱', timestamp: 'دقیقه ۱۲:۴۰' },
-            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: 'کتاب حساب دیفرانسیل و انتگرال توماس - جلد اول', page: 'صفحه ۷۸ تا ۸۴' } as ChatSource] : [])
+            ...(searchMode === 'hybrid' ? [
+              { type: 'textbook', title: 'کتاب حساب دیفرانسیل و انتگرال توماس - جلد اول', page: 'صفحه ۷۸ تا ۸۴' } as ChatSource,
+              { type: 'pdf', title: 'جزوه تمرین حد و پیوستگی - دانشگاه تهران', page: 'صفحه ۱۲' } as ChatSource,
+              { type: 'slide', title: 'اسلایدهای جلسه دوم - مفاهیم حد', page: 'اسلاید ۲۴' } as ChatSource,
+            ] : [])
           ];
           estimatedTokens = 680;
         } 
@@ -1063,7 +1067,11 @@ $$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$
 بنابراین، نرخ تغییرات آنی تابع در این نقطه برابر با **$۱۱$** است.`;
           simulatedSources = [
             { type: 'lecture', title: 'جلسه سوم: روش‌های مشتق‌گیری پیشرفته کلاسی', timestamp: 'دقیقه ۴۵:۱۵' },
-            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: 'کتاب حساب دیفرانسیل و انتگرال توماس - فصل ۳', page: 'صفحه ۱۲۰' } as ChatSource] : [])
+            ...(searchMode === 'hybrid' ? [
+              { type: 'textbook', title: 'کتاب حساب دیفرانسیل و انتگرال توماس - فصل ۳', page: 'صفحه ۱۲۰' } as ChatSource,
+              { type: 'note', title: 'خلاصه نکات مشتق‌گیری - جزوه دانشجو', page: 'صفحه ۸' } as ChatSource,
+              { type: 'slide', title: 'اسلایدهای جلسه سوم - قواعد مشتق', page: 'اسلاید ۱۵' } as ChatSource,
+            ] : [])
           ];
           estimatedTokens = 540;
         } 
@@ -1097,7 +1105,11 @@ $$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$
 *پس از انتخاب گزینه‌ها، شماره سوالات را ارسال کنید تا پاسخ تشریحی و درصد شما را محاسبه کنم!*`;
           simulatedSources = [
             { type: 'lecture', title: 'خلاصه جلسات ۱ تا ۳ کلاس ریاضی', timestamp: 'تحلیل خودکار موضوعی' },
-            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: 'بانک سوالات تشریحی و تستی دانشگاهی', page: 'فصل ۱ و ۲' } as ChatSource] : [])
+            ...(searchMode === 'hybrid' ? [
+              { type: 'textbook', title: 'بانک سوالات تشریحی و تستی دانشگاهی', page: 'فصل ۱ و ۲' } as ChatSource,
+              { type: 'pdf', title: 'نمونه سوالات امتحانی میانترم - سال گذشته', page: 'صفحه ۵' } as ChatSource,
+              { type: 'note', title: 'یادداشت‌های مروری استاد - مبحث حد و مشتق' } as ChatSource,
+            ] : [])
           ];
           estimatedTokens = 490;
         } 
@@ -1111,13 +1123,16 @@ $$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$
 * **حل تشریحی تمارین**: تولید فرمول‌ها، پاسخ‌های گام‌به‌گام و خلاصه فصول به زبان فارسی روان.
 * **طراحی کوییز و شبیه‌ساز آزمون**: کافیست بنویسید *"از مباحث جلسه گذشته یک آزمون تستی بگیر"*.
 * **حالت جستجوی انتخابی**:
-  * **فقط تدریس کلاسی (Lecture Only)**: پاسخ‌ها را به آنچه استاد در کلاس گفت محدود می‌کند.
-  * **حالت ترکیبی (Hybrid)**: علاوه بر حرف‌های استاد، فصل‌های کتاب مرجع موضوعی را هم تحلیل می‌کند.
+  * **فقط تدریس کلاسی**: پاسخ‌ها را به آنچه استاد در کلاس گفت محدود می‌کند.
+  * **ترکیبی**: علاوه بر تدریس کلاسی، کتاب‌های مرجع، جزوات پی‌دی‌اف، اسلایدها و یادداشت‌های درسی را نیز جستجو می‌کند.
 
-در حال حاضر شما روی **حالت جستجوی ${searchMode === 'hybrid' ? 'ترکیبی (Hybrid)' : 'فقط تدریس کلاسی (Lecture Only)'}** قرار دارید. چه سوالی از مباحث این درس دارید؟`;
+در حال حاضر شما روی **حالت ${searchMode === 'hybrid' ? 'ترکیبی' : 'فقط تدریس کلاسی'}** قرار دارید. چه سوالی از مباحث این درس دارید؟`;
           simulatedSources = [
             { type: 'lecture', title: `پایگاه دانش ضبط‌های کلاسی ${className}` },
-            ...(searchMode === 'hybrid' ? [{ type: 'textbook', title: `کتاب مرجع موضوعی این حوزه تحصیلی` } as ChatSource] : [])
+            ...(searchMode === 'hybrid' ? [
+              { type: 'textbook', title: `کتاب مرجع موضوعی این حوزه تحصیلی` } as ChatSource,
+              { type: 'webpage', title: `منابع تکمیلی درس ${className}`, domain: 'academic.resources.edu' } as ChatSource,
+            ] : [])
           ];
           estimatedTokens = 380;
         }

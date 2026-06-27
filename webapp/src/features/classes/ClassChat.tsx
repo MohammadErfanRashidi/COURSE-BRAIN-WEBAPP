@@ -22,12 +22,15 @@ import {
   Share2,
   CornerDownLeft,
   BookMarked,
-  ArrowDown
+  ArrowDown,
+  FileText,
+  Layers
 } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { ChatService } from '../../services/api';
 import { ChatMessage, ChatSource, AIStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChatMessageSources } from './ChatMessageSources';
 import { BookmarkService } from '../../services/bookmarks';
 
@@ -513,7 +516,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
       case 'searching_lecture':
         return 'در حال کاوش و فیلتر فایل‌های تدریس این کلاس...';
       case 'searching_textbook':
-        return 'در حال جستجو و ادغام فصول کتاب مرجع مرتبط...';
+        return 'در حال جستجو و ترکیب منابع درسی و کتاب‌های مرجع...';
       case 'generating':
         return 'در حال تحلیل نهایی و تنظیم پاسخ...';
       default:
@@ -940,13 +943,14 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
                   if (aiStatus === 'completed' && !isLimitReached) setSearchMode('lecture');
                 }}
                 disabled={aiStatus !== 'completed' || isLimitReached}
-                className={`px-3.5 md:px-4 py-1 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap active:scale-95 text-[10px] md:text-[11px] font-bold ${
+                className={`px-3 md:px-3.5 py-1 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap active:scale-95 text-[10px] md:text-[11px] font-bold flex items-center gap-1 ${
                   searchMode === 'lecture' 
                     ? 'bg-white text-indigo-600 shadow-xs border border-slate-200/40 font-black' 
                     : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
-                تدریس کلاسی
+                <FileText className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                <span>تدریس کلاسی</span>
               </button>
               <button
                 type="button"
@@ -954,40 +958,55 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
                   if (aiStatus === 'completed' && !isLimitReached) setSearchMode('hybrid');
                 }}
                 disabled={aiStatus !== 'completed' || isLimitReached}
-                className={`px-3.5 md:px-4 py-1 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap active:scale-95 text-[10px] md:text-[11px] font-bold ${
+                className={`px-3 md:px-3.5 py-1 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap active:scale-95 text-[10px] md:text-[11px] font-bold flex items-center gap-1 ${
                   searchMode === 'hybrid' 
                     ? 'bg-white text-indigo-600 shadow-xs border border-slate-200/40 font-black' 
                     : 'text-slate-400 hover:text-slate-700'
                 }`}
               >
-                کتاب مرجع
+                <Layers className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                <span>ترکیبی</span>
               </button>
             </div>
 
             {/* Action Button: Send or Stop */}
             <div className="shrink-0">
-              {aiStatus !== 'completed' ? (
-                <button
-                  onClick={handleStopGeneration}
-                  className="w-7.5 h-7.5 md:w-8.5 md:h-8.5 bg-slate-800 hover:bg-slate-900 text-white rounded-[10px] md:rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-3xs active:scale-95"
-                  title="توقف تولید پاسخ دستیار"
-                >
-                  <StopCircle className="w-4 h-4 md:w-4.5 md:h-4.5 text-rose-400 animate-pulse" />
-                </button>
-              ) : (
-                <button
-                  onClick={() => handleSendMessage()}
-                  disabled={!input.trim() || isLimitReached}
-                  className={`w-7.5 h-7.5 md:w-8.5 md:h-8.5 rounded-[10px] md:rounded-xl flex items-center justify-center transition-all duration-200 shadow-sm active:scale-95 ${
-                    input.trim() && !isLimitReached
-                      ? 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer hover:scale-105' 
-                      : 'bg-slate-100 text-slate-300 cursor-not-allowed'
-                  }`}
-                  title="ارسال سوال به دستیار"
-                >
-                  <Send className="w-3.5 h-3.5 md:w-4 md:h-4 transform rotate-180" />
-                </button>
-              )}
+              <AnimatePresence mode="wait">
+                {aiStatus !== 'completed' ? (
+                  <motion.button
+                    key="stop"
+                    onClick={handleStopGeneration}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+                    className="w-7.5 h-7.5 md:w-8.5 md:h-8.5 rounded-[10px] md:rounded-xl flex items-center justify-center cursor-pointer bg-white/80 backdrop-blur-sm border border-slate-200/50 text-rose-500 hover:bg-rose-50 hover:border-rose-200/60 hover:text-rose-600 shadow-xs active:scale-90 focus-visible:ring-2 focus-visible:ring-rose-500/20 transition-colors duration-200"
+                    title="توقف تولید پاسخ دستیار"
+                    aria-label="توقف تولید پاسخ"
+                  >
+                    <StopCircle className="w-4 h-4 md:w-4.5 md:h-4.5" />
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    key="send"
+                    onClick={() => handleSendMessage()}
+                    disabled={!input.trim() || isLimitReached}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+                    className={`w-7.5 h-7.5 md:w-8.5 md:h-8.5 rounded-[10px] md:rounded-xl flex items-center justify-center shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-indigo-500/20 ${
+                      input.trim() && !isLimitReached
+                        ? 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer hover:scale-105' 
+                        : 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                    }`}
+                    title="ارسال سوال به دستیار"
+                    aria-label="ارسال پیام"
+                  >
+                    <Send className="w-3.5 h-3.5 md:w-4 md:h-4 transform rotate-180" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
             </div>
 
           </div>

@@ -119,8 +119,10 @@ export interface ApiErrorResponse {
   code?: string;
 }
 
+export type SourceType = 'lecture' | 'textbook' | 'pdf' | 'slide' | 'note' | 'webpage';
+
 export interface ChatSource {
-  type: 'lecture' | 'textbook';
+  type: SourceType;
   title: string;
   excerpt?: string;
   page?: string | number;
