@@ -125,6 +125,9 @@ export interface ChatSource {
   excerpt?: string;
   page?: string | number;
   timestamp?: string;
+  url?: string;
+  domain?: string;
+  publisher?: string;
 }
 
 export type AIStatus = 

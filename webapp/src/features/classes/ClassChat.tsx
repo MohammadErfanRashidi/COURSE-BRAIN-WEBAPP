@@ -43,7 +43,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
   const [input, setInput] = useState('');
   const [searchMode, setSearchMode] = useState<'lecture' | 'hybrid'>('hybrid');
   const [aiStatus, setAiStatus] = useState<AIStatus>('completed');
-  const [currentSources, setCurrentSources] = useState<ChatSource[]>([]);
+  const currentSourcesRef = useRef<ChatSource[]>([]);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [composerHeight, setComposerHeight] = useState(80);
@@ -104,7 +104,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
     setMessages([]);
     setAiStatus('completed');
     setError(null);
-    setCurrentSources([]);
+    currentSourcesRef.current = [];
     setShouldAutoScroll(true);
 
     async function loadHistory() {
@@ -339,7 +339,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
         },
         // Sources callback
         (sources) => {
-          setCurrentSources(sources);
+          currentSourcesRef.current = sources;
           setMessages(prev => {
             const list = [...prev];
             const idx = list.findIndex(m => m.id === assistantMsgId);
@@ -363,7 +363,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
               content: fullText, 
               isStreaming: false, 
               status: 'completed',
-              sources: currentSources
+              sources: currentSourcesRef.current
             } as ChatMessage
           ];
           setMessages(finalMessages);
