@@ -82,46 +82,46 @@ export const AIUsageTab: React.FC = () => {
       {/* Model Analytics Header */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <Card className="p-4 border border-slate-200 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">کل درخواست‌های رایا (RAYA)</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits('۱۲۴,۵۰۰')} کادر گفتگو</span>
             <span className="text-[9px] text-emerald-600 font-bold block">۹۹.۹٪ پاسخ‌دهی استریم</span>
           </div>
-          <div className="w-9 h-9 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
             <Zap className="w-4.5 h-4.5" />
           </div>
         </Card>
 
-        <Card className="p-4 border border-slate-200 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">هزینه حدودی سرور (ماهیانه)</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits('$۴۲.۵')} دلار</span>
             <span className="text-[9px] text-slate-400 font-bold block">مجموع کل توکن‌های مصرف شده</span>
           </div>
-          <div className="w-9 h-9 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
             <DollarSign className="w-4.5 h-4.5" />
           </div>
         </Card>
 
-        <Card className="p-4 border border-slate-200 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">مدت گفتار تبدیل شده (Soniox)</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits(340)} ساعت صوتی</span>
             <span className="text-[9px] text-indigo-600 font-bold block">دقت همگام‌سازی کلمات: ۹۸.۹٪</span>
           </div>
-          <div className="w-9 h-9 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
             <Mic className="w-4.5 h-4.5" />
           </div>
         </Card>
 
-        <Card className="p-4 border border-slate-200 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">نرخ بروز مشکل در رندر</span>
             <span className="text-base font-black text-slate-800">کمتر از {toPersianDigits('۰.۰۲')}٪</span>
             <span className="text-[9px] text-rose-600 font-bold block">بدون ریست فریم یا خطای بافر</span>
           </div>
-          <div className="w-9 h-9 bg-rose-50 border border-rose-100 text-rose-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 bg-rose-50 border border-rose-100/60 text-rose-600 rounded-xl flex items-center justify-center shrink-0">
             <AlertOctagon className="w-4.5 h-4.5" />
           </div>
         </Card>
@@ -129,16 +129,16 @@ export const AIUsageTab: React.FC = () => {
       </div>
 
       {/* Background Processing Queue */}
-      <Card className="p-5 border border-slate-200 bg-white rounded-2xl text-right space-y-4">
+      <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
         <div>
           <h4 className="text-xs font-black text-slate-800">صف پردازش صوتی و ساخت امبدینگ‌ها (Active Workers)</h4>
           <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مشاهده زنده وظایف پس‌زمینه، تکرار وظایف شکست‌خورده و مدیریت ظرفیت</span>
         </div>
 
-        <div className="overflow-x-auto border border-slate-150 rounded-xl">
+        <div className="overflow-x-auto border border-slate-200/40 rounded-xl">
           <table className="w-full text-right border-collapse text-xs font-bold text-slate-700">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
+              <tr className="bg-slate-50 border-b border-slate-200/50 text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
                 <th className="p-3">نام فایل درس</th>
                 <th className="p-3">دانشگاه فرستنده</th>
                 <th className="p-3">مرحله فعلی</th>
@@ -147,7 +147,7 @@ export const AIUsageTab: React.FC = () => {
                 <th className="p-3 text-left">عملیات</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100/50">
               {jobs.map((job) => (
                 <tr key={job.id} className="hover:bg-indigo-50/20 transition-colors">
                   <td className="p-3 font-semibold text-slate-800">{job.fileName}</td>
@@ -155,10 +155,10 @@ export const AIUsageTab: React.FC = () => {
                   <td className="p-3">
                     <span className={`inline-block px-2 py-0.5 rounded-md text-[9px] font-black ${
                       job.step === 'FAILED'
-                        ? 'bg-rose-50 text-rose-600 border border-rose-100'
+                        ? 'bg-rose-50 text-rose-600 border border-rose-100/60'
                         : job.step === 'CHUNKING'
-                        ? 'bg-amber-50 text-amber-700 border border-amber-100'
-                        : 'bg-indigo-50 text-indigo-700 border border-indigo-100'
+                        ? 'bg-amber-50 text-amber-700 border border-amber-100/60'
+                        : 'bg-indigo-50 text-indigo-700 border border-indigo-100/60'
                     }`}>
                       {job.step === 'TRANSCRIBING' ? 'تبدیل گفتار به متن' : job.step === 'CHUNKING' ? 'قطعه‌بندی محتوا' : job.step === 'EMBEDDING' ? 'استخراج امبدینگ' : 'پردازش ناموفق'}
                     </span>

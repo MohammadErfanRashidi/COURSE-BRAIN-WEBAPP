@@ -32,6 +32,12 @@
 @theme {
   --font-sans: "IRANSans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-border-subtle: #e2e8f0;
+  --color-border-light: #cbd5e1;
+  --color-border-accent: #818cf8;
+  --color-border-success: #34d399;
+  --color-border-warning: #fbbf24;
+  --color-border-error: #f87171;
 }
 
 @layer base {

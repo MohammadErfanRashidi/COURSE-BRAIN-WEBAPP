@@ -126,7 +126,7 @@ export const SupportTab: React.FC = () => {
                 className={`p-3.5 border rounded-2xl cursor-pointer text-right transition-all space-y-2 ${
                   activeTicketId === t.id
                     ? 'bg-indigo-600 border-indigo-700 text-white shadow-md'
-                    : 'bg-white border-slate-200 text-slate-800 hover:bg-slate-50'
+                    : 'bg-white border-slate-200/50 text-slate-800 hover:bg-slate-50'
                 }`}
               >
                 <div className="flex items-center justify-between text-[9px] font-bold">
@@ -165,14 +165,14 @@ export const SupportTab: React.FC = () => {
         </div>
 
         {/* Ticket Thread Box (Right, 2 columns) */}
-        <Card className="lg:col-span-2 p-5 border border-slate-200 bg-white rounded-2xl flex flex-col justify-between min-h-[500px]">
+        <Card className="lg:col-span-2 p-5 border border-slate-200/50 bg-white rounded-2xl flex flex-col justify-between min-h-[500px]">
           
           <div className="space-y-4">
             
             {/* Header detail */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center justify-between border-b border-slate-100/50 pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-lg flex items-center justify-center shrink-0">
                   <MessageSquare className="w-4 h-4" />
                 </div>
                 <div>
@@ -184,7 +184,7 @@ export const SupportTab: React.FC = () => {
               {activeTicket.status !== 'RESOLVED' && (
                 <button
                   onClick={() => handleResolveTicket(activeTicket.id)}
-                  className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 hover:border-emerald-200 text-emerald-700 text-[10px] font-black rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100/60 hover:border-emerald-100/60 text-emerald-700 text-[10px] font-black rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <Check className="w-3.5 h-3.5" />
                   <span>ثبت حل‌شده</span>
@@ -199,7 +199,7 @@ export const SupportTab: React.FC = () => {
                   key={idx}
                   className={`p-3 rounded-2xl text-xs max-w-[85%] space-y-1 ${
                     msg.sender === 'USER'
-                      ? 'bg-white text-slate-850 border border-slate-150 mr-auto text-right'
+                      ? 'bg-white text-slate-850 border border-slate-200/40 mr-auto text-right'
                       : 'bg-indigo-600 text-white ml-auto text-right'
                   }`}
                 >
@@ -216,7 +216,7 @@ export const SupportTab: React.FC = () => {
 
           {/* Reply Form */}
           {activeTicket.status !== 'RESOLVED' ? (
-            <form onSubmit={handleSendReply} className="space-y-3 pt-4 border-t border-slate-100">
+            <form onSubmit={handleSendReply} className="space-y-3 pt-4 border-t border-slate-100/50">
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <div className="flex-1 w-full relative">
                   <input
@@ -224,7 +224,7 @@ export const SupportTab: React.FC = () => {
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder="پاسخ صمیمانه و راهگشا خود به دانشجو را بنویسید..."
-                    className="w-full text-right bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl pr-4 pl-12 py-2.5 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
+                    className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-indigo-500 focus:bg-white rounded-xl pr-4 pl-12 py-2.5 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
                     required
                   />
                   <button
@@ -235,7 +235,7 @@ export const SupportTab: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="w-full sm:w-48 flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2 py-2">
+                <div className="w-full sm:w-48 flex items-center gap-1.5 bg-slate-50 border border-slate-200/50 rounded-xl px-2 py-2">
                   <span className="text-[9px] text-slate-400 font-extrabold shrink-0">پاسخ‌دهنده:</span>
                   <select
                     value={assigneeName}
@@ -250,7 +250,7 @@ export const SupportTab: React.FC = () => {
               </div>
             </form>
           ) : (
-            <div className="p-3 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-xl text-center text-xs font-black flex items-center justify-center gap-1.5">
+            <div className="p-3 bg-emerald-50 border border-emerald-100/60 text-emerald-700 rounded-xl text-center text-xs font-black flex items-center justify-center gap-1.5">
               <CheckCircle className="w-4.5 h-4.5" />
               <span>این درخواست با موفقیت حل و مختومه اعلام گردید. ارسال پاسخ جدید متوقف است.</span>
             </div>

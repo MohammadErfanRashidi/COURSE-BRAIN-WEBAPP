@@ -195,14 +195,14 @@ export const UsersTab: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          <span className="text-[10px] bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-xl font-bold">
+          <span className="text-[10px] bg-indigo-50 border border-indigo-100/60 text-indigo-700 px-3 py-1.5 rounded-xl font-bold">
             کل دانشجویان پلتفرم: {toPersianDigits(users.length)} نفر
           </span>
         </div>
       </div>
 
       {/* Search and Filters Drawer */}
-      <Card className="p-4 border border-slate-200 bg-white rounded-2xl space-y-3">
+      <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
             <input
@@ -210,12 +210,12 @@ export const UsersTab: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="جستجوی دانشجو با نام، شماره همراه، یا نام دانشگاه..."
-              className="w-full text-right bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl pr-10 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
+              className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-indigo-500 focus:bg-white rounded-xl pr-10 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
             />
             <Search className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
           </div>
 
-          <div className="w-full md:w-56 flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5">
+          <div className="w-full md:w-56 flex items-center gap-2 bg-slate-50 border border-slate-200/50 rounded-xl px-3 py-1.5">
             <SlidersHorizontal className="w-4 h-4 text-slate-400" />
             <select
               value={filterUniversity}
@@ -233,11 +233,11 @@ export const UsersTab: React.FC = () => {
       </Card>
 
       {/* Users Data Grid Table */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+      <div className="bg-white border border-slate-200/50 rounded-2xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-right border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
+              <tr className="bg-slate-50 border-b border-slate-200/50 text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
                 <th className="p-3.5">نام دانشجو</th>
                 <th className="p-3.5">تلفن همراه</th>
                 <th className="p-3.5">دانشگاه و رشته</th>
@@ -247,12 +247,12 @@ export const UsersTab: React.FC = () => {
                 <th className="p-3.5 text-left">عملیات</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs font-bold text-slate-700">
+            <tbody className="divide-y divide-slate-100/50 text-xs font-bold text-slate-700">
               {filteredUsers.map((u) => (
                 <tr key={u.id} className="hover:bg-indigo-50/20 transition-colors">
                   <td className="p-3.5">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0">
+                      <div className="w-7 h-7 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-lg flex items-center justify-center shrink-0">
                         {u.fullName.charAt(0)}
                       </div>
                       <div>
@@ -269,8 +269,8 @@ export const UsersTab: React.FC = () => {
                   <td className="p-3.5">
                     <span className={`inline-block px-2 py-0.5 rounded-md text-[9px] font-black ${
                       u.status === 'SUSPENDED' 
-                        ? 'bg-rose-50 text-rose-600 border border-rose-100' 
-                        : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                        ? 'bg-rose-50 text-rose-600 border border-rose-100/60' 
+                        : 'bg-emerald-50 text-emerald-700 border border-emerald-100/60'
                     }`}>
                       {u.status === 'SUSPENDED' ? 'مسدود شده' : u.subscriptionPlan}
                     </span>
@@ -281,7 +281,7 @@ export const UsersTab: React.FC = () => {
                   <td className="p-3.5 text-left">
                     <button
                       onClick={() => setSelectedUser(u)}
-                      className="px-2.5 py-1.5 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-600 text-[10px] font-black rounded-lg transition-all cursor-pointer"
+                      className="px-2.5 py-1.5 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200/50 text-slate-600 text-[10px] font-black rounded-lg transition-all cursor-pointer"
                     >
                       مدیریت پرونده
                     </button>
@@ -302,12 +302,12 @@ export const UsersTab: React.FC = () => {
       {/* USER DETAILS & OPERATIONS PANEL (MODAL MODAL) */}
       {selectedUser && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl p-6 space-y-4">
+          <div className="bg-white border border-slate-200/50 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl p-6 space-y-4">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center justify-between border-b border-slate-100/50 pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-lg flex items-center justify-center">
                   {selectedUser.fullName.charAt(0)}
                 </div>
                 <div>
@@ -335,7 +335,7 @@ export const UsersTab: React.FC = () => {
 
             {/* Actions Panel */}
             <div className="space-y-3 pt-2">
-              <span className="text-[10px] font-black text-slate-400 block border-b border-slate-100 pb-1.5">⚙️ ابزارهای مدیریتی فوری</span>
+              <span className="text-[10px] font-black text-slate-400 block border-b border-slate-100/50 pb-1.5">⚙️ ابزارهای مدیریتی فوری</span>
               
               <div className="grid grid-cols-2 gap-2">
                 
@@ -343,8 +343,8 @@ export const UsersTab: React.FC = () => {
                   onClick={() => handleToggleStatus(selectedUser.id)}
                   className={`px-3 py-2.5 rounded-xl border text-[10px] font-black text-right flex items-center justify-between transition-all cursor-pointer ${
                     selectedUser.status === 'SUSPENDED'
-                      ? 'bg-emerald-50 border-emerald-100 text-emerald-700 hover:bg-emerald-100'
-                      : 'bg-rose-50 border-rose-100 text-rose-700 hover:bg-rose-100'
+                      ? 'bg-emerald-50 border-emerald-100/60 text-emerald-700 hover:bg-emerald-100'
+                      : 'bg-rose-50 border-rose-100/60 text-rose-700 hover:bg-rose-100'
                   }`}
                 >
                   <span>{selectedUser.status === 'SUSPENDED' ? 'رفع تعلیق و فعال‌سازی' : 'تعلیق و انسداد کاربر'}</span>
@@ -353,7 +353,7 @@ export const UsersTab: React.FC = () => {
 
                 <button
                   onClick={() => handleResetTokens(selectedUser.id)}
-                  className="px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-black rounded-xl text-right flex items-center justify-between transition-all cursor-pointer"
+                  className="px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200/50 text-slate-700 text-[10px] font-black rounded-xl text-right flex items-center justify-between transition-all cursor-pointer"
                 >
                   <span>صفر کردن توکن روزانه</span>
                   <RotateCw className="w-4 h-4 text-slate-500" />
@@ -361,7 +361,7 @@ export const UsersTab: React.FC = () => {
 
                 <button
                   onClick={() => handleResetHours(selectedUser.id)}
-                  className="px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-[10px] font-black rounded-xl text-right flex items-center justify-between transition-all cursor-pointer"
+                  className="px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200/50 text-slate-700 text-[10px] font-black rounded-xl text-right flex items-center justify-between transition-all cursor-pointer"
                 >
                   <span>ریست سهمیه ضبط صوتی</span>
                   <RotateCw className="w-4 h-4 text-slate-500" />
@@ -369,7 +369,7 @@ export const UsersTab: React.FC = () => {
 
                 <button
                   onClick={() => handleExtendSubscription(selectedUser.id)}
-                  className="px-3 py-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 text-indigo-700 text-[10px] font-black rounded-xl text-right flex items-center justify-between transition-all cursor-pointer"
+                  className="px-3 py-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100/60 text-indigo-700 text-[10px] font-black rounded-xl text-right flex items-center justify-between transition-all cursor-pointer"
                 >
                   <span>اعطای لایسنس / تمدید ۳ ماهه</span>
                   <Award className="w-4 h-4" />

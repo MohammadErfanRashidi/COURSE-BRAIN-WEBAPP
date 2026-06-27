@@ -100,7 +100,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
             onClick={() => setFilterType('all')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               filterType === 'all' 
-                ? 'bg-white text-slate-800 border border-slate-150 rounded-lg shadow-xs font-black' 
+                ? 'bg-white text-slate-800 border border-slate-200/40 rounded-lg shadow-xs font-black' 
                 : 'hover:text-slate-700'
             }`}
           >
@@ -110,7 +110,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
             onClick={() => setFilterType('response')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               filterType === 'response' 
-                ? 'bg-white text-slate-800 border border-slate-150 rounded-lg shadow-xs font-black' 
+                ? 'bg-white text-slate-800 border border-slate-200/40 rounded-lg shadow-xs font-black' 
                 : 'hover:text-slate-700'
             }`}
           >
@@ -120,7 +120,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
             onClick={() => setFilterType('lecture')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               filterType === 'lecture' 
-                ? 'bg-white text-slate-800 border border-slate-150 rounded-lg shadow-xs font-black' 
+                ? 'bg-white text-slate-800 border border-slate-200/40 rounded-lg shadow-xs font-black' 
                 : 'hover:text-slate-700'
             }`}
           >
@@ -136,7 +136,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="جستجو در نشان‌شده‌ها..."
-            className="w-full bg-white border border-slate-150 rounded-xl pr-9 pl-3.5 py-2 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
+            className="w-full bg-white border border-slate-200/40 rounded-xl pr-9 pl-3.5 py-2 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
           />
         </div>
       </div>
@@ -147,13 +147,13 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
           const isAi = item.type === 'response';
           
           return (
-            <Card key={item.id} className="border border-slate-100 bg-white p-5 rounded-3xl space-y-4 hover:border-indigo-100/70 hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all">
+            <Card key={item.id} className="border border-slate-100/80 bg-white p-5 rounded-3xl space-y-4 hover:border-indigo-100/70 hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all">
               
               {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3.5 border-b border-slate-100">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3.5 border-b border-slate-100/50">
                 <div className="flex items-center gap-2.5">
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${
-                    isAi ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                    isAi ? 'bg-indigo-50 border-indigo-100/60 text-indigo-600' : 'bg-emerald-50 border-emerald-100/60 text-emerald-600'
                   }`}>
                     {isAi ? <MessageSquare className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
                   </div>
@@ -178,7 +178,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
                         onNavigate('classes');
                       }
                     }}
-                    className="px-2.5 py-1.5 bg-slate-50 hover:bg-indigo-50 border border-slate-100 hover:border-indigo-100 text-slate-600 hover:text-indigo-600 text-[10px] font-black rounded-lg transition-all flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1.5 bg-slate-50 hover:bg-indigo-50 border border-slate-100/80 hover:border-indigo-100/60 text-slate-600 hover:text-indigo-600 text-[10px] font-black rounded-lg transition-all flex items-center gap-1 cursor-pointer"
                   >
                     <span>مشاهده منبع اصلی</span>
                     <ChevronLeft className="w-3.5 h-3.5" />
@@ -188,7 +188,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
                   {item.description && (
                     <button
                       onClick={() => handleCopy(item.id, item.description || '')}
-                      className="p-1.5 text-slate-400 hover:text-slate-600 bg-white border border-slate-100 hover:border-slate-200 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 text-slate-400 hover:text-slate-600 bg-white border border-slate-100/80 hover:border-slate-200/60 rounded-lg transition-colors cursor-pointer"
                       title="کپی محتوا"
                     >
                       {copiedId === item.id ? (
@@ -202,7 +202,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
                   {/* Delete Bookmark */}
                   <button
                     onClick={() => handleRemoveBookmark(item.id)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 bg-white border border-slate-100 hover:border-rose-200 rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-slate-400 hover:text-rose-600 bg-white border border-slate-100/80 hover:border-rose-100/60 rounded-lg transition-colors cursor-pointer"
                     title="حذف نشان"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -212,13 +212,13 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
 
               {/* Snippet / Content excerpt */}
               {item.description && (
-                <div className="bg-slate-50/50 border border-slate-100 rounded-2xl p-4 text-right">
+                <div className="bg-slate-50/50 border border-slate-100/80 rounded-2xl p-4 text-right">
                   {isAi ? (
                     <div className="prose prose-slate max-w-none text-right leading-relaxed text-xs text-slate-700 font-bold space-y-2">
                       <Markdown
                         components={{
                           table: ({node, ...props}) => (
-                            <div className="overflow-x-auto my-2 border border-slate-100 rounded-xl">
+                            <div className="overflow-x-auto my-2 border border-slate-100/80 rounded-xl">
                               <table className="min-w-full divide-y divide-slate-100 text-[10px] text-slate-700 bg-slate-50/50" {...props} />
                             </div>
                           ),
@@ -226,7 +226,7 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
                             <th className="px-2.5 py-1.5 bg-slate-100 text-slate-800 font-black text-right" {...props} />
                           ),
                           td: ({node, ...props}) => (
-                            <td className="px-2.5 py-1.5 border-t border-slate-100 text-slate-600 font-semibold" {...props} />
+                            <td className="px-2.5 py-1.5 border-t border-slate-100/50 text-slate-600 font-semibold" {...props} />
                           ),
                           ul: ({node, ...props}) => (
                             <ul className="list-disc list-inside mr-2 my-1 space-y-1 text-slate-700" {...props} />
@@ -255,8 +255,8 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
         })}
 
         {filtered.length === 0 && (
-          <div className="text-center py-16 bg-white border border-slate-100 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
-            <div className="w-14 h-14 bg-slate-50 border border-slate-150 rounded-2xl flex items-center justify-center mx-auto text-slate-350">
+          <div className="text-center py-16 bg-white border border-slate-100/80 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
+            <div className="w-14 h-14 bg-slate-50 border border-slate-200/40 rounded-2xl flex items-center justify-center mx-auto text-slate-350">
               <Bookmark className="w-6 h-6" />
             </div>
             <div className="text-xs font-black text-slate-800">هیچ نشان‌شده‌ای یافت نشد!</div>

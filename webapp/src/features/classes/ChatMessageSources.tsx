@@ -53,7 +53,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
   };
 
   return (
-    <div className="mt-4 pt-3 border-t border-slate-100 text-right select-none font-sans">
+    <div className="mt-4 pt-3 border-t border-slate-100/50 text-right select-none font-sans">
 
       {/* Toggle */}
       <button
@@ -65,7 +65,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold flex items-center gap-1.5 text-slate-600 group-hover:text-indigo-600 transition-colors">
             <span>منابع</span>
-            <span className="text-[10px] font-black text-slate-400 bg-slate-100 border border-slate-150 px-1.5 py-0.2 rounded-full">
+            <span className="text-[10px] font-black text-slate-400 bg-slate-100 border border-slate-200/40 px-1.5 py-0.2 rounded-full">
               {toPersianDigits(sources.length)}
             </span>
           </span>
@@ -124,12 +124,12 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                 return (
                   <div
                     key={idx}
-                    className={`border rounded-2xl p-4 transition-all bg-slate-50/50 text-right ${isLecture ? 'border-slate-200 hover:border-indigo-100 hover:bg-indigo-50/10' : 'border-slate-200 hover:border-emerald-100 hover:bg-emerald-50/10'}`}
+                    className={`border rounded-2xl p-4 transition-all bg-slate-50/50 text-right ${isLecture ? 'border-slate-200/50 hover:border-indigo-100/60 hover:bg-indigo-50/10' : 'border-slate-200/50 hover:border-emerald-100/60 hover:bg-emerald-50/10'}`}
                   >
                     {/* Source Metadata Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 border-b border-slate-100 text-xs font-bold text-slate-800">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 border-b border-slate-100/50 text-xs font-bold text-slate-800">
                       <div className="flex items-center gap-2 min-w-0">
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${isLecture ? 'bg-indigo-50 border border-indigo-100 text-indigo-600' : 'bg-emerald-50 border border-emerald-100 text-emerald-600'}`}>
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${isLecture ? 'bg-indigo-50 border border-indigo-100/60 text-indigo-600' : 'bg-emerald-50 border border-emerald-100/60 text-emerald-600'}`}>
                           {isLecture ? <FileText className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
                         </div>
 
@@ -158,7 +158,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                           </span>
                         )}
 
-                        <span className="flex items-center gap-1 bg-slate-100 border border-slate-200 text-slate-600 px-2 py-0.5 rounded-md">
+                        <span className="flex items-center gap-1 bg-slate-100 border border-slate-200/40 text-slate-600 px-2 py-0.5 rounded-md">
                           <Target className="w-3 h-3 text-amber-500" />
                           <span>تطابق: {toPersianDigits(confidence)}٪</span>
                         </span>
@@ -166,7 +166,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                     </div>
 
                     {/* Excerpt Snippet */}
-                    <div className="mt-3 bg-white border border-slate-150 p-3 rounded-xl text-right">
+                    <div className="mt-3 bg-white border border-slate-200/40 p-3 rounded-xl text-right">
                       <p className="text-[11px] leading-relaxed text-slate-500 italic font-medium">
                         {toPersianDigits(excerptText)}
                       </p>
@@ -176,13 +176,13 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                     {(sourceDomain || source.publisher || source.url) && (
                       <div className="mt-3 flex flex-wrap items-center gap-2 text-[10px] font-semibold text-slate-400">
                         {sourceDomain && (
-                          <span className="flex items-center gap-1 bg-slate-100 border border-slate-150 px-2 py-0.5 rounded-md text-slate-500">
+                          <span className="flex items-center gap-1 bg-slate-100 border border-slate-200/40 px-2 py-0.5 rounded-md text-slate-500">
                             <Globe className="w-3 h-3" />
                             <span>{sourceDomain}</span>
                           </span>
                         )}
                         {source.publisher && (
-                          <span className="flex items-center gap-1 bg-slate-100 border border-slate-150 px-2 py-0.5 rounded-md text-slate-500">
+                          <span className="flex items-center gap-1 bg-slate-100 border border-slate-200/40 px-2 py-0.5 rounded-md text-slate-500">
                             <BookOpen className="w-3 h-3" />
                             <span>{source.publisher}</span>
                           </span>
@@ -192,7 +192,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                             href={source.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-1 bg-slate-100 border border-slate-150 px-2 py-0.5 rounded-md text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 transition-colors max-w-[200px]"
+                            className="flex items-center gap-1 bg-slate-100 border border-slate-200/40 px-2 py-0.5 rounded-md text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 transition-colors max-w-[200px]"
                             title={source.url}
                           >
                             <Link className="w-3 h-3 shrink-0" />

@@ -363,7 +363,7 @@ export default function App() {
         
         {currentScreen === 'SPLASH' && (
           <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh] font-sans">
-            <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center mb-6 border border-indigo-100 shadow-sm animate-pulse">
+            <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center mb-6 border border-indigo-100/60 shadow-sm animate-pulse">
               <span className="text-indigo-600 font-black text-3xl">RY</span>
             </div>
             <h1 className="text-xl font-extrabold text-slate-800 tracking-tight animate-pulse">RAYA</h1>
@@ -452,14 +452,14 @@ export default function App() {
               <div className="space-y-4">
                 <button
                   onClick={() => setShowLogoutConfirm(true)}
-                  className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
+                                      className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100/80 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>خروج از حساب</span>
                 </button>
 
                 {/* Sidebar Footer credit */}
-                <div className="border-t border-slate-100 pt-4 text-center">
+                <div className="border-t border-slate-100/50 pt-4 text-center">
                   <span className="text-[9px] text-slate-400 font-extrabold flex items-center justify-center gap-1">
                     <Zap className="w-3 h-3 text-indigo-600" />
                     <span>طرح دانشجویی استاندارد فعال</span>
@@ -651,8 +651,8 @@ export default function App() {
 
       {/* Logout Confirmation Dialog Modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-slate-150 shadow-2xl text-right font-sans animate-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-slate-200/40 shadow-2xl text-right font-sans animate-in zoom-in-95 duration-200">
             <h3 className="text-sm font-extrabold text-slate-900 mb-2">خروج از حساب کاربری</h3>
             <p className="text-xs text-slate-500 font-semibold leading-relaxed mb-6">
               آیا مطمئن هستید که می‌خواهید از حساب کاربری خود خارج شوید؟
@@ -669,7 +669,7 @@ export default function App() {
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/60 font-black py-2.5 rounded-xl text-xs transition-all active:scale-95 cursor-pointer text-center"
+                className="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/40 font-black py-2.5 rounded-xl text-xs transition-all active:scale-95 cursor-pointer text-center"
               >
                 انصراف
               </button>

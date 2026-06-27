@@ -564,7 +564,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
         {messages.length === 0 ? (
           /* Empty State Welcome Screen */
           <div className="h-full flex flex-col items-center justify-center text-center space-y-4 max-w-lg mx-auto py-12 select-none">
-            <div className="w-14 h-14 bg-indigo-50 border border-indigo-100 rounded-3xl flex items-center justify-center text-indigo-600 shadow-sm">
+            <div className="w-14 h-14 bg-indigo-50 border border-indigo-100/60 rounded-3xl flex items-center justify-center text-indigo-600 shadow-sm">
               <Sparkles className="w-7 h-7" />
             </div>
             
@@ -580,13 +580,13 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full pt-4">
               <button 
                 onClick={() => setInput('استاد در طول تدریس این ترم، چه موضوعاتی را جزو مباحث کلیدی قرار داده است؟')}
-                className="p-3 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl text-right text-[11px] font-bold text-slate-600 hover:text-slate-800 transition-all shadow-2xs"
+                className="p-3 bg-white hover:bg-slate-50 border border-slate-200/50 rounded-2xl text-right text-[11px] font-bold text-slate-600 hover:text-slate-800 transition-all shadow-2xs"
               >
                 📝 خلاصه کلیدی مباحث مهم کلاسی
               </button>
               <button 
                 onClick={() => setInput('از جزوات و تدریس‌های این کلاس یک کوییز خودکار تستی ۳ سواله بساز.')}
-                className="p-3 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl text-right text-[11px] font-bold text-slate-600 hover:text-slate-800 transition-all shadow-2xs"
+                className="p-3 bg-white hover:bg-slate-50 border border-slate-200/50 rounded-2xl text-right text-[11px] font-bold text-slate-600 hover:text-slate-800 transition-all shadow-2xs"
               >
                 ✏️ طراحی آزمون سنجش آمادگی (کوییز)
               </button>
@@ -640,13 +640,13 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
                         className={`rounded-3xl p-4 shadow-3xs relative leading-relaxed flex flex-col gap-2.5 w-full break-words [word-break:break-word] [overflow-wrap:anywhere] min-w-0 ${
                           isUser 
                             ? 'bg-indigo-600 text-white rounded-tr-none text-start text-xs font-semibold' 
-                            : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none text-start text-xs'
+                            : 'bg-white border border-slate-200/50 text-slate-800 rounded-tl-none text-start text-xs'
                         }`}
                       >
                         
                         {/* Streaming status inside bubble if active */}
-                        {!isUser && msg.status && msg.status !== 'completed' && msg.status !== 'failed' && (
-                          <div className="mb-2.5 flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-lg text-[9px] text-indigo-600 font-black self-start">
+                          {!isUser && msg.status && msg.status !== 'completed' && msg.status !== 'failed' && (
+                          <div className="mb-2.5 flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100/80 rounded-lg text-[9px] text-indigo-600 font-black self-start">
                             <Loader2 className="w-3 h-3 animate-spin shrink-0" />
                             <span>{getStatusLabel(msg.status)}</span>
                           </div>
@@ -660,15 +660,15 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
                             <Markdown
                               components={{
                                 table: ({node, ...props}) => (
-                                  <div className="overflow-x-auto my-2 border border-slate-100 rounded-xl">
-                                    <table className="min-w-full divide-y divide-slate-100 text-[11px] text-slate-700 bg-slate-50/50" {...props} />
+                                  <div className="overflow-x-auto my-2 border border-slate-100/80 rounded-xl">
+                                    <table className="min-w-full divide-y divide-slate-100/50 text-[11px] text-slate-700 bg-slate-50/50" {...props} />
                                   </div>
                                 ),
                                 th: ({node, ...props}) => (
                                   <th dir="auto" className="px-3 py-2 bg-slate-100 text-slate-800 font-black border-l border-slate-200/50 last:border-0 text-start break-words [word-break:break-word] [overflow-wrap:anywhere]" {...props} />
                                 ),
                                 td: ({node, ...props}) => (
-                                  <td dir="auto" className="px-3 py-2 border-t border-slate-100 border-l last:border-0 border-slate-150/40 text-slate-600 font-bold text-start break-words [word-break:break-word] [overflow-wrap:anywhere]" {...props} />
+                                  <td dir="auto" className="px-3 py-2 border-t border-slate-100/50 border-l last:border-0 border-slate-150/40 text-slate-600 font-bold text-start break-words [word-break:break-word] [overflow-wrap:anywhere]" {...props} />
                                 ),
                                 ul: ({node, ...props}) => (
                                   <ul dir="auto" className="list-disc list-inside mr-2 my-1.5 space-y-1 text-slate-700 font-bold text-start break-words [word-break:break-word] [overflow-wrap:anywhere]" {...props} />
@@ -796,8 +796,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
               <span>در حال تفکر</span>
             </div>
             <div className="flex flex-col max-w-[85%] md:max-w-[75%] mr-auto items-start w-fit min-w-0">
-              <div dir="auto" className="rounded-3xl p-4 bg-white border border-slate-200 rounded-tl-none text-start text-xs flex flex-col gap-2.5 w-full">
-                <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-lg text-[9px] text-indigo-600 font-black self-start">
+              <div dir="auto" className="rounded-3xl p-4 bg-white border border-slate-200/50 rounded-tl-none text-start text-xs flex flex-col gap-2.5 w-full">
+                <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100/80 rounded-lg text-[9px] text-indigo-600 font-black self-start">
                   <Loader2 className="w-3 h-3 animate-spin shrink-0" />
                   <span>{getStatusLabel(aiStatus)}</span>
                 </div>

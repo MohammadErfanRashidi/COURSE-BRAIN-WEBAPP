@@ -160,7 +160,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
             {[1, 2, 3, 4].map(i => (
               <div key={i} className="space-y-2">
                 <div className="h-3 w-16 bg-slate-100 rounded-lg animate-pulse" />
-                <div className="h-13 w-full bg-slate-50 rounded-2xl border border-slate-200 animate-pulse" />
+                <div className="h-13 w-full bg-slate-50 rounded-2xl border border-slate-200/50 animate-pulse" />
               </div>
             ))}
           </div>
@@ -171,12 +171,12 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
 
   return (
     <div className="w-full max-w-lg mx-auto px-4 flex flex-col justify-center min-h-[85vh] font-sans">
-      <Card className="border border-slate-100 shadow-[0_24px_60px_rgba(0,0,0,0.05)] relative">
+      <Card className="border border-slate-100/80 shadow-[0_24px_60px_rgba(0,0,0,0.05)] relative">
         
         {/* Step Indicator Top */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100/50">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center border border-indigo-100">
+            <div className="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center border border-indigo-100/60">
               <GraduationCap className="w-4 h-4 text-indigo-600" />
             </div>
             <div>
@@ -201,7 +201,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
             </div>
 
             {formError && (
-              <div className="p-3.5 bg-rose-50 border border-rose-100 rounded-2xl text-xs text-rose-600 font-semibold flex items-center gap-2">
+              <div className="p-3.5 bg-rose-50 border border-rose-100/60 rounded-2xl text-xs text-rose-600 font-semibold flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -277,14 +277,14 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
             </div>
 
             {formError && (
-              <div className="p-3.5 bg-rose-50 border border-rose-100 rounded-2xl text-xs text-rose-600 font-semibold flex items-center gap-2">
+              <div className="p-3.5 bg-rose-50 border border-rose-100/60 rounded-2xl text-xs text-rose-600 font-semibold flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{formError}</span>
               </div>
             )}
 
             {/* Premium Notice Banner */}
-            <div className="p-3.5 bg-slate-50/50 border border-slate-100 rounded-2xl flex items-start gap-2.5">
+            <div className="p-3.5 bg-slate-50/50 border border-slate-100/80 rounded-2xl flex items-start gap-2.5">
               <BookOpen className="w-4 h-4 text-slate-500 mt-0.5 shrink-0" />
               <div className="text-right">
                 <span className="text-[11px] font-bold text-slate-700 block">طرح استاندارد رایا</span>
@@ -297,7 +297,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
             {isLoadingClasses ? (
               <div className="space-y-2 py-6">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="h-14 w-full bg-slate-50 border border-slate-200 rounded-2xl animate-pulse" />
+                  <div key={i} className="h-14 w-full bg-slate-50 border border-slate-200/50 rounded-2xl animate-pulse" />
                 ))}
               </div>
             ) : availableClasses.length > 0 ? (
@@ -312,7 +312,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
                         p-3.5 rounded-2xl border text-right cursor-pointer select-none flex items-center justify-between transition-all duration-200
                         ${isChecked 
                           ? 'border-indigo-500 bg-indigo-50/20 shadow-xs' 
-                          : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50/10'
+                          : 'border-slate-100/80 bg-white hover:border-slate-200/60 hover:bg-slate-50/10'
                         }
                       `}
                     >

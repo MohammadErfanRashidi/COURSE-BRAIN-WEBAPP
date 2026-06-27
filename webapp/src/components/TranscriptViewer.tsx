@@ -99,12 +99,12 @@ export const TranscriptViewer: React.FC<TranscriptViewerProps> = ({ recording })
   }, [activeSegmentIndex]);
 
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden flex flex-col h-[520px] font-sans text-right">
+    <div className="bg-white rounded-3xl border border-slate-200/50 shadow-xs overflow-hidden flex flex-col h-[520px] font-sans text-right">
       
       {/* Header toolbar */}
-      <div className="p-4 bg-slate-50 border-b border-slate-150 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+      <div className="p-4 bg-slate-50 border-b border-slate-200/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
             <FileText className="w-4 h-4" />
           </div>
           <div>
@@ -117,7 +117,7 @@ export const TranscriptViewer: React.FC<TranscriptViewerProps> = ({ recording })
           {/* Copy action */}
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:text-indigo-600 hover:bg-white bg-slate-100 border border-slate-200 hover:border-indigo-100 rounded-xl text-[11px] font-black cursor-pointer transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-slate-600 hover:text-indigo-600 hover:bg-white bg-slate-100 border border-slate-200/50 hover:border-indigo-100/60 rounded-xl text-[11px] font-black cursor-pointer transition-all"
             title="کپی متن کامل رونوشت"
           >
             {copied ? (
@@ -136,14 +136,14 @@ export const TranscriptViewer: React.FC<TranscriptViewerProps> = ({ recording })
       </div>
 
       {/* Search Input */}
-      <div className="p-3 border-b border-slate-100 shrink-0 bg-white">
+      <div className="p-3 border-b border-slate-100/50 shrink-0 bg-white">
         <div className="relative">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="جستجو در عبارات و کلمات رونوشت..."
-            className="w-full text-right bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl pr-9 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
+            className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-indigo-500 focus:bg-white rounded-xl pr-9 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
           />
           <Search className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
         </div>
@@ -168,7 +168,7 @@ export const TranscriptViewer: React.FC<TranscriptViewerProps> = ({ recording })
                 className={`p-3.5 rounded-2xl border text-right transition-all duration-200 relative group cursor-pointer ${
                   isOriginalActive
                     ? 'bg-indigo-50/80 border-indigo-200 shadow-xs ring-1 ring-indigo-100'
-                    : 'bg-white border-slate-150 hover:border-slate-200'
+                    : 'bg-white border-slate-200/40 hover:border-slate-200/60'
                 }`}
                 onClick={() => handleTimestampClick(seg.start)}
               >
@@ -179,7 +179,7 @@ export const TranscriptViewer: React.FC<TranscriptViewerProps> = ({ recording })
                       {seg.speaker || 'گوینده'}
                     </span>
                     {seg.isAiReferenced && (
-                      <span className="text-[9px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+                      <span className="text-[9px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
                         <Sparkles className="w-2.5 h-2.5" />
                         ارجاع داده شده
                       </span>
@@ -237,7 +237,7 @@ export const TranscriptViewer: React.FC<TranscriptViewerProps> = ({ recording })
       </div>
 
       {/* Sync Status Footer */}
-      <div className="px-4 py-2 border-t border-slate-100 bg-white text-[9px] text-slate-400 font-bold flex items-center justify-between shrink-0">
+      <div className="px-4 py-2 border-t border-slate-100/50 bg-white text-[9px] text-slate-400 font-bold flex items-center justify-between shrink-0">
         <span>تعداد قطعات صوتی: {toPersianDigits(filteredSegments.length)} بخش</span>
         <div className="flex items-center gap-1">
           <Bookmark className="w-3 h-3 text-indigo-500" />

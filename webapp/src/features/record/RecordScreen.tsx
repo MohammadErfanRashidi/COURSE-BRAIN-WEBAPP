@@ -511,7 +511,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
     <div className="font-sans text-right space-y-6 animate-in fade-in duration-300">
       
       {/* Top Remaining Limits Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100/50 pb-5">
         <div>
           <h1 className="text-xl font-black text-slate-900">پردازش و بارگذاری تدریس صوتی</h1>
           <p className="text-xs text-slate-400 mt-1 font-medium">
@@ -521,8 +521,8 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
 
         {subscriptionStatus && (
           <div className="flex flex-col items-end gap-1.5 shrink-0 self-start sm:self-auto">
-            <Card className="border border-slate-100 bg-white px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex items-center gap-3">
-              <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
+            <Card className="border border-slate-100/80 bg-white px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex items-center gap-3">
+              <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
                 {limitsLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
@@ -556,7 +556,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
 
       {/* ERROR TOAST */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-start gap-3 text-rose-700 text-xs font-bold shadow-sm">
+        <div className="p-4 bg-rose-50 border border-rose-100/60 rounded-2xl flex items-start gap-3 text-rose-700 text-xs font-bold shadow-sm">
           <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
           <div>
             <span>خطا رخ داد:</span>
@@ -588,7 +588,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
       </div>
 
       {/* TAB CONTENT PANEL */}
-      <div className="bg-white border border-slate-100 rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+      <div className="bg-white border border-slate-100/80 rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
         
         {/* ========================================================
            TAB: LIVE RECORDING
@@ -597,7 +597,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
           <div className="space-y-6 max-w-xl mx-auto text-center">
             
             <div className="space-y-2">
-              <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full font-extrabold inline-block">
+              <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full font-extrabold inline-block">
                 ضبط از میکروفون مرورگر (فرمت وب)
               </span>
               <h2 className="text-base font-black text-slate-800">ایستگاه ضبط صدای رایا</h2>
@@ -618,7 +618,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   localStorage.setItem('cb_temp_recording_name', e.target.value);
                 }}
                 placeholder="مثال: جلسه سوم ریاضی مهندسی"
-                className="w-full bg-white border border-slate-150 rounded-xl px-4 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold disabled:bg-slate-50 disabled:text-slate-400"
+                className="w-full bg-white border border-slate-200/40 rounded-xl px-4 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold disabled:bg-slate-50 disabled:text-slate-400"
               />
             </div>
 
@@ -665,7 +665,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 
                 {/* 89 Minute Warning Alert banner */}
                 {recordingSeconds >= 5340 && recordingSeconds < 5400 && (
-                  <div className="bg-amber-50 text-amber-800 text-[10px] font-bold py-1 px-3 border border-amber-100 rounded-lg max-w-xs mx-auto animate-bounce mt-2">
+                  <div className="bg-amber-50 text-amber-800 text-[10px] font-bold py-1 px-3 border border-amber-100/60 rounded-lg max-w-xs mx-auto animate-bounce mt-2">
                     ⚠️ ضبط صوتی تا یک دقیقه دیگر به طور خودکار متوقف خواهد شد.
                   </div>
                 )}
@@ -686,7 +686,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
               <div className="flex justify-center gap-3">
                 <button
                   onClick={handlePauseToggle}
-                  className="px-5 py-2 bg-slate-50 border border-slate-100 hover:border-slate-200 rounded-xl font-bold text-xs text-slate-700 flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                  className="px-5 py-2 bg-slate-50 border border-slate-100/80 hover:border-slate-200/60 rounded-xl font-bold text-xs text-slate-700 flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
                 >
                   <Pause className="w-3.5 h-3.5" />
                   <span>{isPaused ? 'ادامه ضبط' : 'موقت متوقف کن'}</span>
@@ -696,7 +696,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
 
             {/* Dynamic canvas waveform */}
             {isRecording && (
-              <div className="w-full max-w-sm mx-auto h-16 bg-slate-50 border border-slate-100 rounded-2xl overflow-hidden mt-2 p-1">
+              <div className="w-full max-w-sm mx-auto h-16 bg-slate-50 border border-slate-100/80 rounded-2xl overflow-hidden mt-2 p-1">
                 <canvas ref={canvasRef} className="w-full h-full" width={384} height={60} />
               </div>
             )}
@@ -709,9 +709,9 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                     initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.95, opacity: 0 }}
-                    className="bg-white border border-slate-100 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] p-6 space-y-5 text-right font-sans"
+                    className="bg-white border border-slate-100/80 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] p-6 space-y-5 text-right font-sans"
                   >
-                    <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                    <div className="border-b border-slate-100/50 pb-3 flex items-center justify-between">
                       <h3 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
                         <ListPlus className="w-4 h-4 text-indigo-600" />
                         <span>انتساب ویس ضبط شده به کلاس درسی</span>
@@ -739,14 +739,14 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                         {isLoadingClasses ? (
                           <div className="h-10 w-full bg-slate-100 animate-pulse rounded-xl" />
                         ) : classes.length === 0 ? (
-                          <div className="text-xs text-rose-600 font-black p-3 bg-rose-50 border border-rose-100 rounded-xl leading-relaxed">
+                          <div className="text-xs text-rose-600 font-black p-3 bg-rose-50 border border-rose-100/60 rounded-xl leading-relaxed">
                             ⚠️ شما هیچ کلاس فعالی در ترم تحصیلی جاری ثبت نکرده‌اید! ابتدا به منوی کلاس‌ها رفته و یک کلاس درسی اضافه کنید.
                           </div>
                         ) : (
                           <select
                             value={assignedClassId}
                             onChange={(e) => setAssignedClassId(e.target.value)}
-                            className="w-full bg-white border border-slate-150 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold cursor-pointer transition-all duration-200"
+                            className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold cursor-pointer transition-all duration-200"
                           >
                             <option value="">-- کلاس مورد نظر را انتخاب کنید --</option>
                             {classes.map((cls) => (
@@ -761,11 +761,11 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
 
                     </div>
 
-                    <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                    <div className="pt-4 border-t border-slate-100/50 flex items-center justify-end gap-2.5">
                       <button
                         type="button"
                         onClick={handleDiscardRecording}
-                        className="px-4 py-2 border border-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 hover:border-slate-200 cursor-pointer shadow-xs transition-all"
+                        className="px-4 py-2 border border-slate-100/80 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 hover:border-slate-200/60 cursor-pointer shadow-xs transition-all"
                       >
                         دور ریختن ویس ضبط شده
                       </button>
@@ -794,7 +794,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
           <div className="space-y-6 max-w-xl mx-auto">
             
             <div className="text-center space-y-1.5">
-              <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full font-extrabold inline-block">
+              <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full font-extrabold inline-block">
                 بارگذاری تدریس صوتی ضبط شده خارجی
               </span>
               <h2 className="text-base font-black text-slate-800">بارگذاری تدریس صوتی آماده</h2>
@@ -814,7 +814,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center ${
                   dragActive 
                     ? 'border-indigo-500 bg-indigo-50/20 shadow-md' 
-                    : 'border-slate-200 bg-slate-50/10 hover:border-indigo-200/80 hover:bg-slate-50/30'
+                    : 'border-slate-200/50 bg-slate-50/10 hover:border-indigo-200/80 hover:bg-slate-50/30'
                 }`}
               >
                 <input
@@ -825,7 +825,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   className="hidden"
                 />
                 
-                <div className="w-12 h-12 bg-white border border-slate-100 rounded-2xl flex items-center justify-center shadow-xs text-slate-400 mb-4">
+                <div className="w-12 h-12 bg-white border border-slate-100/80 rounded-2xl flex items-center justify-center shadow-xs text-slate-400 mb-4">
                   <Upload className="w-6 h-6 text-indigo-600" />
                 </div>
                 
@@ -836,10 +836,10 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
               </div>
             ) : (
               /* FILE SELECTED VIEW & PROCESSING STAGE INDICATORS */
-              <Card className="border border-slate-100 bg-white p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <Card className="border border-slate-100/80 bg-white p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100/50">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center text-indigo-600">
+                    <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 rounded-xl flex items-center justify-center text-indigo-600">
                       <FileAudio className="w-4.5 h-4.5" />
                     </div>
                     <div className="text-right">
@@ -868,14 +868,14 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   <div className="space-y-1.5 text-right">
                     <label className="text-[10px] font-black text-slate-400 block">نام کلاس درسی منتسب</label>
                     {classes.length === 0 ? (
-                      <div className="text-[10px] text-rose-650 font-bold p-3 bg-rose-50 border border-rose-100 rounded-xl">
+                      <div className="text-[10px] text-rose-650 font-bold p-3 bg-rose-50 border border-rose-100/60 rounded-xl">
                         ⚠️ قبل از شروع آپلود، باید یک کلاس در ترم تحصیلی جاری خود ثبت کنید.
                       </div>
                     ) : (
                       <select
                         value={uploadClassId}
                         onChange={(e) => setUploadClassId(e.target.value)}
-                        className="w-full bg-white border border-slate-150 rounded-xl px-3 py-2 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold cursor-pointer transition-all duration-200"
+                        className="w-full bg-white border border-slate-200/40 rounded-xl px-3 py-2 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold cursor-pointer transition-all duration-200"
                       >
                         <option value="">-- یک کلاس درسی انتخاب کنید --</option>
                         {classes.map((cls) => (
@@ -990,7 +990,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   <div className="pt-2 flex items-center justify-end gap-2">
                     <button
                       onClick={handleRemoveFile}
-                      className="px-4 py-2 border border-slate-100 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 hover:border-slate-200 cursor-pointer shadow-xs transition-all"
+                      className="px-4 py-2 border border-slate-100/80 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 hover:border-slate-200/60 cursor-pointer shadow-xs transition-all"
                     >
                       انصراف
                     </button>
@@ -1008,7 +1008,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
             )}
 
             {/* Quick tips */}
-            <div className="bg-slate-50 rounded-2xl p-4 text-right flex items-start gap-3 border border-slate-150">
+            <div className="bg-slate-50 rounded-2xl p-4 text-right flex items-start gap-3 border border-slate-200/40">
               <Info className="w-4.5 h-4.5 text-indigo-600 shrink-0 mt-0.5" />
               <div>
                 <span className="text-xs font-black text-slate-800 block">درباره سیستم بارگذاری و پردازش</span>
@@ -1080,7 +1080,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                     const isRunning = !['completed', 'failed'].includes(job.stage);
 
                     return (
-                      <Card key={job.id} className="border border-slate-200 bg-white p-5 rounded-2xl space-y-4 relative overflow-hidden">
+                      <Card key={job.id} className="border border-slate-200/50 bg-white p-5 rounded-2xl space-y-4 relative overflow-hidden">
                         
                         {/* Background progress tint for premium touch */}
                         {isRunning && (
@@ -1090,7 +1090,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                           />
                         )}
 
-                        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100">
+                        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100/50">
                           <div className="text-right">
                             <span className="text-xs font-black text-slate-800 block">{job.name}</span>
                             <div className="flex items-center gap-2 mt-1 text-[9px] text-slate-400 font-bold">
@@ -1106,13 +1106,13 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                             {job.stage === 'completed' ? (
                               <button
                                 onClick={() => onNavigate('classes', { openClassId: job.classId })}
-                                className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 text-[10px] font-black rounded-lg transition-all cursor-pointer flex items-center gap-1"
+                                className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/50 text-emerald-700 text-[10px] font-black rounded-lg transition-all cursor-pointer flex items-center gap-1"
                               >
                                 <span>برو به کلاس</span>
                                 <ChevronLeft className="w-3.5 h-3.5" />
                               </button>
                             ) : job.stage === 'failed' ? (
-                              <span className="text-[9px] font-bold text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-md">
+                              <span className="text-[9px] font-bold text-rose-600 bg-rose-50 border border-rose-100/60 px-2 py-0.5 rounded-md">
                                 ناموفق
                               </span>
                             ) : (

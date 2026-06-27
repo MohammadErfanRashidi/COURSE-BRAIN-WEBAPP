@@ -173,7 +173,7 @@ export const SubscriptionScreen: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Card 1: Active Subscription Details */}
-          <div className="border border-slate-100 rounded-3xl p-6 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between min-h-[300px]">
+          <div className="border border-slate-100/80 rounded-3xl p-6 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between min-h-[300px]">
             <div>
               <div className="flex items-center justify-between border-b border-slate-50 pb-4">
                 <div className="space-y-2 text-right">
@@ -200,7 +200,7 @@ export const SubscriptionScreen: React.FC = () => {
           </div>
 
           {/* Card 2: Subscription Tier Plan Details */}
-          <div className="border border-slate-100 rounded-3xl p-6 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between min-h-[300px]">
+          <div className="border border-slate-100/80 rounded-3xl p-6 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between min-h-[300px]">
             <div>
               <div className="flex items-center justify-between border-b border-slate-50 pb-4">
                 <div className="space-y-2 text-right">
@@ -234,7 +234,7 @@ export const SubscriptionScreen: React.FC = () => {
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
       
       {/* Page Header */}
-      <div className="border-b border-slate-100 pb-5">
+      <div className="border-b border-slate-100/50 pb-5">
         <h1 className="text-xl font-black text-slate-900">مدیریت لایسنس و اشتراک مالی</h1>
         <p className="text-xs text-slate-400 mt-1 font-medium">
           میزان استفاده از منابع پردازشی، سابقه تراکنش‌ها و جزئیات تمدید طرح دانشجویی خود را مشاهده کنید.
@@ -243,14 +243,14 @@ export const SubscriptionScreen: React.FC = () => {
 
       {/* FEEDBACK TOASTS */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-center gap-3 text-rose-700 text-xs font-bold shadow-xs animate-in slide-in-from-top-4 duration-200">
+        <div className="p-4 bg-rose-50 border border-rose-100/60 rounded-2xl flex items-center gap-3 text-rose-700 text-xs font-bold shadow-xs animate-in slide-in-from-top-4 duration-200">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold shadow-xs animate-in slide-in-from-top-4 duration-200">
+        <div className="p-4 bg-emerald-50 border border-emerald-100/60 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold shadow-xs animate-in slide-in-from-top-4 duration-200">
           <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
           <span>{successMsg}</span>
         </div>
@@ -262,7 +262,7 @@ export const SubscriptionScreen: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Main License Detail Card */}
-          <Card className="border border-slate-100 bg-white rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden relative">
+          <Card className="border border-slate-100/80 bg-white rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden relative">
             <div className="bg-indigo-600 px-6 py-5 text-white flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0">
@@ -290,7 +290,7 @@ export const SubscriptionScreen: React.FC = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   
                   {/* Gauge 1 */}
-                  <div className="border border-slate-100 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
+                  <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
                     <span className="text-[10px] font-bold text-slate-400 block">زمان ضبط باقی‌مانده این ماه</span>
                     <span className="text-sm font-black text-indigo-600 block">
                       {formatPersianDuration(remainingHours)}
@@ -299,7 +299,7 @@ export const SubscriptionScreen: React.FC = () => {
                   </div>
 
                   {/* Gauge 2 */}
-                  <div className="border border-slate-100 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
+                  <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
                     <span className="text-[10px] font-bold text-slate-400 block">ظرفیت باقی‌مانده هوش مصنوعی امروز</span>
                     <span className="text-sm font-black text-slate-800 block">
                       {toPersianDigits(Math.max(0, Math.min(100, Math.round(((subscriptionStatus.usage.maxDailyTokens - subscriptionStatus.usage.dailyTokensUsed) / subscriptionStatus.usage.maxDailyTokens) * 100))))}٪ در دسترس
@@ -308,7 +308,7 @@ export const SubscriptionScreen: React.FC = () => {
                   </div>
 
                   {/* Gauge 3 */}
-                  <div className="border border-slate-100 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
+                  <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
                     <span className="text-[10px] font-bold text-slate-400 block">ظرفیت ایجاد کلاس فعال</span>
                     <span className="text-sm font-black text-slate-800 block">
                       {toPersianDigits(subscriptionStatus.usage.classesCount)} / {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس
@@ -320,7 +320,7 @@ export const SubscriptionScreen: React.FC = () => {
               </div>
 
               {/* License Validity Dates & Actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100 pt-4 gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100/50 pt-4 gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold">
                     <Calendar className="w-4 h-4 text-slate-400" />
@@ -340,7 +340,7 @@ export const SubscriptionScreen: React.FC = () => {
                   <button
                     onClick={handleRestore}
                     disabled={isActionLoading}
-                    className="px-3.5 py-2 bg-white border border-slate-100 hover:border-slate-200 rounded-xl text-slate-700 text-xs font-bold transition-all cursor-pointer shadow-xs"
+                    className="px-3.5 py-2 bg-white border border-slate-100/80 hover:border-slate-200/60 rounded-xl text-slate-700 text-xs font-bold transition-all cursor-pointer shadow-xs"
                   >
                     بازیابی تراکنش‌ها
                   </button>
@@ -349,7 +349,7 @@ export const SubscriptionScreen: React.FC = () => {
                     <button
                       onClick={handleCancelSubscription}
                       disabled={isActionLoading}
-                      className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100/60 border border-rose-100 text-rose-750 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                      className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100/60 border border-rose-100/60 text-rose-750 text-xs font-bold rounded-xl transition-all cursor-pointer"
                     >
                       لغو تمدید خودکار
                     </button>
@@ -385,7 +385,7 @@ export const SubscriptionScreen: React.FC = () => {
                     className={`border rounded-2xl p-5 text-right flex flex-col justify-between space-y-4 transition-all duration-300 relative ${
                       isActive 
                         ? 'border-2 border-indigo-500 bg-indigo-50/5/30 shadow-md' 
-                        : 'border-slate-150 bg-white hover:border-indigo-200 hover:shadow-sm'
+                        : 'border-slate-200/40 bg-white hover:border-indigo-200/60 hover:shadow-sm'
                     }`}
                   >
                     {isActive && (
@@ -426,7 +426,7 @@ export const SubscriptionScreen: React.FC = () => {
                         onClick={() => handleChangePlan(plan.id)}
                         className={`text-[10px] py-1.5 rounded-xl font-bold cursor-pointer ${
                           isActive 
-                            ? 'bg-slate-100 text-slate-400 border border-slate-200' 
+                            ? 'bg-slate-100 text-slate-400 border border-slate-200/50' 
                             : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                         }`}
                       >
@@ -443,11 +443,11 @@ export const SubscriptionScreen: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-sm font-black text-slate-800">جزئیات و مزایای لایسنس دانشجویی رایا</h3>
             
-            <Card className="border border-slate-100 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+            <Card className="border border-slate-100/80 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="text-right">
@@ -457,7 +457,7 @@ export const SubscriptionScreen: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="text-right">
@@ -467,7 +467,7 @@ export const SubscriptionScreen: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="text-right">
@@ -477,7 +477,7 @@ export const SubscriptionScreen: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   </div>
                   <div className="text-right">
@@ -489,8 +489,8 @@ export const SubscriptionScreen: React.FC = () => {
               </div>
 
               {/* Future benefits */}
-              <div className="border-t border-slate-100 mt-5 pt-5 text-right space-y-3">
-                <span className="text-[10px] text-indigo-600 font-extrabold bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">ویژگی‌های در دست احداث (Coming Soon)</span>
+              <div className="border-t border-slate-100/50 mt-5 pt-5 text-right space-y-3">
+                <span className="text-[10px] text-indigo-600 font-extrabold bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full">ویژگی‌های در دست احداث (Coming Soon)</span>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div className="text-right text-slate-400">
@@ -515,7 +515,7 @@ export const SubscriptionScreen: React.FC = () => {
             <span>تاریخچه فاکتورها و تراکنش‌ها</span>
           </h3>
 
-          <Card className="border border-slate-100 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] divide-y divide-slate-100">
+          <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] divide-y divide-slate-100/50">
             {history.length === 0 ? (
               <div className="text-center py-10 space-y-2">
                 <History className="w-8 h-8 text-slate-300 mx-auto" />
@@ -535,7 +535,7 @@ export const SubscriptionScreen: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="bg-emerald-50 text-emerald-700 text-[9px] font-black px-2 py-0.5 rounded-md border border-emerald-100">تراکنش موفق</span>
+                    <span className="bg-emerald-50 text-emerald-700 text-[9px] font-black px-2 py-0.5 rounded-md border border-emerald-100/60">تراکنش موفق</span>
                   </div>
                 </div>
               ))

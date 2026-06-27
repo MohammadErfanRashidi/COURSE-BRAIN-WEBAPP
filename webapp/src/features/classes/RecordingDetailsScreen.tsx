@@ -316,7 +316,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
       
       {/* 1. STUDY MODE / DISTRACTION-FREE NAVBAR (Point 11) */}
       {isStudyMode && (
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4 select-none">
+        <div className="flex items-center justify-between border-b border-slate-100/50 pb-4 mb-4 select-none">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse"></span>
             <span className="text-xs font-black text-slate-800">حالت مطالعه بدون حواس‌پرتی فعال است</span>
@@ -324,7 +324,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
           
           <div className="flex items-center gap-2.5">
             {/* Font Sizer */}
-            <div className="flex items-center border border-slate-100 bg-white/85 rounded-xl p-0.5 text-[10px] font-bold shadow-xs">
+            <div className="flex items-center border border-slate-100/80 bg-white/85 rounded-xl p-0.5 text-[10px] font-bold shadow-xs">
               <button 
                 onClick={() => setFontSizeClass('text-xs')}
                 className={`px-2 py-1 rounded-lg ${fontSizeClass === 'text-xs' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-400'}`}
@@ -371,7 +371,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
 
             <button
               onClick={() => setIsStudyMode(true)}
-              className="px-3 py-1.5 bg-white border border-slate-100 hover:border-slate-200 rounded-xl text-xs font-bold flex items-center gap-1.5 text-slate-600 hover:text-slate-800 transition-all cursor-pointer shadow-xs"
+              className="px-3 py-1.5 bg-white border border-slate-100/80 hover:border-slate-200/60 rounded-xl text-xs font-bold flex items-center gap-1.5 text-slate-600 hover:text-slate-800 transition-all cursor-pointer shadow-xs"
             >
               <Maximize2 className="w-3.5 h-3.5 text-indigo-600" />
               <span>حالت مطالعه (بدون حواس‌پرتی)</span>
@@ -379,7 +379,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
           </div>
 
           {/* Title Card */}
-          <Card className="p-6 bg-white border border-slate-100 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative">
+          <Card className="p-6 bg-white border border-slate-100/80 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative">
             
             <div className="space-y-2">
               <div className="flex items-center gap-2">
@@ -416,7 +416,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center shadow-xs ${
                   isLectureBookmarked 
                     ? 'bg-amber-50 border-amber-250 text-amber-600 shadow-xs' 
-                    : 'bg-white border-slate-100 text-slate-400 hover:text-slate-600 hover:border-slate-200'
+                    : 'bg-white border-slate-100/80 text-slate-400 hover:text-slate-600 hover:border-slate-200/60'
                 }`}
                 title="نشان کردن کامل این جلسه"
               >
@@ -425,7 +425,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
 
               <button
                 onClick={() => setIsRenameOpen(true)}
-                className="px-3.5 py-2 bg-white border border-slate-100 hover:border-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1.5 hover:bg-slate-50 transition-all cursor-pointer shadow-xs"
+                className="px-3.5 py-2 bg-white border border-slate-100/80 hover:border-slate-200/60 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1.5 hover:bg-slate-50 transition-all cursor-pointer shadow-xs"
               >
                 <Edit3 className="w-4 h-4 text-slate-400" />
                 <span>ویرایش نام</span>
@@ -459,7 +459,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 className={`w-full text-right px-4 py-3 rounded-xl transition-all flex items-center justify-between cursor-pointer whitespace-nowrap shrink-0 ${
                   activeWorkspaceTab === 'transcript'
                     ? 'bg-indigo-600 text-white shadow-3xs font-black'
-                    : 'bg-white border border-slate-200/80 text-slate-600 hover:text-slate-800'
+                    : 'bg-white border border-slate-200/50 text-slate-600 hover:text-slate-800'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -474,7 +474,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 className={`w-full text-right px-4 py-3 rounded-xl transition-all flex items-center justify-between cursor-pointer whitespace-nowrap shrink-0 ${
                   activeWorkspaceTab === 'summary'
                     ? 'bg-indigo-600 text-white shadow-3xs font-black'
-                    : 'bg-white border border-slate-200/80 text-slate-600 hover:text-slate-800'
+                    : 'bg-white border border-slate-200/50 text-slate-600 hover:text-slate-800'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -489,7 +489,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 className={`w-full text-right px-4 py-3 rounded-xl transition-all flex items-center justify-between cursor-pointer whitespace-nowrap shrink-0 ${
                   activeWorkspaceTab === 'chat'
                     ? 'bg-indigo-600 text-white shadow-3xs font-black'
-                    : 'bg-white border border-slate-200/80 text-slate-600 hover:text-slate-800'
+                    : 'bg-white border border-slate-200/50 text-slate-600 hover:text-slate-800'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -504,7 +504,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 className={`w-full text-right px-4 py-3 rounded-xl transition-all flex items-center justify-between cursor-pointer whitespace-nowrap shrink-0 ${
                   activeWorkspaceTab === 'stats'
                     ? 'bg-indigo-600 text-white shadow-3xs font-black'
-                    : 'bg-white border border-slate-200/80 text-slate-600 hover:text-slate-800'
+                    : 'bg-white border border-slate-200/50 text-slate-600 hover:text-slate-800'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -516,7 +516,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
             </nav>
             
             {/* Audio player reminder card */}
-            <Card className="bg-slate-50/50 border border-slate-100 p-4 rounded-2xl space-y-2 select-none shadow-xs">
+            <Card className="bg-slate-50/50 border border-slate-100/80 p-4 rounded-2xl space-y-2 select-none shadow-xs">
               <div className="flex items-center gap-2">
                 <Volume2 className="w-4 h-4 text-indigo-600" />
                 <span className="text-[10px] font-black text-slate-800">پلیر یکپارچه صوتی</span>
@@ -530,13 +530,13 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
 
         {/* Workspace Display Area (Takes full width in study mode or 3 cols in standard workspace) */}
         <div className={isStudyMode || activeWorkspaceTab === 'summary' ? 'lg:col-span-4' : 'lg:col-span-3'}>
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] min-h-[500px] flex flex-col overflow-hidden">
+          <div className="bg-white rounded-3xl border border-slate-100/80 shadow-[0_8px_30px_rgba(0,0,0,0.02)] min-h-[500px] flex flex-col overflow-hidden">
             
             {/* TAB PANEL 1: TRANSCRIPT (Supercharged, Point 2) */}
             {(activeWorkspaceTab === 'transcript' || isStudyMode) && (
               <div className="flex-1 flex flex-col h-full">
                 {/* Panel Toolbar */}
-                <div className="p-4 bg-slate-50/60 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+                <div className="p-4 bg-slate-50/60 border-b border-slate-100/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
                   <div className="flex items-center gap-2 select-none">
                     <FileText className="w-4 h-4 text-indigo-600" />
                     <div>
@@ -548,7 +548,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                   <div className="flex flex-wrap items-center gap-2 font-bold text-[11px]">
                     <button
                       onClick={handleCopyTranscript}
-                      className="px-3 py-1.5 bg-white border border-slate-100 hover:border-slate-200 text-slate-600 hover:text-indigo-600 rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                      className="px-3 py-1.5 bg-white border border-slate-100/80 hover:border-slate-200/60 text-slate-600 hover:text-indigo-600 rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-xs"
                     >
                       {copied ? (
                         <>
@@ -565,7 +565,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
 
                     <button
                       onClick={handleDownloadTranscript}
-                      className="px-3 py-1.5 bg-white border border-slate-100 hover:border-slate-200 text-slate-600 hover:text-indigo-600 rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                      className="px-3 py-1.5 bg-white border border-slate-100/80 hover:border-slate-200/60 text-slate-600 hover:text-indigo-600 rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-xs"
                     >
                       <Download className="w-3.5 h-3.5" />
                       <span>دانلود فایل متنی</span>
@@ -574,14 +574,14 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 </div>
 
                 {/* Transcript Local Search */}
-                <div className="p-3 border-b border-slate-100 bg-white shrink-0">
+                <div className="p-3 border-b border-slate-100/50 bg-white shrink-0">
                   <div className="relative">
                     <input
                       type="text"
                       value={transcriptSearch}
                       onChange={(e) => setTranscriptSearch(e.target.value)}
                       placeholder="جستجو و همگام‌سازی فوری در عبارات رونوشت..."
-                      className="w-full text-right bg-slate-50 border border-slate-150 focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 focus:bg-white rounded-xl pr-9 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
+                      className="w-full text-right bg-slate-50 border border-slate-200/40 focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 focus:bg-white rounded-xl pr-9 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
                     />
                     <Search className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
                   </div>
@@ -601,8 +601,8 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                           onClick={() => handleSegmentClick(seg.start)}
                           className={`p-4 rounded-2xl border text-right transition-all duration-200 relative group cursor-pointer ${
                             isSegActive
-                              ? 'bg-indigo-50/80 border-indigo-200 shadow-xs ring-1 ring-indigo-100'
-                              : 'bg-white border-slate-100 hover:border-indigo-100/70 shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-sm'
+                              ? 'bg-indigo-50/80 border-indigo-200/50 shadow-xs ring-1 ring-indigo-100'
+                              : 'bg-white border-slate-100/80 hover:border-indigo-100/70 shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-sm'
                           }`}
                         >
                           <div className="flex items-center justify-between gap-2 mb-2">
@@ -625,7 +625,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                                 className={`p-1 rounded-md border transition-all ${
                                   isBookmarked 
                                     ? 'bg-amber-50 border-amber-200 text-amber-600' 
-                                    : 'opacity-0 group-hover:opacity-100 bg-slate-50 border-slate-100 hover:border-slate-200 text-slate-400 hover:text-slate-600 shadow-3xs'
+                                    : 'opacity-0 group-hover:opacity-100 bg-slate-50 border-slate-100/80 hover:border-slate-200/60 text-slate-400 hover:text-slate-600 shadow-3xs'
                                 }`}
                                 title="نشان کردن این بخش"
                               >
@@ -671,7 +671,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                       );
                     })
                   ) : (
-                    <div className="text-center py-20 bg-white border border-slate-100 rounded-2xl space-y-2">
+                    <div className="text-center py-20 bg-white border border-slate-100/80 rounded-2xl space-y-2">
                       <Search className="w-8 h-8 text-slate-300 mx-auto" />
                       <span className="text-xs font-bold text-slate-400 block">هیچ عبارتی منطبق با فیلتر یافت نشد</span>
                     </div>
@@ -683,7 +683,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
             {/* TAB PANEL 2: COLLAPSIBLE AI SUMMARY (Point 10) */}
             {activeWorkspaceTab === 'summary' && !isStudyMode && (
               <div className="p-6 space-y-6">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 border-b border-slate-100/50 pb-3">
                   <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
                   <div>
                     <h3 className="text-sm font-black text-slate-800">خلاصه علمی هوشمند و مفاهیم آموزشی</h3>
@@ -695,8 +695,8 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   
                   {/* Key Concepts */}
-                  <Card className="p-5 border border-slate-100 rounded-2xl bg-slate-50/10 space-y-3 shadow-xs">
-                    <h4 className="text-xs font-black text-indigo-600 block border-b border-slate-100 pb-2">🧠 مفاهیم کلیدی جلسه</h4>
+                  <Card className="p-5 border border-slate-100/80 rounded-2xl bg-slate-50/10 space-y-3 shadow-xs">
+                    <h4 className="text-xs font-black text-indigo-600 block border-b border-slate-100/50 pb-2">🧠 مفاهیم کلیدی جلسه</h4>
                     <div className="space-y-3 font-bold text-xs">
                       {aiSummaryData.concepts.map((concept, k) => (
                         <div key={k} className="space-y-1">
@@ -708,11 +708,11 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                   </Card>
 
                   {/* Definitions & Formulas */}
-                  <Card className="p-5 border border-slate-100 rounded-2xl bg-slate-50/10 space-y-3 shadow-xs">
-                    <h4 className="text-xs font-black text-emerald-600 block border-b border-slate-100 pb-2">📝 فرمول‌ها و تعاریف مهم</h4>
+                  <Card className="p-5 border border-slate-100/80 rounded-2xl bg-slate-50/10 space-y-3 shadow-xs">
+                    <h4 className="text-xs font-black text-emerald-600 block border-b border-slate-100/50 pb-2">📝 فرمول‌ها و تعاریف مهم</h4>
                     <div className="space-y-3.5 font-bold text-xs">
                       {aiSummaryData.definitions.map((def, k) => (
-                        <div key={k} className="space-y-1 bg-white p-2.5 rounded-xl border border-slate-100 shadow-3xs">
+                        <div key={k} className="space-y-1 bg-white p-2.5 rounded-xl border border-slate-100/80 shadow-3xs">
                           <span className="text-slate-800 font-black text-xs block">{def.term}</span>
                           <code className="text-[11px] text-indigo-600 font-mono block py-1 font-black" dir="ltr">
                             {def.formula}
@@ -724,8 +724,8 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                   </Card>
 
                   {/* Important Points */}
-                  <Card className="p-5 border border-slate-100 rounded-2xl bg-slate-50/10 space-y-3 md:col-span-2 shadow-xs">
-                    <h4 className="text-xs font-black text-amber-600 block border-b border-slate-100 pb-2">🎯 نکات طلایی امتحان پایان‌ترم</h4>
+                  <Card className="p-5 border border-slate-100/80 rounded-2xl bg-slate-50/10 space-y-3 md:col-span-2 shadow-xs">
+                    <h4 className="text-xs font-black text-amber-600 block border-b border-slate-100/50 pb-2">🎯 نکات طلایی امتحان پایان‌ترم</h4>
                     <ul className="space-y-2 text-xs font-bold text-slate-600 leading-relaxed list-disc list-inside mr-2">
                       {aiSummaryData.importantPoints.map((pt, k) => (
                         <li key={k} className="text-slate-600">{pt}</li>
@@ -734,8 +734,8 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                   </Card>
 
                   {/* Study Tips */}
-                  <Card className="p-5 border border-slate-100 rounded-2xl bg-slate-50/10 space-y-3 shadow-xs">
-                    <h4 className="text-xs font-black text-indigo-600 block border-b border-slate-100 pb-2">💡 روش‌های طلایی مطالعه</h4>
+                  <Card className="p-5 border border-slate-100/80 rounded-2xl bg-slate-50/10 space-y-3 shadow-xs">
+                    <h4 className="text-xs font-black text-indigo-600 block border-b border-slate-100/50 pb-2">💡 روش‌های طلایی مطالعه</h4>
                     <div className="space-y-2 text-[11px] font-bold text-slate-600 leading-relaxed">
                       {aiSummaryData.studyTips.map((tip, k) => (
                         <p key={k}>{tip}</p>
@@ -744,15 +744,15 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                   </Card>
 
                   {/* Quick Review */}
-                  <Card className="p-5 border border-slate-100 rounded-2xl bg-slate-50/10 space-y-3 flex flex-col justify-between shadow-xs">
+                  <Card className="p-5 border border-slate-100/80 rounded-2xl bg-slate-50/10 space-y-3 flex flex-col justify-between shadow-xs">
                     <div>
-                      <h4 className="text-xs font-black text-rose-500 block border-b border-slate-100 pb-2">⚡ مرور فوق‌سریع</h4>
+                      <h4 className="text-xs font-black text-rose-500 block border-b border-slate-100/50 pb-2">⚡ مرور فوق‌سریع</h4>
                       <p className="text-xs font-bold text-slate-600 leading-relaxed pt-2">
                         {aiSummaryData.quickReview}
                       </p>
                     </div>
                     
-                    <div className="pt-4 border-t border-slate-100 text-center">
+                    <div className="pt-4 border-t border-slate-100/50 text-center">
                       <button 
                         onClick={() => setActiveWorkspaceTab('chat')}
                         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-xl cursor-pointer shadow-3xs transition-all w-full"
@@ -769,7 +769,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
             {/* TAB PANEL 3: SPECIFIC REFERENCED LECTURE CHAT */}
             {activeWorkspaceTab === 'chat' && !isStudyMode && (
               <div className="flex-1 flex flex-col h-[520px]">
-                <div className="p-4 bg-slate-50/60 border-b border-slate-100 flex items-center justify-between">
+                <div className="p-4 bg-slate-50/60 border-b border-slate-100/50 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-indigo-600" />
                     <div>
@@ -810,7 +810,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
             {/* TAB PANEL 4: SPEECH STATISTICS (Point 3) */}
             {activeWorkspaceTab === 'stats' && !isStudyMode && (
               <div className="p-6 space-y-6 font-bold text-xs">
-                <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 border-b border-slate-100/50 pb-3">
                   <BarChart2 className="w-5 h-5 text-indigo-600" />
                   <div>
                     <h3 className="text-sm font-black text-slate-800">گزارش و آمارهای گفتاری جلسه</h3>
@@ -819,24 +819,24 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="p-4 bg-slate-50/20 border border-slate-100 rounded-2xl space-y-2 shadow-3xs">
+                  <Card className="p-4 bg-slate-50/20 border border-slate-100/80 rounded-2xl space-y-2 shadow-3xs">
                     <span className="text-[10px] text-slate-400 block font-black">کل کلمات رونوشت شده</span>
                     <span className="text-base font-black text-slate-800">{toPersianDigits(recording.segments ? recording.segments.reduce((sum, s) => sum + s.text.split(' ').length, 0) : 120)} کلمه</span>
                   </Card>
 
-                  <Card className="p-4 bg-slate-50/20 border border-slate-100 rounded-2xl space-y-2 shadow-3xs">
+                  <Card className="p-4 bg-slate-50/20 border border-slate-100/80 rounded-2xl space-y-2 shadow-3xs">
                     <span className="text-[10px] text-slate-400 block font-black">دقت تشخیص کلمات (Confidence)</span>
                     <span className="text-base font-black text-slate-800">{toPersianDigits('98.7')}٪</span>
                   </Card>
 
-                  <Card className="p-4 bg-slate-50/20 border border-slate-100 rounded-2xl space-y-2 shadow-3xs">
+                  <Card className="p-4 bg-slate-50/20 border border-slate-100/80 rounded-2xl space-y-2 shadow-3xs">
                     <span className="text-[10px] text-slate-400 block font-black">سرعت متوسط ادای گوینده</span>
                     <span className="text-base font-black text-slate-800">{toPersianDigits(135)} کلمه در دقیقه</span>
                   </Card>
                 </div>
 
                 {/* Additional stats illustration */}
-                <div className="bg-slate-50/20 border border-slate-100 p-5 rounded-2xl space-y-4 shadow-3xs">
+                <div className="bg-slate-50/20 border border-slate-100/80 p-5 rounded-2xl space-y-4 shadow-3xs">
                   <h4 className="text-xs font-black text-slate-800">تفکیک سهم زمانی گویندگان</h4>
                   
                   <div className="space-y-3 text-[11px] font-bold">
@@ -874,7 +874,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
       {/* RENAME MODAL */}
       {isRenameOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 select-none">
-          <form onSubmit={handleRename} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xl max-w-sm w-full text-right space-y-4 animate-in zoom-in-95 duration-200">
+          <form onSubmit={handleRename} className="bg-white rounded-3xl p-6 border border-slate-200/50 shadow-xl max-w-sm w-full text-right space-y-4 animate-in zoom-in-95 duration-200">
             <h3 className="text-sm font-black text-slate-900">ویرایش نام فایل ضبط شده</h3>
             <div className="space-y-1">
               <label className="text-[10px] text-slate-400 font-bold block">نام جدید جلسه</label>
@@ -882,14 +882,14 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                 type="text"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                className="w-full text-right bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl px-4 py-2 text-xs font-bold outline-none"
+                className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-indigo-500 focus:bg-white rounded-xl px-4 py-2 text-xs font-bold outline-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-3 pt-2 font-bold text-xs">
               <button
                 type="button"
                 onClick={() => setIsRenameOpen(false)}
-                className="px-4 py-2 bg-slate-100 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-200 transition-all cursor-pointer"
+                className="px-4 py-2 bg-slate-100 border border-slate-200/50 text-slate-700 rounded-xl hover:bg-slate-200 transition-all cursor-pointer"
               >
                 انصراف
               </button>
@@ -907,8 +907,8 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
       {/* DELETE CONFIRMATION MODAL */}
       {isDeleteOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 select-none">
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xl max-w-sm w-full text-center space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 bg-rose-50 border border-rose-100 rounded-2xl flex items-center justify-center text-rose-600 mx-auto">
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/50 shadow-xl max-w-sm w-full text-center space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 bg-rose-50 border border-rose-100/60 rounded-2xl flex items-center justify-center text-rose-600 mx-auto">
               <Trash2 className="w-6 h-6" />
             </div>
             
@@ -922,7 +922,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
             <div className="grid grid-cols-2 gap-3 pt-2 font-bold text-xs">
               <button
                 onClick={() => setIsDeleteOpen(false)}
-                className="px-4 py-2 bg-slate-100 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-200 transition-all cursor-pointer"
+                className="px-4 py-2 bg-slate-100 border border-slate-200/50 text-slate-700 rounded-xl hover:bg-slate-200 transition-all cursor-pointer"
               >
                 انصراف
               </button>

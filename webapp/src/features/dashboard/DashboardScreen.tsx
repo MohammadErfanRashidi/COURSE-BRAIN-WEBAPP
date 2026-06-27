@@ -275,7 +275,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         </div>
 
         {/* Search Bar Skeleton */}
-        <div className="border border-slate-100 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+        <div className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
           <div className="h-11.5 bg-slate-50 border border-slate-100/50 rounded-2xl animate-pulse flex items-center justify-end px-3.5">
             <div className="w-4.5 h-4.5 bg-slate-250 rounded-full" />
           </div>
@@ -284,7 +284,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         {/* Card Stats Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="border border-slate-100 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between min-h-[115px]">
+            <div key={i} className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between min-h-[115px]">
               <div className="flex items-center justify-between">
                 {/* Text on right (start), Icon on left (end) */}
                 <div className="h-3.5 w-24 bg-slate-150 animate-pulse rounded-md" />
@@ -309,23 +309,23 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
             <div className="space-y-3.5">
               {[1, 2, 3].map(i => (
-                <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-slate-100 rounded-3xl shadow-[0_4px_12px_-4px_rgba(0,0,0,0.02)] gap-4">
+                <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-slate-100/80 rounded-3xl shadow-[0_4px_12px_-4px_rgba(0,0,0,0.02)] gap-4">
                   {/* Right side info (RTL flow) */}
                   <div className="flex items-center gap-3.5 flex-1 min-w-0">
                     <div className="w-12 h-12 bg-slate-100 border border-slate-100/50 rounded-2xl animate-pulse shrink-0" />
                     <div className="space-y-2 flex-1 min-w-0 text-right">
                       <div className="h-3.5 w-48 bg-slate-200 animate-pulse rounded-md" />
                       <div className="flex gap-2">
-                        <div className="h-5 w-20 bg-slate-50 border border-slate-100 rounded-xl" />
-                        <div className="h-5 w-16 bg-slate-50 border border-slate-100 rounded-xl" />
+                        <div className="h-5 w-20 bg-slate-50 border border-slate-100/80 rounded-xl" />
+                        <div className="h-5 w-16 bg-slate-50 border border-slate-100/80 rounded-xl" />
                       </div>
                     </div>
                   </div>
 
                   {/* Left side actions (RTL flow) */}
                   <div className="flex items-center gap-3.5 shrink-0">
-                    <div className="h-5 w-16 bg-slate-100 border border-slate-100 rounded-full" />
-                    <div className="h-8 w-8 bg-slate-50 border border-slate-100 rounded-xl" />
+                    <div className="h-5 w-16 bg-slate-100 border border-slate-100/80 rounded-full" />
+                    <div className="h-8 w-8 bg-slate-50 border border-slate-100/80 rounded-xl" />
                   </div>
                 </div>
               ))}
@@ -338,7 +338,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
             <div className="grid grid-cols-1 gap-3">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
+                <div key={i} className="flex items-center justify-between p-4 bg-white border border-slate-100/80 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 bg-slate-100 border border-slate-100/50 rounded-xl animate-pulse shrink-0" />
                     <div className="space-y-1.5 text-right">
@@ -436,7 +436,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
       </div>
 
       {/* Global Search Bar */}
-      <Card className="border border-slate-100 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] text-right space-y-4">
+      <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] text-right space-y-4">
         <div className="group relative w-full transition-all duration-300 ease-in-out hover:-translate-y-[2px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.02)] focus-within:shadow-[0_12px_24px_rgba(79,70,229,0.03)] focus-within:-translate-y-[2px] active:scale-[0.995] rounded-2xl">
           <input
             type="text"
@@ -460,7 +460,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                     <div 
                       key={cls.id}
                       onClick={() => onNavigate('classes', { openClassId: cls.id })}
-                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
+                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
                     >
                       <div className="flex items-center gap-2">
                         <BookOpen className="w-4 h-4 text-indigo-500 shrink-0" />
@@ -482,7 +482,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                     <div 
                       key={rec.id}
                       onClick={() => onNavigate('classes', { openClassId: rec.classId })}
-                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
+                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
                     >
                       <div className="flex items-center gap-2">
                         <Mic className="w-4 h-4 text-indigo-500 shrink-0" />
@@ -515,7 +515,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                           usePlayerStore.getState().triggerSeek(snippet.segment.start);
                         }, 300);
                       }}
-                      className="p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs text-slate-750 space-y-1.5 text-right"
+                      className="p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs text-slate-750 space-y-1.5 text-right"
                     >
                       <div className="flex items-center justify-between text-[10px] font-bold text-slate-400">
                         <div className="flex items-center gap-1 text-indigo-600">
@@ -554,7 +554,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400">سهمیه ضبط صوتی این ماه</span>
-            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
+            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
@@ -587,7 +587,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400">ظرفیت باقی‌مانده هوش مصنوعی</span>
-            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
+            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
@@ -616,7 +616,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400">ظرفیت کلاس‌های باقی‌مانده</span>
-            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center">
+            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <BookOpen className="w-4 h-4" />
             </div>
           </div>
@@ -651,10 +651,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             <span className="text-xs font-bold text-slate-400">اعتبار زمانی اشتراک</span>
             <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
               !hasSubscription 
-                ? 'bg-slate-50 border-slate-100 text-slate-400' 
+                ? 'bg-slate-50 border-slate-100/80 text-slate-400' 
                 : isExpired 
-                  ? 'bg-rose-50 border-rose-100 text-rose-600' 
-                  : 'bg-emerald-50 border-emerald-100 text-emerald-600'
+                  ? 'bg-rose-50 border-rose-100/60 text-rose-600' 
+                  : 'bg-emerald-50 border-emerald-100/60 text-emerald-600'
             }`}>
               <ShieldCheck className="w-4 h-4" />
             </div>
@@ -707,7 +707,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           </div>
 
           {recentChats.length === 0 ? (
-            <Card className="border border-slate-100 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] p-8 text-center">
+            <Card className="border border-slate-100/80 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] p-8 text-center">
               <div className="py-10 space-y-4">
                 <div className="w-14 h-14 bg-slate-50/50 border border-slate-100/80 rounded-2xl flex items-center justify-center mx-auto text-slate-400 shadow-[0_4px_12px_rgba(0,0,0,0.01)] animate-pulse">
                   <MessageSquare className="w-6 h-6 text-slate-400" />
@@ -745,7 +745,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                     }}
                     tabIndex={0}
                     aria-label={`گفتگو در کلاس ${chat.className}`}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-slate-100 hover:border-indigo-100/70 rounded-3xl shadow-[0_4px_12px_-4px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition-all duration-300 cursor-pointer group text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/80 focus-visible:ring-offset-2 gap-4"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-slate-100/80 hover:border-indigo-100/70 rounded-3xl shadow-[0_4px_12px_-4px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] transition-all duration-300 cursor-pointer group text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/80 focus-visible:ring-offset-2 gap-4"
                   >
                     {/* Right side info (RTL flow) */}
                     <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
@@ -767,7 +767,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                     </div>
 
                     {/* Left side actions & metadata */}
-                    <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-3 sm:pt-0 border-t border-slate-100 sm:border-0">
+                    <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-3 sm:pt-0 border-t border-slate-100/50 sm:border-0">
                       {/* Interaction Badge */}
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[9px] font-black border border-indigo-100/50 bg-indigo-50/30 text-indigo-600 transition-all duration-300 shadow-sm shadow-indigo-100/10">
                         <span>ادامه گفتگو</span>
@@ -779,7 +779,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                           {getRelativePersianTime(chat.lastInteractedAt)}
                         </span>
                         
-                        <div className="w-8 h-8 bg-slate-50/60 border border-slate-100 text-slate-400 group-hover:text-indigo-600 group-hover:bg-indigo-50/80 group-hover:border-indigo-100/60 rounded-xl flex items-center justify-center transition-all duration-300 shadow-xs">
+                        <div className="w-8 h-8 bg-slate-50/60 border border-slate-100/80 text-slate-400 group-hover:text-indigo-600 group-hover:bg-indigo-50/80 group-hover:border-indigo-100/60 rounded-xl flex items-center justify-center transition-all duration-300 shadow-xs">
                           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
                         </div>
                       </div>
@@ -800,7 +800,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* Create Class */}
             <button
               onClick={onCreateClassTrigger}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100 rounded-2xl hover:border-indigo-100 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
@@ -817,7 +817,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* Record Lecture */}
             <button
               onClick={() => onNavigate('record', { focusRecord: true })}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100 rounded-2xl hover:border-indigo-100 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
@@ -834,7 +834,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* Upload Audio */}
             <button
               onClick={() => onNavigate('record', { focusUpload: true })}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100 rounded-2xl hover:border-indigo-100 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
@@ -851,7 +851,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* View Subscription */}
             <button
               onClick={() => onNavigate('subscription')}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100 rounded-2xl hover:border-indigo-100 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">

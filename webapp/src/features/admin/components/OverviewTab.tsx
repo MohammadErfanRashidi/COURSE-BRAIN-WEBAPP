@@ -58,46 +58,46 @@ export const OverviewTab: React.FC = () => {
       {/* 1. TOP KPI Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        <Card className="p-5 border border-slate-200/80 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">کل کاربران پلتفرم</span>
             <span className="text-xl font-black text-slate-800">{toPersianDigits(1240)} نفر</span>
             <span className="text-[9px] text-emerald-600 font-bold block">▲ ۱۲٪ نسبت به هفته گذشته</span>
           </div>
-          <div className="w-10 h-10 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
             <Users className="w-5 h-5" />
           </div>
         </Card>
 
-        <Card className="p-5 border border-slate-200/80 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">کاربران فعال امروز (DAU)</span>
             <span className="text-xl font-black text-slate-800">{toPersianDigits(342)} کاربر</span>
             <span className="text-[9px] text-indigo-600 font-bold block">۹۴٪ نرخ تعامل تحصیلی</span>
           </div>
-          <div className="w-10 h-10 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
             <Activity className="w-5 h-5" />
           </div>
         </Card>
 
-        <Card className="p-5 border border-slate-200/80 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">درآمد ناخالص این ماه</span>
             <span className="text-xl font-black text-slate-800">{toPersianDigits('۷۸,۹۰۰,۰۰۰')} تومان</span>
             <span className="text-[9px] text-emerald-600 font-bold block">▲ ۱۸٪ رشد حق اشتراک‌ها</span>
           </div>
-          <div className="w-10 h-10 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
             <DollarSign className="w-5 h-5" />
           </div>
         </Card>
 
-        <Card className="p-5 border border-slate-200/80 bg-white rounded-2xl flex items-center justify-between">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">سرعت پردازش هوش مصنوعی</span>
             <span className="text-xl font-black text-slate-800">{toPersianDigits(metrics.aiLatency)} میلی‌ثانیه</span>
             <span className="text-[9px] text-slate-400 font-bold block">تاخیر استریم عاری از خطا</span>
           </div>
-          <div className="w-10 h-10 bg-amber-50 border border-amber-100 text-amber-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 bg-amber-50 border border-amber-100/60 text-amber-600 rounded-xl flex items-center justify-center shrink-0">
             <Zap className="w-5 h-5" />
           </div>
         </Card>
@@ -131,8 +131,8 @@ export const OverviewTab: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* SVG Sales & Ingestion Graph (Left, spanning 2 columns) */}
-        <Card className="lg:col-span-2 p-5 border border-slate-200/80 bg-white rounded-2xl text-right space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <Card className="lg:col-span-2 p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100/50 pb-3">
             <div>
               <h4 className="text-xs font-black text-slate-800">روند خرید اشتراک و عضویت‌های جدید</h4>
               <span className="text-[9px] text-slate-400 font-bold block mt-0.5">آمار ثبت‌نام و خرید لایسنس در ۷ روز اخیر</span>
@@ -182,7 +182,7 @@ export const OverviewTab: React.FC = () => {
             </svg>
             
             {/* Days label row */}
-            <div className="flex justify-between text-[9px] text-slate-400 font-bold px-1.5 pt-1 border-t border-slate-100">
+            <div className="flex justify-between text-[9px] text-slate-400 font-bold px-1.5 pt-1 border-t border-slate-100/50">
               <span>شنبه</span>
               <span>یک‌شنبه</span>
               <span>دوشنبه</span>
@@ -195,7 +195,7 @@ export const OverviewTab: React.FC = () => {
         </Card>
 
         {/* Server Performance Meters (Right) */}
-        <Card className="p-5 border border-slate-200/80 bg-white rounded-2xl text-right space-y-4">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
           <div>
             <h4 className="text-xs font-black text-slate-800">منابع سخت‌افزاری سرور</h4>
             <span className="text-[9px] text-slate-400 font-bold block mt-0.5">میزان مصرف پردازنده، رم و فضای ذخیره‌سازی محلی</span>
@@ -245,7 +245,7 @@ export const OverviewTab: React.FC = () => {
             </div>
 
             {/* Micro Details */}
-            <div className="grid grid-cols-2 gap-2 text-[9px] text-slate-400 font-bold border-t border-slate-100 pt-3">
+            <div className="grid grid-cols-2 gap-2 text-[9px] text-slate-400 font-bold border-t border-slate-100/50 pt-3">
               <div>پایگاه داده: <span className="text-slate-700 font-extrabold">{toPersianDigits(metrics.postgresDbSize)}</span></div>
               <div>مجموع کالکشن‌ها: <span className="text-slate-700 font-extrabold">{toPersianDigits(metrics.chromaCollectionCount)} مجموعه</span></div>
             </div>
@@ -259,8 +259,8 @@ export const OverviewTab: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* Most Active Universities */}
-        <Card className="p-4 border border-slate-200/80 bg-white rounded-2xl text-right space-y-3">
-          <div className="flex items-center gap-2 text-indigo-600 border-b border-slate-100 pb-2">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl text-right space-y-3">
+          <div className="flex items-center gap-2 text-indigo-600 border-b border-slate-100/50 pb-2">
             <GraduationCap className="w-4.5 h-4.5" />
             <span className="text-xs font-black text-slate-800">دانشگاه‌های برتر فعال</span>
           </div>
@@ -280,8 +280,8 @@ export const OverviewTab: React.FC = () => {
         </Card>
 
         {/* Most Active Subjects */}
-        <Card className="p-4 border border-slate-200/80 bg-white rounded-2xl text-right space-y-3">
-          <div className="flex items-center gap-2 text-indigo-600 border-b border-slate-100 pb-2">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl text-right space-y-3">
+          <div className="flex items-center gap-2 text-indigo-600 border-b border-slate-100/50 pb-2">
             <BookOpen className="w-4.5 h-4.5" />
             <span className="text-xs font-black text-slate-800">پرطرفدارترین دروس تخصصی</span>
           </div>
@@ -301,8 +301,8 @@ export const OverviewTab: React.FC = () => {
         </Card>
 
         {/* Live Counters / System Speeds */}
-        <Card className="p-4 border border-slate-200/80 bg-white rounded-2xl text-right space-y-3">
-          <div className="flex items-center gap-2 text-indigo-600 border-b border-slate-100 pb-2">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl text-right space-y-3">
+          <div className="flex items-center gap-2 text-indigo-600 border-b border-slate-100/50 pb-2">
             <Clock className="w-4.5 h-4.5" />
             <span className="text-xs font-black text-slate-800">سرعت پردازش فایل‌های صوتی</span>
           </div>

@@ -47,40 +47,40 @@ export const DatabaseTab: React.FC = () => {
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
-        <Card className="p-4 border border-slate-200 bg-white rounded-2xl">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-black text-slate-400 block">پایگاه داده PostgreSQL</span>
               <span className="text-sm font-black text-slate-800">۱۸.۴ مگابایت مصرف هارد</span>
               <span className="text-[9px] text-emerald-600 font-bold block">۹ اتصـال فعال (تست شده)</span>
             </div>
-            <div className="w-9 h-9 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
               <Database className="w-4.5 h-4.5" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 border border-slate-200 bg-white rounded-2xl">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-black text-slate-400 block">موتور برداری ChromaDB</span>
               <span className="text-sm font-black text-slate-800">۶ کالکشن تخصصی فعال</span>
               <span className="text-[9px] text-indigo-600 font-bold block">۳۴,۵۰۰ قطعه امبدینگ ثبت شده</span>
             </div>
-            <div className="w-9 h-9 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
               <Layers className="w-4.5 h-4.5" />
             </div>
           </div>
         </Card>
 
-        <Card className="p-4 border border-slate-200 bg-white rounded-2xl">
+        <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-[10px] font-black text-slate-400 block">متوسط پاسخ بازیابی (RAG)</span>
               <span className="text-sm font-black text-slate-800">۱۴۰ میلی‌ثانیه جستجوی برداری</span>
               <span className="text-[9px] text-emerald-600 font-bold block">نرخ بازخوانی درست: ۹۹.۴٪</span>
             </div>
-            <div className="w-9 h-9 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
               <Activity className="w-4.5 h-4.5" />
             </div>
           </div>
@@ -91,8 +91,8 @@ export const DatabaseTab: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* ChromaDB Collections */}
-        <Card className="p-5 border border-slate-200 bg-white rounded-2xl text-right space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100/50 pb-3">
             <div>
               <h4 className="text-xs font-black text-slate-800">کالکشن‌های هوشمند ChromaDB</h4>
               <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مدیریت لایبرری‌ها، دسته‌بندی و کوئری بردارها</span>
@@ -120,8 +120,8 @@ export const DatabaseTab: React.FC = () => {
                 onClick={() => setSelectedCollection(col.name)}
                 className={`p-3 border rounded-xl flex items-center justify-between text-xs font-bold cursor-pointer transition-all ${
                   selectedCollection === col.name 
-                    ? 'bg-indigo-50/50 border-indigo-200 text-indigo-900' 
-                    : 'bg-slate-50/50 border-slate-150 hover:bg-slate-50 text-slate-700'
+                    ? 'bg-indigo-50/50 border-indigo-200/50 text-indigo-900' 
+                    : 'bg-slate-50/50 border-slate-200/40 hover:bg-slate-50 text-slate-700'
                 }`}
               >
                 <div>
@@ -151,13 +151,13 @@ export const DatabaseTab: React.FC = () => {
         </Card>
 
         {/* PostgreSQL Sizing & Slow queries */}
-        <Card className="p-5 border border-slate-200 bg-white rounded-2xl text-right space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100/50 pb-3">
             <div>
               <h4 className="text-xs font-black text-slate-800">کوئری‌های کند و ابزارهای عیب‌یابی SQL</h4>
               <span className="text-[9px] text-slate-400 font-bold block mt-0.5">رصد کوئری‌های پرهزینه بالای ۱.۵ ثانیه</span>
             </div>
-            <span className="text-[9px] bg-amber-50 text-amber-700 border border-amber-100 px-2.5 py-1 rounded-md font-bold flex items-center gap-1">
+            <span className="text-[9px] bg-amber-50 text-amber-700 border border-amber-100/60 px-2.5 py-1 rounded-md font-bold flex items-center gap-1">
               <AlertTriangle className="w-3.5 h-3.5" />
               <span>۲ هشدار بهینه‌سازی</span>
             </span>
@@ -165,12 +165,12 @@ export const DatabaseTab: React.FC = () => {
 
           <div className="space-y-3">
             {slowQueryLog.map((log) => (
-              <div key={log.id} className="p-3 bg-rose-50/40 border border-rose-100 rounded-xl space-y-2">
+              <div key={log.id} className="p-3 bg-rose-50/40 border border-rose-100/60 rounded-xl space-y-2">
                 <div className="flex items-center justify-between text-[10px] font-bold">
                   <span className="text-rose-600 bg-rose-100/50 px-1.5 py-0.5 rounded-sm">تاخیر: {toPersianDigits(log.duration)}</span>
                   <span className="text-slate-400 font-semibold">{log.timestamp}</span>
                 </div>
-                <p className="text-[10px] font-mono text-slate-600 bg-white p-2 border border-slate-150 rounded-lg overflow-x-auto whitespace-pre-wrap leading-relaxed text-left" dir="ltr">
+                <p className="text-[10px] font-mono text-slate-600 bg-white p-2 border border-slate-200/40 rounded-lg overflow-x-auto whitespace-pre-wrap leading-relaxed text-left" dir="ltr">
                   {log.query}
                 </p>
                 <div className="text-[9px] text-slate-400 font-bold flex items-center justify-between">
@@ -181,7 +181,7 @@ export const DatabaseTab: React.FC = () => {
             ))}
           </div>
 
-          <div className="bg-slate-50 border border-slate-150 p-3 rounded-xl flex items-center justify-between text-xs font-bold text-slate-700">
+          <div className="bg-slate-50 border border-slate-200/40 p-3 rounded-xl flex items-center justify-between text-xs font-bold text-slate-700">
             <span>بررسی وضعیت دوره‌ای جداول (VACUUM ANALYZE)</span>
             <button className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-[10px] font-black cursor-pointer transition-colors">
               اجرا

@@ -149,7 +149,7 @@ export const KnowledgeBaseTab: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Upload Ingestion Control (Left, 1 column) */}
-        <Card className="p-5 border border-slate-200 bg-white rounded-2xl text-right space-y-4">
+        <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
           <div>
             <h4 className="text-xs font-black text-slate-800">بارگذاری و ایندکس کتاب جدید</h4>
             <span className="text-[9px] text-slate-400 font-bold block mt-0.5">افزودن خودکار مرجع آموزشی جدید به پایگاه دانش هوش مصنوعی</span>
@@ -164,7 +164,7 @@ export const KnowledgeBaseTab: React.FC = () => {
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="مثال: طراحی الگوریتم نیپولیتان"
-                className="w-full text-right bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl px-3.5 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-300 text-slate-800"
+                className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-indigo-500 focus:bg-white rounded-xl px-3.5 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-300 text-slate-800"
                 required
               />
             </div>
@@ -175,7 +175,7 @@ export const KnowledgeBaseTab: React.FC = () => {
                 <select
                   value={newSubject}
                   onChange={(e) => setNewSubject(e.target.value)}
-                  className="w-full text-right bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-xs font-bold text-slate-700 outline-none"
+                  className="w-full text-right bg-slate-50 border border-slate-200/50 rounded-xl px-2 py-2 text-xs font-bold text-slate-700 outline-none"
                 >
                   <option value="مهندسی کامپیوتر">کامپیوتر</option>
                   <option value="پزشکی عمومی">پزشکی</option>
@@ -191,7 +191,7 @@ export const KnowledgeBaseTab: React.FC = () => {
                   value={newVersion}
                   onChange={(e) => setNewVersion(e.target.value)}
                   placeholder="ویرایش نهم"
-                  className="w-full text-right bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold outline-none placeholder:text-slate-300 text-slate-800"
+                  className="w-full text-right bg-slate-50 border border-slate-200/50 rounded-xl px-3 py-2 text-xs font-bold outline-none placeholder:text-slate-300 text-slate-800"
                 />
               </div>
             </div>
@@ -200,7 +200,7 @@ export const KnowledgeBaseTab: React.FC = () => {
             <div className="space-y-1 pt-1">
               <label className="text-[10px] font-bold text-slate-500 block">فایل کتاب درسی (PDF):</label>
               {selectedFile ? (
-                <div className="p-3 bg-indigo-50/60 border border-indigo-150 rounded-xl flex items-center justify-between text-xs font-bold text-indigo-900">
+                <div className="p-3 bg-indigo-50/60 border border-indigo-100/60 rounded-xl flex items-center justify-between text-xs font-bold text-indigo-900">
                   <div className="flex items-center gap-1.5">
                     <FileCheck className="w-4 h-4 text-indigo-600" />
                     <span>{selectedFile}</span>
@@ -211,7 +211,7 @@ export const KnowledgeBaseTab: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedFile('algorithm_design_clrs_4th.pdf')}
-                  className="w-full border-2 border-dashed border-slate-200 hover:border-indigo-400 py-6 rounded-2xl flex flex-col items-center justify-center text-slate-450 hover:text-indigo-600 transition-all cursor-pointer bg-slate-50/50"
+                  className="w-full border-2 border-dashed border-slate-200/50 hover:border-indigo-400 py-6 rounded-2xl flex flex-col items-center justify-center text-slate-450 hover:text-indigo-600 transition-all cursor-pointer bg-slate-50/50"
                 >
                   <UploadCloud className="w-8 h-8 mb-1" />
                   <span className="text-[10px] font-black">انتخاب و کشیدن فایل کتاب به اینجا</span>
@@ -232,7 +232,7 @@ export const KnowledgeBaseTab: React.FC = () => {
 
           {/* Live Ingestion Steps Tracker */}
           {uploadProgress !== null && (
-            <div className="p-4 bg-slate-50 border border-indigo-100 rounded-2xl space-y-3 animate-in slide-in-from-bottom-2">
+            <div className="p-4 bg-slate-50 border border-indigo-100/60 rounded-2xl space-y-3 animate-in slide-in-from-bottom-2">
               <div className="flex items-center justify-between">
                 <span className="text-[9px] font-black text-indigo-600">روند ثبت در بردارها</span>
                 <span className="text-[10px] font-mono text-slate-800 font-bold">{toPersianDigits(uploadProgress)}٪</span>
@@ -250,7 +250,7 @@ export const KnowledgeBaseTab: React.FC = () => {
         </Card>
 
         {/* Existing Textbook knowledge list (Right, 2 columns) */}
-        <Card className="lg:col-span-2 p-5 border border-slate-200 bg-white rounded-2xl text-right space-y-4">
+        <Card className="lg:col-span-2 p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
           <div>
             <h4 className="text-xs font-black text-slate-800">کتاب‌های مرجع ایندکس شده در سیستم</h4>
             <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مشاهده حجم اطلاعات، تعداد قطعات (Chunks) و نسخه‌های فعال</span>
@@ -258,24 +258,24 @@ export const KnowledgeBaseTab: React.FC = () => {
 
           <div className="space-y-3.5 max-h-[420px] overflow-y-auto pr-1">
             {textbooks.map((b) => (
-              <div key={b.id} className="p-4 border border-slate-150 bg-slate-50/50 hover:bg-white rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
+              <div key={b.id} className="p-4 border border-slate-200/40 bg-slate-50/50 hover:bg-white rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="space-y-1">
                     <h5 className="text-xs font-black text-slate-900">{b.title}</h5>
                     <div className="flex flex-wrap gap-2 text-[9px] font-bold">
-                      <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-md border border-indigo-100">رشته: {b.subject}</span>
+                      <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded-md border border-indigo-100/60">رشته: {b.subject}</span>
                       <span className="text-slate-400">فایل: {b.fileName} ({toPersianDigits(b.fileSize)} مگابایت)</span>
                       <span className="text-slate-400">نسخه: {b.version}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100">
+                <div className="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100/50">
                   <div className="text-right sm:text-left">
-                    <span className="text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md font-bold block">
+                    <span className="text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-100/60 px-2 py-0.5 rounded-md font-bold block">
                       ایندکس کامل ({toPersianDigits(b.chunkCount)} قطعه)
                     </span>
                     <span className="text-[9px] text-slate-400 block mt-1 font-semibold">ثبت در {toPersianDigits(b.uploadedAt)}</span>
@@ -283,7 +283,7 @@ export const KnowledgeBaseTab: React.FC = () => {
 
                   <button
                     onClick={() => handleDeleteBook(b.id)}
-                    className="w-7 h-7 text-slate-400 hover:bg-rose-50 hover:text-rose-600 rounded-lg flex items-center justify-center border border-slate-150 hover:border-rose-100 transition-colors cursor-pointer"
+                    className="w-7 h-7 text-slate-400 hover:bg-rose-50 hover:text-rose-600 rounded-lg flex items-center justify-center border border-slate-200/40 hover:border-rose-100/60 transition-colors cursor-pointer"
                     title="حذف کتاب و امبدینگ‌ها"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

@@ -200,7 +200,7 @@ export const OtpScreen: React.FC<OtpScreenProps> = ({
                 disabled={isLoading}
                 className={`
                   w-12 h-13 text-center text-xl font-bold bg-slate-50 border rounded-2xl outline-none transition-all duration-150
-                  ${digit ? 'border-indigo-600 bg-white ring-2 ring-indigo-500/5 text-slate-900' : 'border-slate-200 text-slate-500'}
+                  ${digit ? 'border-indigo-600 bg-white ring-2 ring-indigo-500/5 text-slate-900' : 'border-slate-200/50 text-slate-500'}
                   ${activeError ? 'border-rose-400 ring-2 ring-rose-500/5' : 'focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10'}
                 `}
               />
@@ -232,7 +232,7 @@ export const OtpScreen: React.FC<OtpScreenProps> = ({
         </form>
 
         {/* Resend Action Footer */}
-        <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between text-xs">
+        <div className="mt-8 pt-6 border-t border-slate-100/50 flex items-center justify-between text-xs">
           {timer > 0 ? (
             <span className="text-slate-400 flex items-center gap-1.5 font-medium">
               <span>ارسال مجدد کد پس از:</span>

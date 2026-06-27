@@ -141,12 +141,12 @@ export const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ onBa
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 flex gap-6 text-right font-sans relative">
           
           {/* 1. DESKTOP SIDEBAR */}
-          <aside className="w-64 shrink-0 bg-white border border-slate-200/80 rounded-3xl p-5 shadow-sm hidden md:flex flex-col justify-between min-h-[70vh] sticky top-24 self-start">
+          <aside className="w-64 shrink-0 bg-white border border-slate-200/50 rounded-3xl p-5 shadow-sm hidden md:flex flex-col justify-between min-h-[70vh] sticky top-24 self-start">
             <div className="space-y-6">
               
               {/* Admin profile box */}
-              <div className="bg-slate-50 border border-slate-150 p-4 rounded-2xl flex items-center gap-3">
-                <div className="w-10 h-10 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+              <div className="bg-slate-50 border border-slate-200/40 p-4 rounded-2xl flex items-center gap-3">
+                <div className="w-10 h-10 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
                   <Shield className="w-5 h-5 text-indigo-700" />
                 </div>
                 <div className="text-right overflow-hidden">
@@ -183,7 +183,7 @@ export const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ onBa
             </div>
 
             {/* Sidebar Footer details */}
-            <div className="border-t border-slate-100 pt-4 text-center">
+            <div className="border-t border-slate-100/50 pt-4 text-center">
               <span className="text-[8px] text-slate-400 font-extrabold flex items-center justify-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span>اتصال با هسته FastAPI برقرار است</span>
@@ -221,11 +221,11 @@ export const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ onBa
                   onClick={(e) => e.stopPropagation()}
                 >
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100/50">
                     <span className="text-xs font-black text-slate-800">ناوبر ادمین</span>
                     <button 
                       onClick={() => setMobileMenuOpen(false)}
-                      className="w-7 h-7 text-slate-400 hover:bg-slate-50 rounded-lg flex items-center justify-center border border-slate-150 text-sm"
+                      className="w-7 h-7 text-slate-400 hover:bg-slate-50 rounded-lg flex items-center justify-center border border-slate-200/40 text-sm"
                     >
                       ✕
                     </button>
@@ -259,7 +259,7 @@ export const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ onBa
                   </nav>
                 </div>
 
-                <div className="border-t border-slate-100 pt-4 text-center">
+                <div className="border-t border-slate-100/50 pt-4 text-center">
                   <span className="text-[9px] text-slate-400 font-extrabold block">RAYA SECURE OPERATIONS</span>
                 </div>
               </motion.aside>

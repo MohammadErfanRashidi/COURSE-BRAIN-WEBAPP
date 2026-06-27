@@ -81,7 +81,7 @@ export const Select: React.FC<SelectProps> = ({
             ? 'border-rose-200/60 focus:border-rose-500/80 focus:ring-4 focus:ring-rose-500/5' 
             : isOpen 
               ? 'border-indigo-500 ring-4 ring-indigo-500/5 bg-white'
-              : 'border-slate-150 hover:border-slate-200'
+              : 'border-slate-200/40 hover:border-slate-200/60'
           }
         `}
       >
@@ -93,17 +93,17 @@ export const Select: React.FC<SelectProps> = ({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 left-0 top-[calc(100%+6px)] z-50 bg-white border border-slate-100 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] max-h-60 flex flex-col overflow-hidden animate-in fade-in-50 slide-in-from-top-1 duration-150">
+        <div className="absolute right-0 left-0 top-[calc(100%+6px)] z-50 bg-white border border-slate-100/80 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] max-h-60 flex flex-col overflow-hidden animate-in fade-in-50 slide-in-from-top-1 duration-150">
           {/* Search bar inside dropdown */}
           {searchable && (
-            <div className="relative border-b border-slate-100 p-2 bg-slate-50/50 flex items-center">
+            <div className="relative border-b border-slate-100/50 p-2 bg-slate-50/50 flex items-center">
               <Search className="absolute right-4 w-4 h-4 text-slate-400 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="w-full py-1.5 pr-8 pl-8 text-xs bg-white border border-slate-150 rounded-lg outline-none focus:border-indigo-500 font-sans"
+                className="w-full py-1.5 pr-8 pl-8 text-xs bg-white border border-slate-200/40 rounded-lg outline-none focus:border-indigo-500 font-sans"
                 autoFocus
               />
               {searchQuery && (

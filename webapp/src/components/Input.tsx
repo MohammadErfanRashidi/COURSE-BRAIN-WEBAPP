@@ -43,7 +43,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               ${icon ? 'pr-10' : 'pr-5'} pl-5
               ${error 
                 ? 'border-rose-200/60 focus:border-rose-500/80 focus:ring-4 focus:ring-rose-500/5 bg-white' 
-                : 'border-slate-150 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 focus:bg-white'
+                : 'border-slate-200/40 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 focus:bg-white'
               }
               disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200
               ${className}

@@ -28,28 +28,28 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onComplete }) => {
       title: 'سامانه هوشمند کمک‌آموزشی رایا',
       description: 'به Raya خوش آمدید! پلتفرمی تجاری و پیشرفته بر پایه هوش مصنوعی RAG که رفیق شفیق شما در طول نیمسال تحصیلی است. در این پلتفرم می‌توانید ویس کلاس‌ها را پیاده‌سازی و جزوات هوشمند بسازید.',
       icon: <GraduationCap className="w-10 h-10 text-indigo-600 animate-bounce" />,
-      color: 'text-indigo-600 border-indigo-100',
+      color: 'text-indigo-600 border-indigo-100/60',
       bgColor: 'bg-indigo-50/60'
     },
     {
       title: 'ضبط خودکار و پیاده‌سازی ویس استاد',
       description: 'دیگر نیازی به نوشتن جزوه سر کلاس نیست. صدای استاد را در کلاس درس ضبط یا آپلود کنید. موتور قدرتمند پردازش صوتی ما در کسری از ثانیه ویس را به متن تایپ‌شده و ساختاریافته (ترنسکریپشن علمی) تبدیل می‌کند.',
       icon: <Mic className="w-10 h-10 text-indigo-600" />,
-      color: 'text-indigo-600 border-indigo-100',
+      color: 'text-indigo-600 border-indigo-100/60',
       bgColor: 'bg-indigo-50/60'
     },
     {
       title: 'پایگاه برداری و همگام‌سازی کتاب‌ها',
       description: 'متون پیاده‌سازی شده همراه با کتاب‌های مرجع و جزوات، به کدهای برداری (Embeddings) تبدیل شده و در پایگاه داده اختصاصی ChromaDB شما ذخیره می‌شوند تا اطلاعات علمی همواره در دسترس دستیار هوشمند شما باشند.',
       icon: <Database className="w-10 h-10 text-indigo-600" />,
-      color: 'text-indigo-600 border-indigo-100',
+      color: 'text-indigo-600 border-indigo-100/60',
       bgColor: 'bg-indigo-50/60'
     },
     {
       title: 'چت و پاسخ‌دهی دقیق RAG با ارجاع به منبع',
       description: 'در هر زمان با چت‌بات درسی خود گفتگو کنید. دستیار علمی بر اساس رفرنس‌های معتبر کتابخانه و فایل‌های صوتی خودتان پاسخ مستند می‌دهد و بخش دقیق آن را از جزوه یا فصل کتاب برای شما مشخص می‌کند.',
       icon: <MessageSquare className="w-10 h-10 text-indigo-600" />,
-      color: 'text-indigo-600 border-indigo-100',
+      color: 'text-indigo-600 border-indigo-100/60',
       bgColor: 'bg-indigo-50/60'
     }
   ];
@@ -76,7 +76,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onComplete }) => {
 
   return (
     <div className="w-full max-w-lg mx-auto px-4 flex flex-col justify-center min-h-[85vh] font-sans">
-      <Card className="border border-slate-200/80 shadow-2xl shadow-slate-200/50 relative overflow-hidden flex flex-col min-h-[460px]">
+      <Card className="border border-slate-200/50 shadow-2xl shadow-slate-200/50 relative overflow-hidden flex flex-col min-h-[460px]">
         {/* Step counter top-left */}
         <div className="absolute left-6 top-6 bg-slate-100 px-3 py-1 rounded-full text-[10px] font-bold text-slate-500">
           گام {toPersianDigits(currentSlide + 1)} از {toPersianDigits(slides.length)}
@@ -110,7 +110,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onComplete }) => {
         </div>
 
         {/* Navigation Action Panel */}
-        <div className="flex gap-3 pt-4 border-t border-slate-100">
+        <div className="flex gap-3 pt-4 border-t border-slate-100/50">
           {currentSlide > 0 && (
             <Button
               variant="outline"

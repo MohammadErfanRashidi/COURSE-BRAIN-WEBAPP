@@ -59,7 +59,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center font-sans text-right px-4">
-      <div className="w-full max-w-md bg-white border border-slate-200/90 shadow-2xl rounded-3xl overflow-hidden p-6 md:p-8 space-y-6">
+      <div className="w-full max-w-md bg-white border border-slate-200/50 shadow-2xl rounded-3xl overflow-hidden p-6 md:p-8 space-y-6">
         
         {/* Header */}
         <div className="text-center space-y-2">
@@ -71,7 +71,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
         </div>
 
         {error && (
-          <div className="bg-rose-50 border border-rose-100 p-3.5 rounded-2xl text-[11px] text-rose-600 font-bold leading-relaxed flex items-start gap-2 text-right">
+          <div className="bg-rose-50 border border-rose-100/60 p-3.5 rounded-2xl text-[11px] text-rose-600 font-bold leading-relaxed flex items-start gap-2 text-right">
             <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -80,7 +80,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
         {/* 2FA Step */}
         {twoFactorStep && tempAdmin ? (
           <form onSubmit={handleSubmitPin} className="space-y-4">
-            <div className="bg-indigo-50/60 border border-indigo-100 p-3.5 rounded-2xl text-[11px] text-slate-600 leading-relaxed text-right space-y-1.5">
+            <div className="bg-indigo-50/60 border border-indigo-100/60 p-3.5 rounded-2xl text-[11px] text-slate-600 leading-relaxed text-right space-y-1.5">
               <span className="font-black text-indigo-700 block">🔒 تأیید هویت دو مرحله‌ای (2FA) فعال است</span>
               <p className="font-bold text-slate-500">
                 یک رمز پویای یک‌بارمصرف برای ورود به حساب <strong className="text-slate-800">{tempAdmin.fullName}</strong> تولید شد.
@@ -102,7 +102,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
                   value={pinCode}
                   onChange={(e) => setPinCode(e.target.value.replace(/\D/g, ''))}
                   placeholder="------"
-                  className="w-full text-center tracking-[0.5em] bg-slate-50 border border-slate-200 focus:border-slate-900 rounded-xl py-3 text-sm font-black outline-none transition-all placeholder:text-slate-300 text-slate-800"
+                  className="w-full text-center tracking-[0.5em] bg-slate-50 border border-slate-200/50 focus:border-slate-900 rounded-xl py-3 text-sm font-black outline-none transition-all placeholder:text-slate-300 text-slate-800"
                   required
                 />
               </div>
@@ -135,7 +135,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="مثال: superadmin"
-                className="w-full text-right bg-slate-50 border border-slate-200 focus:border-slate-900 focus:bg-white rounded-xl px-4 py-2.5 text-xs font-bold outline-none transition-all placeholder:text-slate-300 text-slate-800"
+                className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-slate-900 focus:bg-white rounded-xl px-4 py-2.5 text-xs font-bold outline-none transition-all placeholder:text-slate-300 text-slate-800"
                 required
               />
             </div>
@@ -148,7 +148,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full text-right bg-slate-50 border border-slate-200 focus:border-slate-900 focus:bg-white rounded-xl pr-4 pl-10 py-2.5 text-xs font-bold outline-none transition-all placeholder:text-slate-300 text-slate-800"
+                  className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-slate-900 focus:bg-white rounded-xl pr-4 pl-10 py-2.5 text-xs font-bold outline-none transition-all placeholder:text-slate-300 text-slate-800"
                   required
                 />
                 <button
@@ -171,8 +171,8 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
 
             {/* Quick credentials Helper list */}
             {showCredentialsHelp && (
-              <div className="bg-slate-50 border border-slate-150 p-3.5 rounded-2xl text-[10px] text-slate-500 leading-relaxed space-y-1.5">
-                <div className="flex items-center justify-between pb-1 border-b border-slate-100">
+              <div className="bg-slate-50 border border-slate-200/40 p-3.5 rounded-2xl text-[10px] text-slate-500 leading-relaxed space-y-1.5">
+                <div className="flex items-center justify-between pb-1 border-b border-slate-100/50">
                   <span className="font-extrabold text-slate-700">💡 راهنمای حساب‌های کارمندان (جهت تست)</span>
                   <button 
                     type="button" 
@@ -194,7 +194,7 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
               </div>
             )}
 
-            <div className="border-t border-slate-100 pt-4 flex items-center justify-center">
+            <div className="border-t border-slate-100/50 pt-4 flex items-center justify-center">
               <button
                 type="button"
                 onClick={onBackToStudentApp}

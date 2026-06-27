@@ -113,7 +113,7 @@ export const AuditLogsTab: React.FC = () => {
       </div>
 
       {/* Log Filters Bar */}
-      <Card className="p-4 border border-slate-200 bg-white rounded-2xl space-y-3">
+      <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl space-y-3">
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
             <input
@@ -121,12 +121,12 @@ export const AuditLogsTab: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="جستجو در متن اقدام، نام ادمین یا آدرس IP..."
-              className="w-full text-right bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white rounded-xl pr-10 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
+              className="w-full text-right bg-slate-50 border border-slate-200/50 focus:border-indigo-500 focus:bg-white rounded-xl pr-10 pl-4 py-2 text-xs font-bold outline-none transition-all placeholder:text-slate-400 text-slate-800"
             />
             <Search className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
           </div>
 
-          <div className="w-full md:w-56 flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5">
+          <div className="w-full md:w-56 flex items-center gap-2 bg-slate-50 border border-slate-200/50 rounded-xl px-3 py-1.5">
             <Filter className="w-4 h-4 text-slate-400" />
             <select
               value={filterRole}
@@ -144,11 +144,11 @@ export const AuditLogsTab: React.FC = () => {
       </Card>
 
       {/* Audit Log Table Grid */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+      <div className="bg-white border border-slate-200/50 rounded-2xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-right border-collapse text-xs font-bold text-slate-700">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
+              <tr className="bg-slate-50 border-b border-slate-200/50 text-[10px] text-slate-400 font-extrabold uppercase tracking-wider">
                 <th className="p-3.5">زمان</th>
                 <th className="p-3.5">اقدام ادمین</th>
                 <th className="p-3.5">شناسه ادمین</th>
@@ -157,7 +157,7 @@ export const AuditLogsTab: React.FC = () => {
                 <th className="p-3.5 text-left">وضعیت</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100/50">
               {filteredLogs.map((log) => (
                 <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="p-3.5 text-slate-500 font-semibold">{toPersianDigits(log.timestamp)}</td>

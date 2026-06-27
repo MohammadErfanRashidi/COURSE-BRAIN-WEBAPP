@@ -61,7 +61,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
 
       <div className="space-y-6">
         {errorMessage && (
-          <div className="p-3.5 bg-rose-50 border border-rose-100 rounded-2xl text-xs text-rose-600 font-semibold text-right">
+          <div className="p-3.5 bg-rose-50 border border-rose-100/60 rounded-2xl text-xs text-rose-600 font-semibold text-right">
             {errorMessage}
           </div>
         )}
@@ -73,7 +73,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
             طرح پیشنهادی مصوب
           </div>
 
-          <div className="pb-5 border-b border-slate-100 text-right">
+          <div className="pb-5 border-b border-slate-100/50 text-right">
             <h2 className="text-base font-extrabold text-slate-800">طرح استاندارد دانشگاهی (تک‌کاربره)</h2>
             <p className="text-xs text-slate-400 mt-1">ویژه همگام‌سازی، ویس، جزوات و چت آزمون دانشگاهی</p>
             
@@ -148,7 +148,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 space-y-3.5">
+          <div className="pt-4 border-t border-slate-100/50 space-y-3.5">
             {/* Real Checkout Portal Simulation */}
             <Button
               onClick={handleDemoActivate}
@@ -168,15 +168,15 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
 
         {/* Security / Quality guarantee footer */}
         <div className="grid grid-cols-3 gap-3.5 text-center">
-          <div className="bg-slate-50/30 border border-slate-100 p-3 rounded-2xl flex flex-col items-center shadow-xs">
+          <div className="bg-slate-50/30 border border-slate-100/80 p-3 rounded-2xl flex flex-col items-center shadow-xs">
             <Activity className="w-4 h-4 text-indigo-600 mb-1.5" />
             <span className="text-[9px] font-bold text-slate-700 block">پایداری سرور ۹۹.۹٪</span>
           </div>
-          <div className="bg-slate-50/30 border border-slate-100 p-3 rounded-2xl flex flex-col items-center shadow-xs">
+          <div className="bg-slate-50/30 border border-slate-100/80 p-3 rounded-2xl flex flex-col items-center shadow-xs">
             <Hourglass className="w-4 h-4 text-indigo-600 mb-1.5" />
             <span className="text-[9px] font-bold text-slate-700 block">فعال‌سازی آنی لایسنس</span>
           </div>
-          <div className="bg-slate-50/30 border border-slate-100 p-3 rounded-2xl flex flex-col items-center shadow-xs">
+          <div className="bg-slate-50/30 border border-slate-100/80 p-3 rounded-2xl flex flex-col items-center shadow-xs">
             <HelpCircle className="w-4 h-4 text-indigo-600 mb-1.5" />
             <span className="text-[9px] font-bold text-slate-700 block">پشتیبانی کامل ترمی</span>
           </div>

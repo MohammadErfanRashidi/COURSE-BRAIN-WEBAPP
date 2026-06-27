@@ -123,13 +123,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
 
         {/* Demo Assistant Mode Toast */}
         {demoCode && (
-          <div className="mt-5 p-4 bg-indigo-50/70 border border-indigo-100 rounded-2xl flex items-start gap-3 animate-in fade-in duration-200">
+          <div className="mt-5 p-4 bg-indigo-50/70 border border-indigo-100/60 rounded-2xl flex items-start gap-3 animate-in fade-in duration-200">
             <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
             <div className="text-right">
               <span className="text-xs font-bold text-indigo-900 block">شبیه‌ساز هوشمند پیامک فعال شد</span>
               <span className="text-[11px] text-indigo-800 mt-1 block leading-relaxed">
                 در حالت پیش‌نمایش، کد تأیید ۶ رقمی برای شماره {toPersianDigits(phoneNumber)} شبیه‌سازی شد: 
-                <strong className="text-sm text-indigo-700 mx-1 bg-white px-2 py-0.5 rounded border border-indigo-200 font-mono font-bold">
+                    <strong className="text-sm text-indigo-700 mx-1 bg-white px-2 py-0.5 rounded border border-indigo-200/50 font-mono font-bold">
                   {toPersianDigits(demoCode)}
                 </strong>
               </span>

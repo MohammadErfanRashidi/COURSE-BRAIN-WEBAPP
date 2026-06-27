@@ -78,7 +78,7 @@ export default function MobileMenu({ navItems, activeTab, onNavigate, onLogout }
       >
         <div className="space-y-6 flex-1 flex flex-col justify-between">
           <div className="space-y-6">
-            <div className="pb-3 border-b border-slate-100 text-right">
+            <div className="pb-3 border-b border-slate-100/50 text-right">
               <span className="text-xs font-black text-slate-800">رایا منو</span>
             </div>
 
@@ -110,13 +110,13 @@ export default function MobileMenu({ navItems, activeTab, onNavigate, onLogout }
           <div className="space-y-4">
             <button
               onClick={handleLogout}
-              className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
+              className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100/80 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
             >
               <LogOut className="w-4 h-4" />
               <span>خروج از حساب</span>
             </button>
 
-            <div className="border-t border-slate-100 pt-4 text-center">
+            <div className="border-t border-slate-100/50 pt-4 text-center">
               <span className="text-[9px] text-slate-400 font-extrabold block">طرح استاندارد فعال</span>
             </div>
 

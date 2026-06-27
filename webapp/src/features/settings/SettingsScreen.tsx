@@ -158,7 +158,7 @@ export const SettingsScreen: React.FC = () => {
         </div>
 
         {/* Form settings panel */}
-        <div className="border border-slate-100 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6">
+        <div className="border border-slate-100/80 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6">
           <div className="h-4 w-36 bg-slate-250 animate-pulse rounded-md" />
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-3">
@@ -182,7 +182,7 @@ export const SettingsScreen: React.FC = () => {
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
       
       {/* Settings Header */}
-      <div className="border-b border-slate-100 pb-5">
+      <div className="border-b border-slate-100/50 pb-5">
         <h1 className="text-xl font-black text-slate-900">تنظیمات سیستم و پروفایل</h1>
         <p className="text-xs text-slate-400 mt-1 font-medium">
           مشخصات علمی دانشگاهی، اولویت‌های نمایش و ابزارهای دسترسی‌پذیری خود را شخصی‌سازی کنید.
@@ -191,14 +191,14 @@ export const SettingsScreen: React.FC = () => {
 
       {/* ERROR / SUCCESS TOASTS */}
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-center gap-3 text-rose-700 text-xs font-bold shadow-xs">
+        <div className="p-4 bg-rose-50 border border-rose-100/60 rounded-2xl flex items-center gap-3 text-rose-700 text-xs font-bold shadow-xs">
           <AlertTriangle className="w-5 h-5 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold shadow-xs">
+        <div className="p-4 bg-emerald-50 border border-emerald-100/60 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold shadow-xs">
           <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
           <span>{successMsg}</span>
         </div>
@@ -209,9 +209,9 @@ export const SettingsScreen: React.FC = () => {
         {/* RIGHT COLUMN: PROFILE & ACADEMIC FORM */}
         <div className="lg:col-span-2 space-y-6">
           <form onSubmit={handleSaveProfile}>
-            <Card className="border border-slate-100 bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6">
+            <Card className="border border-slate-100/80 bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6">
               
-              <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2 pb-3 border-b border-slate-100/50">
                 <UserIcon className="w-5 h-5 text-indigo-600" />
                 <h3 className="text-xs font-black text-slate-800">مشخصات تحصیلی و شناسنامه‌ای</h3>
               </div>
@@ -227,7 +227,7 @@ export const SettingsScreen: React.FC = () => {
                     onChange={(e) => setFullName(e.target.value)}
                     required
                     placeholder="مثال: امیرحسین علوی"
-                    className="w-full bg-white border border-slate-150/60 rounded-xl px-4 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
+                    className="w-full bg-white border border-slate-200/40 rounded-xl px-4 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
                   />
                 </div>
 
@@ -237,7 +237,7 @@ export const SettingsScreen: React.FC = () => {
                   <select
                     value={selectedDegree}
                     onChange={(e) => setSelectedDegree(e.target.value)}
-                    className="w-full bg-white border border-slate-150/60 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
+                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
                   >
                     <option value="associate">کاردانی</option>
                     <option value="bachelor">کارشناسی (لیسانس)</option>
@@ -253,7 +253,7 @@ export const SettingsScreen: React.FC = () => {
                     value={selectedUniversity}
                     onChange={(e) => setSelectedUniversity(e.target.value)}
                     required
-                    className="w-full bg-white border border-slate-150/60 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
+                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
                   >
                     <option value="">-- انتخاب دانشگاه --</option>
                     {universities.map((uni) => (
@@ -269,7 +269,7 @@ export const SettingsScreen: React.FC = () => {
                     value={selectedMajor}
                     onChange={(e) => setSelectedMajor(e.target.value)}
                     required
-                    className="w-full bg-white border border-slate-150/60 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
+                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
                   >
                     <option value="">-- انتخاب رشته تحصیلی --</option>
                     {majors.map((mj) => (
@@ -285,7 +285,7 @@ export const SettingsScreen: React.FC = () => {
                     value={selectedSemester}
                     onChange={(e) => setSelectedSemester(e.target.value)}
                     required
-                    className="w-full bg-white border border-slate-150/60 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
+                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
                   >
                     <option value="">-- انتخاب نیمسال جاری --</option>
                     {semesters.map((sem) => (
@@ -296,7 +296,7 @@ export const SettingsScreen: React.FC = () => {
 
               </div>
 
-              <div className="pt-4 border-t border-slate-100 flex justify-end">
+              <div className="pt-4 border-t border-slate-100/50 flex justify-end">
                 <Button
                   type="submit"
                   isLoading={isSubmitLoading}
@@ -315,9 +315,9 @@ export const SettingsScreen: React.FC = () => {
         <div className="space-y-6">
           
           <form onSubmit={handleSaveAccessibility}>
-            <Card className="border border-slate-100 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6 text-right">
+            <Card className="border border-slate-100/80 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6 text-right">
               
-              <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2 pb-3 border-b border-slate-100/50">
                 <Sliders className="w-5 h-5 text-indigo-600" />
                 <h3 className="text-xs font-black text-slate-800">اولویت‌های دسترسی و رابط</h3>
               </div>
@@ -379,7 +379,7 @@ export const SettingsScreen: React.FC = () => {
                 </label>
               </div>
 
-              <div className="pt-4 border-t border-slate-100">
+              <div className="pt-4 border-t border-slate-100/50">
                 <button
                   type="submit"
                   className="w-full py-2 bg-slate-900 hover:bg-black text-white hover:text-slate-50 text-xs font-black rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer"
