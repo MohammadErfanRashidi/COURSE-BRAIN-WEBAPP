@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
+import { Select } from '../../components/Select';
 import { useAuthStore } from '../../store/authStore';
 import { AcademicService } from '../../services/api';
 import { University, Major, Semester, User } from '../../types';
@@ -233,65 +234,58 @@ export const SettingsScreen: React.FC = () => {
 
                 {/* Degree Selection */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-500 block">مقطع تحصیلی</label>
-                  <select
+                  <Select
+                    label="مقطع تحصیلی"
+                    placeholder="مقطع تحصیلی خود را انتخاب کنید"
+                    options={[
+                      { value: 'associate', label: 'کاردانی' },
+                      { value: 'bachelor', label: 'کارشناسی (لیسانس)' },
+                      { value: 'master', label: 'کارشناسی ارشد (فوق لیسانس)' },
+                      { value: 'phd', label: 'دکتری تخصصی (PhD)' },
+                    ]}
                     value={selectedDegree}
-                    onChange={(e) => setSelectedDegree(e.target.value)}
-                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
-                  >
-                    <option value="associate">کاردانی</option>
-                    <option value="bachelor">کارشناسی (لیسانس)</option>
-                    <option value="master">کارشناسی ارشد (فوق لیسانس)</option>
-                    <option value="phd">دکتری تخصصی (PhD)</option>
-                  </select>
+                    onChange={setSelectedDegree}
+                    searchable={false}
+                  />
                 </div>
 
                 {/* University Selector */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-500 block">مؤسسه یا دانشگاه محل تحصیل</label>
-                  <select
+                  <Select
+                    label="مؤسسه یا دانشگاه محل تحصیل"
+                    placeholder="-- انتخاب دانشگاه --"
+                    options={universities.map(uni => ({ value: uni.id, label: uni.name }))}
                     value={selectedUniversity}
-                    onChange={(e) => setSelectedUniversity(e.target.value)}
+                    onChange={setSelectedUniversity}
+                    searchable
                     required
-                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
-                  >
-                    <option value="">-- انتخاب دانشگاه --</option>
-                    {universities.map((uni) => (
-                      <option key={uni.id} value={uni.id}>{uni.name}</option>
-                    ))}
-                  </select>
+                  />
                 </div>
 
                 {/* Major Selector */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-500 block">رشته تخصصی تحصیلی</label>
-                  <select
+                  <Select
+                    label="رشته تخصصی تحصیلی"
+                    placeholder="-- انتخاب رشته تحصیلی --"
+                    options={majors.map(mj => ({ value: mj.id, label: mj.name }))}
                     value={selectedMajor}
-                    onChange={(e) => setSelectedMajor(e.target.value)}
+                    onChange={setSelectedMajor}
+                    searchable
                     required
-                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
-                  >
-                    <option value="">-- انتخاب رشته تحصیلی --</option>
-                    {majors.map((mj) => (
-                      <option key={mj.id} value={mj.id}>{mj.name}</option>
-                    ))}
-                  </select>
+                  />
                 </div>
 
                 {/* Semester Selector */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-500 block">نیمسال تحصیلی فعال</label>
-                  <select
+                  <Select
+                    label="نیمسال تحصیلی فعال"
+                    placeholder="-- انتخاب نیمسال جاری --"
+                    options={semesters.map(sem => ({ value: sem.id, label: sem.name }))}
                     value={selectedSemester}
-                    onChange={(e) => setSelectedSemester(e.target.value)}
+                    onChange={setSelectedSemester}
+                    searchable
                     required
-                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold cursor-pointer"
-                  >
-                    <option value="">-- انتخاب نیمسال جاری --</option>
-                    {semesters.map((sem) => (
-                      <option key={sem.id} value={sem.id}>{sem.name}</option>
-                    ))}
-                  </select>
+                  />
                 </div>
 
               </div>

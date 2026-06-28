@@ -23,6 +23,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { Card } from '../../../components/Card';
+import { Select } from '../../../components/Select';
 import { ManagedUser } from '../types';
 
 export const UsersTab: React.FC = () => {
@@ -216,18 +217,20 @@ export const UsersTab: React.FC = () => {
           </div>
 
           <div className="w-full md:w-56 flex items-center gap-2 bg-slate-50 border border-slate-200/50 rounded-xl px-3 py-1.5">
-            <SlidersHorizontal className="w-4 h-4 text-slate-400" />
-            <select
+            <SlidersHorizontal className="w-4 h-4 text-slate-400 shrink-0" />
+            <Select
               value={filterUniversity}
-              onChange={(e) => setFilterUniversity(e.target.value)}
-              className="bg-transparent border-none text-xs font-bold text-slate-700 outline-none w-full text-right"
-            >
-              <option value="ALL">همه دانشگاه‌ها</option>
-              <option value="دانشگاه تهران">دانشگاه تهران</option>
-              <option value="دانشگاه صنعتی شریف">دانشگاه صنعتی شریف</option>
-              <option value="دانشگاه شهید بهشتی">دانشگاه شهید بهشتی</option>
-              <option value="دانشگاه صنعتی امیرکبیر">دانشگاه امیرکبیر</option>
-            </select>
+              onChange={setFilterUniversity}
+              options={[
+                { value: 'ALL', label: 'همه دانشگاه‌ها' },
+                { value: 'دانشگاه تهران', label: 'دانشگاه تهران' },
+                { value: 'دانشگاه صنعتی شریف', label: 'دانشگاه صنعتی شریف' },
+                { value: 'دانشگاه شهید بهشتی', label: 'دانشگاه شهید بهشتی' },
+                { value: 'دانشگاه صنعتی امیرکبیر', label: 'دانشگاه امیرکبیر' },
+              ]}
+              inline
+              searchable={false}
+            />
           </div>
         </div>
       </Card>

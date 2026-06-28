@@ -17,6 +17,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Card } from '../../../components/Card';
+import { Select } from '../../../components/Select';
 import { SupportTicket } from '../types';
 
 export const SupportTab: React.FC = () => {
@@ -237,15 +238,17 @@ export const SupportTab: React.FC = () => {
 
                 <div className="w-full sm:w-48 flex items-center gap-1.5 bg-slate-50 border border-slate-200/50 rounded-xl px-2 py-2">
                   <span className="text-[9px] text-slate-400 font-extrabold shrink-0">پاسخ‌دهنده:</span>
-                  <select
+                  <Select
                     value={assigneeName}
-                    onChange={(e) => setAssigneeName(e.target.value)}
-                    className="bg-transparent border-none text-[10px] font-black text-slate-700 outline-none w-full text-right"
-                  >
-                    <option value="امیررضا علوی">امیررضا علوی</option>
-                    <option value="سارا رضایی">سارا رضایی</option>
-                    <option value="زهرا احمدی">زهرا احمدی</option>
-                  </select>
+                    onChange={setAssigneeName}
+                    options={[
+                      { value: 'امیررضا علوی', label: 'امیررضا علوی' },
+                      { value: 'سارا رضایی', label: 'سارا رضایی' },
+                      { value: 'زهرا احمدی', label: 'زهرا احمدی' },
+                    ]}
+                    inline
+                    searchable={false}
+                  />
                 </div>
               </div>
             </form>

@@ -31,6 +31,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
+import { Select } from '../../components/Select';
 import { ClassService, RecordingService, SubscriptionService, ChatService } from '../../services/api';
 import { Class, Recording, SubscriptionStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
@@ -632,20 +633,15 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                 
                 {/* Available Classes Template Selection */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-500 block">انتخاب عنوان درس (لیست مجاز دانشگاه)</label>
-                  <div className="relative">
-                    <select
-                      value={selectedTemplate}
-                      onChange={(e) => setSelectedTemplate(e.target.value)}
-                      required
-className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold cursor-pointer transition-all duration-200"
-                      >
-                        <option value="">-- لطفا یک عنوان درس را انتخاب کنید --</option>
-                        {templates.map((temp) => (
-                          <option key={temp} value={temp}>{temp}</option>
-                        ))}
-                      </select>
-                  </div>
+                  <Select
+                    label="انتخاب عنوان درس (لیست مجاز دانشگاه)"
+                    placeholder="-- لطفا یک عنوان درس را انتخاب کنید --"
+                    options={templates.map(temp => ({ value: temp, label: temp }))}
+                    value={selectedTemplate}
+                    onChange={setSelectedTemplate}
+                    searchable
+                    required
+                  />
                   <span className="text-[9px] text-slate-400 block font-bold leading-normal">
                     * جهت انطباق علمی در سرورهای مرکزی، عنوان کلاس باید از قالب سرفصل‌های دانشگاه انتخاب شود.
                   </span>

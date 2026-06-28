@@ -17,6 +17,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { Card } from '../../../components/Card';
+import { Select } from '../../../components/Select';
 import { AdminAuditLog } from '../types';
 
 export const AuditLogsTab: React.FC = () => {
@@ -127,18 +128,20 @@ export const AuditLogsTab: React.FC = () => {
           </div>
 
           <div className="w-full md:w-56 flex items-center gap-2 bg-slate-50 border border-slate-200/50 rounded-xl px-3 py-1.5">
-            <Filter className="w-4 h-4 text-slate-400" />
-            <select
+            <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+            <Select
               value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="bg-transparent border-none text-xs font-bold text-slate-700 outline-none w-full text-right"
-            >
-              <option value="ALL">همه نقش‌ها</option>
-              <option value="SUPER_ADMINISTRATOR">مدیر ارشد</option>
-              <option value="ADMINISTRATOR">مدیر سیستم</option>
-              <option value="CONTENT_MANAGER">مدیر محتوا</option>
-              <option value="SUPPORT_STAFF">پشتیبان</option>
-            </select>
+              onChange={setFilterRole}
+              options={[
+                { value: 'ALL', label: 'همه نقش‌ها' },
+                { value: 'SUPER_ADMINISTRATOR', label: 'مدیر ارشد' },
+                { value: 'ADMINISTRATOR', label: 'مدیر سیستم' },
+                { value: 'CONTENT_MANAGER', label: 'مدیر محتوا' },
+                { value: 'SUPPORT_STAFF', label: 'پشتیبان' },
+              ]}
+              inline
+              searchable={false}
+            />
           </div>
         </div>
       </Card>

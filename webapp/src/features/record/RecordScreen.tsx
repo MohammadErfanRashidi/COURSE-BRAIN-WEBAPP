@@ -26,6 +26,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
+import { Select } from '../../components/Select';
 import { ClassService, RecordingService, SubscriptionService } from '../../services/api';
 import { Class, Recording, SubscriptionStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
@@ -743,16 +744,13 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                             ⚠️ شما هیچ کلاس فعالی در ترم تحصیلی جاری ثبت نکرده‌اید! ابتدا به منوی کلاس‌ها رفته و یک کلاس درسی اضافه کنید.
                           </div>
                         ) : (
-                          <select
+                          <Select
+                            placeholder="-- کلاس مورد نظر را انتخاب کنید --"
+                            options={classes.map(cls => ({ value: cls.id, label: cls.name }))}
                             value={assignedClassId}
-                            onChange={(e) => setAssignedClassId(e.target.value)}
-                            className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold cursor-pointer transition-all duration-200"
-                          >
-                            <option value="">-- کلاس مورد نظر را انتخاب کنید --</option>
-                            {classes.map((cls) => (
-                              <option key={cls.id} value={cls.id}>{cls.name}</option>
-                            ))}
-                          </select>
+                            onChange={setAssignedClassId}
+                            searchable
+                          />
                         )}
                         <span className="text-[9px] text-slate-400 block font-bold mt-1">
                           * بدون انتساب این ضبط به کلاس مربوطه، امکان بارگذاری و آغاز تحلیل وجود نخواهد داشت.
@@ -872,16 +870,13 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                         ⚠️ قبل از شروع آپلود، باید یک کلاس در ترم تحصیلی جاری خود ثبت کنید.
                       </div>
                     ) : (
-                      <select
+                      <Select
+                        placeholder="-- یک کلاس درسی انتخاب کنید --"
+                        options={classes.map(cls => ({ value: cls.id, label: cls.name }))}
                         value={uploadClassId}
-                        onChange={(e) => setUploadClassId(e.target.value)}
-                        className="w-full bg-white border border-slate-200/40 rounded-xl px-3 py-2 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold cursor-pointer transition-all duration-200"
-                      >
-                        <option value="">-- یک کلاس درسی انتخاب کنید --</option>
-                        {classes.map((cls) => (
-                          <option key={cls.id} value={cls.id}>{cls.name}</option>
-                        ))}
-                      </select>
+                        onChange={setUploadClassId}
+                        searchable
+                      />
                     )}
                   </div>
                 )}

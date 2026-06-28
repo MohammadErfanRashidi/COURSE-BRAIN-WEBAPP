@@ -212,7 +212,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
                 label="دانشگاه محل تحصیل"
                 placeholder="نام دانشگاه خود را جستجو یا انتخاب کنید"
                 options={universityOptions}
-                selectedValue={selectedUniversity}
+                value={selectedUniversity}
                 onChange={setSelectedUniversity}
                 searchPlaceholder="مثال: دانشگاه تهران..."
               />
@@ -221,7 +221,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
                 label="مقطع تحصیلی"
                 placeholder="مقطع تحصیلی خود را انتخاب کنید"
                 options={degreeOptions}
-                selectedValue={selectedDegree}
+                value={selectedDegree}
                 onChange={setSelectedDegree}
                 searchable={false}
               />
@@ -230,7 +230,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
                 label="رشته تحصیلی"
                 placeholder="رشته تحصیلی خود را جستجو یا انتخاب کنید"
                 options={majorOptions}
-                selectedValue={selectedMajor}
+                value={selectedMajor}
                 onChange={setSelectedMajor}
                 searchPlaceholder="مثال: مهندسی کامپیوتر..."
               />
@@ -239,7 +239,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
                 label="نیمسال تحصیلی جاری"
                 placeholder="نیمسال فعلی تحصیلی خود را انتخاب کنید"
                 options={semesterOptions}
-                selectedValue={selectedSemester}
+                value={selectedSemester}
                 onChange={setSelectedSemester}
                 searchable={false}
               />

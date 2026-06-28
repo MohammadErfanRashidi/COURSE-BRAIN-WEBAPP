@@ -20,6 +20,7 @@ import {
   FileCheck
 } from 'lucide-react';
 import { Card } from '../../../components/Card';
+import { Select } from '../../../components/Select';
 import { TextbookKnowledge } from '../types';
 
 export const KnowledgeBaseTab: React.FC = () => {
@@ -171,17 +172,19 @@ export const KnowledgeBaseTab: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-500">رشته تحصیلی:</label>
-                <select
+                <Select
+                  label="رشته تحصیلی:"
+                  options={[
+                    { value: 'مهندسی کامپیوتر', label: 'کامپیوتر' },
+                    { value: 'پزشکی عمومی', label: 'پزشکی' },
+                    { value: 'زیست‌شناسی', label: 'زیست‌شناسی' },
+                    { value: 'فیزیک عمومی', label: 'فیزیک' },
+                  ]}
                   value={newSubject}
-                  onChange={(e) => setNewSubject(e.target.value)}
-                  className="w-full text-right bg-slate-50 border border-slate-200/50 rounded-xl px-2 py-2 text-xs font-bold text-slate-700 outline-none"
-                >
-                  <option value="مهندسی کامپیوتر">کامپیوتر</option>
-                  <option value="پزشکی عمومی">پزشکی</option>
-                  <option value="زیست‌شناسی">زیست‌شناسی</option>
-                  <option value="فیزیک عمومی">فیزیک</option>
-                </select>
+                  onChange={setNewSubject}
+                  searchable={false}
+                  size="sm"
+                />
               </div>
 
               <div className="space-y-1">
