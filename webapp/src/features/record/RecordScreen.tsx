@@ -473,9 +473,33 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
     }
   };
 
-  const validateAndSetFile = (file: File) => {
+  const getAudioDuration = (file: File): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      try {
+        const url = URL.createObjectURL(file);
+        const audio = new Audio();
+        audio.addEventListener('loadedmetadata', () => {
+          URL.revokeObjectURL(url);
+          if (isFinite(audio.duration) && audio.duration > 0) {
+            resolve(audio.duration);
+          } else {
+            reject(new Error('مدت زمان فایل صوتی قابل تشخیص نیست.'));
+          }
+        });
+        audio.addEventListener('error', () => {
+          URL.revokeObjectURL(url);
+          reject(new Error('فایل صوتی قابل خواندن نیست.'));
+        });
+        audio.src = url;
+      } catch {
+        reject(new Error('خطا در خواندن فایل صوتی'));
+      }
+    });
+  };
+
+  const validateAndSetFile = async (file: File) => {
     setError(null);
-    
+
     // Size check: max 100MB
     const maxSize = 100 * 1024 * 1024;
     if (file.size > maxSize) {
@@ -487,19 +511,38 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
     // Format validation
     const allowedExtensions = ['mp3', 'wav', 'aac', 'm4a', 'ogg', 'flac'];
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
-    
+
     if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
       setError('فرمت فایل صوتی انتخاب شده پشتیبانی نمی‌شود. فرمت‌های مجاز: MP3, WAV, AAC, M4A, OGG, FLAC');
       setSelectedFile(null);
       return;
     }
 
-    setSelectedFile(file);
+    // Read actual audio duration from file metadata
+    let durationSecs: number;
+    try {
+      durationSecs = await getAudioDuration(file);
+    } catch {
+      setError('مدت زمان فایل صوتی قابل تشخیص نیست. لطفا از سالم بودن فایل اطمینان حاصل کنید.');
+      setSelectedFile(null);
+      return;
+    }
 
-    // Simulate extracting duration (for realistic visual cues)
-    // Generating a realistic lecture size-to-duration ratio: 1MB ≈ 1 minute (60 seconds)
-    const simulatedSecs = Math.max(300, Math.floor((file.size / (1024 * 1024)) * 60));
-    setSimulatedDuration(simulatedSecs);
+    // Check remaining recording balance before allowing upload
+    const remainingSecs = (subscriptionStatus.usage.maxRecordingHours - subscriptionStatus.usage.recordingHoursUsed) * 3600;
+    if (durationSecs > remainingSecs) {
+      const remainingFormatted = formatTime(remainingSecs);
+      const durationFormatted = formatTime(durationSecs);
+      setError(
+        `مدت زمان فایل صوتی (${durationFormatted}) بیش از سهمیه باقی‌مانده (${remainingFormatted}) است. ` +
+        `لطفا فایل کوتاه‌تری انتخاب کنید یا اشتراک خود را تمدید نمایید.`
+      );
+      setSelectedFile(null);
+      return;
+    }
+
+    setSelectedFile(file);
+    setSimulatedDuration(durationSecs);
   };
 
   const handleRemoveFile = () => {
@@ -515,6 +558,13 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
 
     const targetClass = classes.find(c => c.id === uploadClassId);
     const className = targetClass ? targetClass.name : 'کلاس درسی';
+
+    // Guard: re-check remaining balance before queueing
+    const remainingSecs = (subscriptionStatus.usage.maxRecordingHours - subscriptionStatus.usage.recordingHoursUsed) * 3600;
+    if (simulatedDuration > remainingSecs) {
+      setError('سهمیه ضبط شما برای این فایل صوتی کافی نیست.');
+      return;
+    }
 
     try {
       ProcessingQueueService.addJob({
@@ -850,7 +900,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                         {selectedFile.name}
                       </span>
                       <span className="text-[9px] text-slate-400 block mt-0.5">
-                        اندازه: {toPersianDigits((selectedFile.size / (1024 * 1024)).toFixed(1))} مگابایت | مدت تقریبی: {formatTime(simulatedDuration)}
+                        اندازه: {toPersianDigits((selectedFile.size / (1024 * 1024)).toFixed(1))} مگابایت | مدت: {formatTime(simulatedDuration)}
                       </span>
                     </div>
                   </div>
