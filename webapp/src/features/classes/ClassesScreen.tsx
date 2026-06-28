@@ -708,7 +708,7 @@ className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 t
               exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white border border-rose-100/60 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] p-6 space-y-5 text-right font-sans"
             >
-              <div className="flex items-center gap-2 text-rose-650 font-black text-sm border-b border-rose-50 pb-3">
+              <div className="flex items-center gap-2 text-rose-600 font-black text-sm border-b border-rose-50 pb-3">
                 <AlertTriangle className="w-5 h-5" />
                 <span>هشدار: حذف دائمی و قطعی کلاس درسی</span>
               </div>
@@ -759,7 +759,7 @@ className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 t
               exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white border border-rose-100/60 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] p-6 space-y-5 text-right font-sans"
             >
-              <div className="flex items-center gap-2 text-rose-650 font-black text-sm border-b border-rose-50 pb-3">
+              <div className="flex items-center gap-2 text-rose-600 font-black text-sm border-b border-rose-50 pb-3">
                 <AlertTriangle className="w-5 h-5 animate-pulse" />
                 <span>شروع مجدد گفتگو؟</span>
               </div>

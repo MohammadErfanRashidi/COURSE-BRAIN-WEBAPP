@@ -77,3 +77,16 @@
 .transition-all-custom {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Recording button pulse: gently breathes the shadow glow */
+@keyframes recording-pulse {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(225, 29, 72, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 48px rgba(225, 29, 72, 0.5);
+  }
+}
+.animate-recording-pulse {
+  animation: recording-pulse 2s ease-in-out infinite;
+}

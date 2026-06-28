@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuthStore } from './store/authStore';
 import { LoginScreen } from './features/auth/LoginScreen';
@@ -126,6 +126,10 @@ export default function App() {
 
   // Logout Confirmation state
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  // Recording navigation guard
+  const [showRecordingGuard, setShowRecordingGuard] = useState(false);
+  const pendingNavigationRef = useRef<{ tab: string; args?: any } | null>(null);
 
   // Premium gestures: swipe-to-open from right edge and swipe-to-close toward the right edge
   // Reads state from Zustand store directly to avoid re-creating listeners
@@ -254,6 +258,14 @@ export default function App() {
   };
 
   const handleDashboardNavigate = useCallback((tab: string, args?: any) => {
+    // Block navigation away from record if recording is active
+    const recordingState = (window as any).__cbRecordingActive;
+    if (activeTab === 'record' && recordingState && tab !== 'record') {
+      pendingNavigationRef.current = { tab, args };
+      setShowRecordingGuard(true);
+      return;
+    }
+
     // Reset secondary states
     setOpenClassId(null);
     setFocusRecord(false);
@@ -269,7 +281,7 @@ export default function App() {
 
     setActiveTab(tab as ActiveTab);
     useMobileMenuStore.getState().close();
-  }, []);
+  }, [activeTab]);
 
   const handleLaunchCreateClassFromDashboard = useCallback(() => {
     setActiveTab('classes');
@@ -648,6 +660,50 @@ export default function App() {
       />
 
 
+
+      {/* Recording Navigation Guard Modal */}
+      {showRecordingGuard && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border border-slate-200/40 shadow-2xl text-right font-sans animate-in zoom-in-95 duration-200">
+            <h3 className="text-sm font-extrabold text-slate-900 mb-2 flex items-center gap-2">
+              <Mic className="w-4 h-4 text-rose-500" />
+              <span>ضبط صدا در حال انجام است</span>
+            </h3>
+            <p className="text-xs text-slate-500 font-semibold leading-relaxed mb-6">
+              شما یک فایل ضبط ناتمام دارید.
+              <br /><br />
+              خروج از این صفحه باعث حذف دائمی فایل ضبط شده قبل از انتساب به کلاس درسی می‌شود.
+              <br /><br />
+              آیا مطمئن هستید که می‌خواهید خارج شوید؟
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  pendingNavigationRef.current = null;
+                  setShowRecordingGuard(false);
+                }}
+                className="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/40 font-black py-2.5 rounded-xl text-xs transition-all active:scale-95 cursor-pointer text-center"
+              >
+                ادامه ضبط (توصیه می‌شود)
+              </button>
+              <button
+                onClick={() => {
+                  (window as any).__cbDiscardRecording?.();
+                  const pending = pendingNavigationRef.current;
+                  pendingNavigationRef.current = null;
+                  setShowRecordingGuard(false);
+                  if (pending) {
+                    handleDashboardNavigate(pending.tab, pending.args);
+                  }
+                }}
+                className="flex-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/40 font-black py-2.5 rounded-xl text-xs transition-all active:scale-95 cursor-pointer text-center"
+              >
+                حذف و خروج
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Logout Confirmation Dialog Modal */}
       {showLogoutConfirm && (

@@ -14,6 +14,7 @@ import {
   Trash2, 
   Pause, 
   Play, 
+  Square,
   CheckCircle2, 
   Volume2, 
   Info,
@@ -87,6 +88,8 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const isPausedRef = useRef(false);
+  const maxDurationReachedRef = useRef(false);
 
   // -------------------------------------------------------------------------
   // 2. FILE UPLOAD STATE
@@ -199,6 +202,39 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
     }
   };
 
+  // Keep refs in sync with state for closure safety in setInterval / beforeunload
+  useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
+
+  // Auto-stop at max duration (90 minutes = 5400 seconds)
+  useEffect(() => {
+    if (recordingSeconds >= 5400 && isRecording && !maxDurationReachedRef.current) {
+      maxDurationReachedRef.current = true;
+      handleStopRecording();
+      setError('مدت زمان ضبط به سقف مجاز ۹۰ دقیقه رسید و ذخیره شد.');
+    }
+  }, [recordingSeconds, isRecording]);
+
+  // Navigation protection: beforeunload for browser refresh/close
+  useEffect(() => {
+    if (!isRecording && !isPaused) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isRecording, isPaused]);
+
+  // Expose recording state + discard handler for App.tsx navigation guard
+  useEffect(() => {
+    (window as any).__cbRecordingActive = isRecording || isPaused ? (isPaused ? 'paused' : 'recording') : null;
+    (window as any).__cbDiscardRecording = handleDiscardAndLeave;
+    return () => {
+      (window as any).__cbRecordingActive = null;
+      (window as any).__cbDiscardRecording = null;
+    };
+  }, [isRecording, isPaused]);
+
   const syncUsageData = async () => {
     setLimitsLoading(true);
     try {
@@ -272,6 +308,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
     audioChunksRef.current = [];
     setRecordingSeconds(0);
     setRecordedBlob(null);
+    maxDurationReachedRef.current = false;
 
     // Save active recording name
     if (!recordingName.trim()) {
@@ -315,19 +352,10 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
 
       await startAudioContext(stream);
 
-      // Start timer tick
+      // Start timer tick — respects pause via ref
       timerIntervalRef.current = setInterval(() => {
-        setRecordingSeconds((prev) => {
-          const nextSec = prev + 1;
-          
-          // Force stop at 90 Minutes (5400 seconds)
-          if (nextSec >= 5400) {
-            handleStopRecording();
-            setError('مدت زمان ضبط به سقف مجاز ۹۰ دقیقه رسید و ذخیره شد.');
-            return 5400;
-          }
-          return nextSec;
-        });
+        if (isPausedRef.current) return;
+        setRecordingSeconds((prev) => prev + 1);
       }, 1000);
 
     } catch (err: any) {
@@ -343,13 +371,27 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
     if (isPaused) {
       mediaRecorderRef.current.resume();
       setIsPaused(false);
+      isPausedRef.current = false;
       if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
         audioContextRef.current.resume();
       }
     } else {
       mediaRecorderRef.current.pause();
       setIsPaused(true);
+      isPausedRef.current = true;
     }
+  };
+
+  const handleDiscardAndLeave = () => {
+    cleanupRecording();
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+    setIsPaused(false);
+    setRecordingSeconds(0);
+    setRecordedBlob(null);
+    maxDurationReachedRef.current = false;
   };
 
   const handleStopRecording = () => {
@@ -644,16 +686,32 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 )}
 
                 <button
-                  onClick={isRecording ? handleStopRecording : handleStartRecording}
-                  className={`w-24 h-24 rounded-full border shadow-[0_12px_40px_rgba(79,70,229,0.15)] flex flex-col items-center justify-center transition-all cursor-pointer relative z-10 ${
-                    isRecording 
-                      ? 'bg-rose-550 border-rose-600 text-white hover:bg-rose-650' 
-                      : 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 hover:scale-105'
+                  onClick={() => {
+                    if (!isRecording) {
+                      handleStartRecording();
+                    } else if (isPaused) {
+                      handlePauseToggle();
+                    } else {
+                      handleStopRecording();
+                    }
+                  }}
+                  className={`w-24 h-24 rounded-full border flex flex-col items-center justify-center transition-all duration-300 cursor-pointer relative z-10 ${
+                    !isRecording
+                      ? 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 hover:scale-105 shadow-[0_12px_40px_rgba(79,70,229,0.15)]'
+                      : isPaused
+                        ? 'bg-slate-400 border-slate-500 text-white hover:bg-slate-500 shadow-[0_8px_32px_rgba(100,116,139,0.3)]'
+                        : 'bg-rose-600 border-rose-700 text-white hover:bg-rose-700 shadow-[0_8px_32px_rgba(225,29,72,0.3)] animate-recording-pulse'
                   }`}
                 >
-                  <Mic className={`w-8 h-8 ${isRecording && !isPaused ? 'animate-pulse' : ''}`} />
+                  {!isRecording ? (
+                    <Mic className="w-8 h-8" />
+                  ) : isPaused ? (
+                    <Play className="w-8 h-8" />
+                  ) : (
+                    <Square className="w-8 h-8" />
+                  )}
                   <span className="text-[10px] font-black mt-1.5">
-                    {isRecording ? 'پایان ضبط' : 'شروع ضبط'}
+                    {!isRecording ? 'شروع ضبط' : isPaused ? 'ادامه ضبط' : 'پایان ضبط'}
                   </span>
                 </button>
               </div>
@@ -689,16 +747,9 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   onClick={handlePauseToggle}
                   className="px-5 py-2 bg-slate-50 border border-slate-100/80 hover:border-slate-200/60 rounded-xl font-bold text-xs text-slate-700 flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
                 >
-                  <Pause className="w-3.5 h-3.5" />
+                  {isPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
                   <span>{isPaused ? 'ادامه ضبط' : 'موقت متوقف کن'}</span>
                 </button>
-              </div>
-            )}
-
-            {/* Dynamic canvas waveform */}
-            {isRecording && (
-              <div className="w-full max-w-sm mx-auto h-16 bg-slate-50 border border-slate-100/80 rounded-2xl overflow-hidden mt-2 p-1">
-                <canvas ref={canvasRef} className="w-full h-full" width={384} height={60} />
               </div>
             )}
 
@@ -866,7 +917,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   <div className="space-y-1.5 text-right">
                     <label className="text-[10px] font-black text-slate-400 block">نام کلاس درسی منتسب</label>
                     {classes.length === 0 ? (
-                      <div className="text-[10px] text-rose-650 font-bold p-3 bg-rose-50 border border-rose-100/60 rounded-xl">
+                      <div className="text-[10px] text-rose-600 font-bold p-3 bg-rose-50 border border-rose-100/60 rounded-xl">
                         ⚠️ قبل از شروع آپلود، باید یک کلاس در ترم تحصیلی جاری خود ثبت کنید.
                       </div>
                     ) : (
