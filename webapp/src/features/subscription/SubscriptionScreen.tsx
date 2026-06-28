@@ -5,30 +5,21 @@
 
 import React, { useEffect, useState } from 'react';
 import { 
-  CreditCard, 
   CheckCircle2, 
-  HelpCircle, 
   Calendar, 
-  Clock, 
-  Sparkles, 
-  BookOpen, 
   Award, 
   AlertCircle,
   History,
   TrendingUp,
   Receipt,
-  RotateCw,
-  Zap,
-  Check,
-  ShieldAlert,
-  Info
+  RotateCw
 } from 'lucide-react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { useAuthStore } from '../../store/authStore';
 import { SubscriptionService } from '../../services/api';
 import { SubscriptionStatus } from '../../types';
-import { formatPersianDuration, toPersianDigits as farsiDigitsUtil } from '../../utils/timeFormatter';
+import { formatPersianDuration } from '../../utils/timeFormatter';
 
 interface PaymentLog {
   id: string;
@@ -38,36 +29,6 @@ interface PaymentLog {
   refId: string;
   description: string;
 }
-
-const PLANS_DETAILS = [
-  {
-    id: 'plan_starter_v1',
-    name: 'طرح آغازین (Starter)',
-    hours: 10,
-    classes: 5,
-    tokens: '۶۰,۰۰۰',
-    price: 39000,
-    description: 'ویژه دانشجوهای پرشور و تک‌واحدی'
-  },
-  {
-    id: 'plan_pro_v1',
-    name: 'طرح پیشرفته (Pro)',
-    hours: 30,
-    classes: 15,
-    tokens: '۱۵۰,۰۰۰',
-    price: 79000,
-    description: 'انتخاب بهینه اساتید و دانشجوهای همیار'
-  },
-  {
-    id: 'plan_premium_v1',
-    name: 'طرح ویژه (Premium)',
-    hours: 100,
-    classes: 100,
-    tokens: '۵۰۰,۰۰۰',
-    price: 149000,
-    description: 'برای تحقیق و پردازش تدریس‌های متعدد سنگین'
-  }
-];
 
 export const SubscriptionScreen: React.FC = () => {
   const { subscriptionStatus, syncSubscription } = useAuthStore();
@@ -106,57 +67,11 @@ export const SubscriptionScreen: React.FC = () => {
     try {
       await SubscriptionService.renewSubscription();
       await syncSubscription();
-      setSuccessMsg('تمدید لایسنس اشتراک با موفقیت انجام شد. سهمیه‌های ضبط صوتی شما بازنشانی شدند و اعتبار شما ۳۰ روز تمدید گردید.');
+      setSuccessMsg('اشتراک شما با موفقیت تمدید شد. سهمیه‌های ضبط صوتی بازنشانی شدند و اعتبار حساب ۳۰ روز تمدید گردید.');
       const updatedHistory = await SubscriptionService.getPaymentHistory();
       setHistory(updatedHistory);
     } catch (err: any) {
       setError(err.message || 'خطا در تمدید اشتراک');
-    } finally {
-      setIsActionLoading(false);
-    }
-  };
-
-  const handleChangePlan = async (planId: string) => {
-    setIsActionLoading(true);
-    setError(null);
-    setSuccessMsg(null);
-    try {
-      await SubscriptionService.changePlan(planId);
-      await syncSubscription();
-      setSuccessMsg('طرح اشتراک شما با موفقیت تغییر یافت. محدودیت‌های جدید بلافاصله اعمال شدند و مصرف شما حفظ گردید.');
-      const updatedHistory = await SubscriptionService.getPaymentHistory();
-      setHistory(updatedHistory);
-    } catch (err: any) {
-      setError(err.message || 'خطا در تغییر طرح');
-    } finally {
-      setIsActionLoading(false);
-    }
-  };
-
-  const handleCancelSubscription = async () => {
-    setIsActionLoading(true);
-    setError(null);
-    setSuccessMsg(null);
-    try {
-      await SubscriptionService.cancelSubscription();
-      await syncSubscription();
-      setSuccessMsg('تمدید خودکار اشتراک لغو شد. لایسنس شما تا مهلت انقضا همچنان معتبر و فعال باقی می‌ماند و محدودیتی در ضبط ایجاد نخواهد شد.');
-    } catch (err: any) {
-      setError(err.message || 'خطا در لغو تمدید خودکار');
-    } finally {
-      setIsActionLoading(false);
-    }
-  };
-
-  const handleRestore = async () => {
-    setIsActionLoading(true);
-    setError(null);
-    setSuccessMsg(null);
-    try {
-      await syncSubscription();
-      setSuccessMsg('بازیابی اشتراک با موفقیت به پایان رسید. تراکنش‌های معتبر با موفقیت همگام‌سازی شدند.');
-    } catch (err: any) {
-      setError(err.message || 'خطا در بازیابی اشتراک');
     } finally {
       setIsActionLoading(false);
     }
@@ -228,16 +143,15 @@ export const SubscriptionScreen: React.FC = () => {
   }
 
   const remainingHours = subscriptionStatus.usage.maxRecordingHours - subscriptionStatus.usage.recordingHoursUsed;
-  const remainingTokens = subscriptionStatus.usage.maxDailyTokens - subscriptionStatus.usage.dailyTokensUsed;
 
   return (
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
       
       {/* Page Header */}
       <div className="border-b border-slate-100/50 pb-5">
-        <h1 className="text-xl font-black text-slate-900">مدیریت لایسنس و اشتراک مالی</h1>
+        <h1 className="text-xl font-black text-slate-900">اشتراک و لایسنس</h1>
         <p className="text-xs text-slate-400 mt-1 font-medium">
-          میزان استفاده از منابع پردازشی، سابقه تراکنش‌ها و جزئیات تمدید طرح دانشجویی خود را مشاهده کنید.
+          وضعیت اشتراک ماهانه، سهمیه‌های مصرفی و تاریخچه تراکنش‌های خود را مشاهده کنید.
         </p>
       </div>
 
@@ -258,19 +172,19 @@ export const SubscriptionScreen: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* RIGHT COLUMN: ACTIVE LICENSE & ACTIONS */}
+        {/* MAIN COLUMN: LICENSE DETAILS */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* Main License Detail Card */}
-          <Card className="border border-slate-100/80 bg-white rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden relative">
-            <div className="bg-indigo-600 px-6 py-5 text-white flex items-center justify-between">
+          {/* Main License Card */}
+          <Card className="border border-slate-100/80 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative">
+            <div className="bg-indigo-600 px-6 py-5 text-white flex items-center justify-between rounded-t-3xl">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white shrink-0">
                   <Award className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-black">طرح فعال: {subscriptionStatus.planName || 'طرح آغازین'}</h2>
-                  <span className="text-[10px] text-indigo-150 font-medium block mt-0.5">مخصوص دانشجویان و اساتید دانشگاهی رایا</span>
+                  <h2 className="text-sm font-black">اشتراک ماهانه رایا</h2>
+                  <span className="text-[10px] text-indigo-150 font-medium block mt-0.5">دسترسی کامل به قابلیت‌های پردازش صوتی و هوش مصنوعی</span>
                 </div>
               </div>
               <span className="bg-white/20 text-[10px] font-bold px-3 py-1 rounded-full text-white">
@@ -280,246 +194,109 @@ export const SubscriptionScreen: React.FC = () => {
 
             <div className="p-6 space-y-6">
               
-              {/* Detailed Usage Gauges */}
+              {/* Price */}
+              <div className="text-center border-b border-slate-100/50 pb-5">
+                <span className="text-2xl font-black text-slate-900">۴۹۹٬۹۹۹</span>
+                <span className="text-xs text-slate-400 font-bold mr-1">تومان / ماه</span>
+              </div>
+
+              {/* Usage Gauges */}
               <div className="space-y-4">
                 <h3 className="text-xs font-black text-slate-800 flex items-center gap-1.5">
                   <TrendingUp className="w-4 h-4 text-indigo-600" />
-                  <span>آمار مصرف از سهمیه پردازش ابری (این ماه)</span>
+                  <span>مصرف سهمیه این ماه</span>
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   
-                  {/* Gauge 1 */}
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
-                    <span className="text-[10px] font-bold text-slate-400 block">زمان ضبط باقی‌مانده این ماه</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">زمان ضبط باقی‌مانده</span>
                     <span className="text-sm font-black text-indigo-600 block">
                       {formatPersianDuration(remainingHours)}
                     </span>
-                    <span className="text-[9px] text-slate-400 block font-bold">از کل {toPersianDigits(subscriptionStatus.usage.maxRecordingHours)} ساعت سهمیه مجاز دوره</span>
+                    <span className="text-[9px] text-slate-400 block font-bold">از {toPersianDigits(subscriptionStatus.usage.maxRecordingHours)} ساعت سهمیه ماهانه</span>
                   </div>
 
-                  {/* Gauge 2 */}
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
-                    <span className="text-[10px] font-bold text-slate-400 block">ظرفیت باقی‌مانده هوش مصنوعی امروز</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">ظرفیت هوش مصنوعی امروز</span>
                     <span className="text-sm font-black text-slate-800 block">
                       {toPersianDigits(Math.max(0, Math.min(100, Math.round(((subscriptionStatus.usage.maxDailyTokens - subscriptionStatus.usage.dailyTokensUsed) / subscriptionStatus.usage.maxDailyTokens) * 100))))}٪ در دسترس
                     </span>
-                    <span className="text-[9px] text-slate-400 block font-bold">سهمیه روزانه مجاز گفتگو و خلاصه هوشمند</span>
+                    <span className="text-[9px] text-slate-400 block font-bold">از {toPersianDigits(subscriptionStatus.usage.maxDailyTokens)} توکن ورودی روزانه</span>
                   </div>
 
-                  {/* Gauge 3 */}
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
-                    <span className="text-[10px] font-bold text-slate-400 block">ظرفیت ایجاد کلاس فعال</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">کلاس‌های فعال</span>
                     <span className="text-sm font-black text-slate-800 block">
                       {toPersianDigits(subscriptionStatus.usage.classesCount)} / {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس
                     </span>
-                    <span className="text-[9px] text-slate-400 block font-bold">محدودیت تعداد کلاس‌های فعال ترم جاری</span>
+                    <span className="text-[9px] text-slate-400 block font-bold">از حداکثر {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس مجاز</span>
                   </div>
 
                 </div>
               </div>
 
-              {/* License Validity Dates & Actions */}
+              {/* Subscription Benefits */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="flex items-center gap-2.5 bg-slate-50/30 border border-slate-100/60 rounded-xl px-3.5 py-2.5">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-700">{toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس درسی در ماه</span>
+                </div>
+                <div className="flex items-center gap-2.5 bg-slate-50/30 border border-slate-100/60 rounded-xl px-3.5 py-2.5">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-700">{toPersianDigits(subscriptionStatus.usage.maxRecordingHours)} ساعت ضبط صدا در ماه</span>
+                </div>
+                <div className="flex items-center gap-2.5 bg-slate-50/30 border border-slate-100/60 rounded-xl px-3.5 py-2.5">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-700">{toPersianDigits(subscriptionStatus.usage.maxDailyTokens)} توکن هوش مصنوعی در روز</span>
+                </div>
+              </div>
+
+              {/* License Expiry & Actions */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between border-t border-slate-100/50 pt-4 gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold">
                     <Calendar className="w-4 h-4 text-slate-400" />
-                    <span>زمان انقضای لایسنس جاری:</span>
+                    <span>اعتبار تا:</span>
                     <span className="text-slate-800 font-bold">
                       {subscriptionStatus.expiresAt ? toPersianDigits(new Date(subscriptionStatus.expiresAt).toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' })) : 'نامحدود'}
                     </span>
                   </div>
-                  {subscriptionStatus.isCancelled && (
-                    <span className="text-[10px] text-rose-600 font-bold block bg-rose-50 border border-rose-100/50 px-2 py-0.5 rounded-lg w-fit">
-                      ⚠️ تمدید خودکار غیرفعال شده است. اشتراک تا پایان دوره در دسترس است.
-                    </span>
-                  )}
                 </div>
 
-                <div className="flex flex-wrap gap-2.5">
-                  <button
-                    onClick={handleRestore}
-                    disabled={isActionLoading}
-                    className="px-3.5 py-2 bg-white border border-slate-100/80 hover:border-slate-200/60 rounded-xl text-slate-700 text-xs font-bold transition-all cursor-pointer shadow-xs"
-                  >
-                    بازیابی تراکنش‌ها
-                  </button>
-                  
-                  {subscriptionStatus.active && !subscriptionStatus.isCancelled && (
-                    <button
-                      onClick={handleCancelSubscription}
-                      disabled={isActionLoading}
-                      className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100/60 border border-rose-100/60 text-rose-750 text-xs font-bold rounded-xl transition-all cursor-pointer"
-                    >
-                      لغو تمدید خودکار
-                    </button>
-                  )}
-
-                  <Button
-                    onClick={handleRenew}
-                    isLoading={isActionLoading}
-                    className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
-                  >
-                    <RotateCw className="w-3.5 h-3.5" />
-                    <span>تمدید ۳۰ روزه اشتراک</span>
-                  </Button>
-                </div>
+                <Button
+                  onClick={handleRenew}
+                  isLoading={isActionLoading}
+                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+                >
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>تمدید اشتراک</span>
+                </Button>
               </div>
 
             </div>
           </Card>
 
-          {/* Plan Switcher Grid */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-black text-slate-800 flex items-center gap-1.5">
-              <Zap className="w-4 h-4 text-indigo-600" />
-              <span>انتخاب و تغییر طرح اشتراک رایا (بر اساس نیاز ضبط ماهانه)</span>
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {PLANS_DETAILS.map((plan) => {
-                const isActive = subscriptionStatus.planId === plan.id;
-                return (
-                  <Card 
-                    key={plan.id} 
-                    className={`border rounded-2xl p-5 text-right flex flex-col justify-between space-y-4 transition-all duration-300 relative ${
-                      isActive 
-                        ? 'border-2 border-indigo-500 bg-indigo-50/5/30 shadow-md' 
-                        : 'border-slate-200/40 bg-white hover:border-indigo-200/60 hover:shadow-sm'
-                    }`}
-                  >
-                    {isActive && (
-                      <span className="absolute top-3 left-3 bg-indigo-600 text-white px-2 py-0.5 rounded-full text-[8px] font-black flex items-center gap-0.5">
-                        <Check className="w-2.5 h-2.5" /> طرح فعلی شما
-                      </span>
-                    )}
-
-                    <div className="space-y-1.5">
-                      <span className="text-xs font-black text-slate-900 block">{plan.name}</span>
-                      <p className="text-[10px] text-slate-400 font-bold leading-relaxed">{plan.description}</p>
-                    </div>
-
-                    <div className="border-t border-b border-slate-100/80 py-3 space-y-2 text-[11px] font-bold text-slate-650">
-                      <div className="flex justify-between items-center">
-                        <span>سهمیه ضبط:</span>
-                        <span className="text-indigo-600 font-black">{toPersianDigits(plan.hours)} ساعت / ماه</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>ظرفیت کلاس:</span>
-                        <span className="text-slate-800">{toPersianDigits(plan.classes === 100 ? 'نامحدود' : plan.classes)} کلاس</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>کپسیتی روزانه AI:</span>
-                        <span className="text-slate-800">{toPersianDigits(plan.tokens)} توکن</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2.5">
-                      <div className="text-center">
-                        <span className="text-sm font-black text-slate-850">{toPersianDigits(plan.price.toLocaleString('fa-IR'))}</span>
-                        <span className="text-[9px] text-slate-400 font-semibold mr-1">تومان / ماه</span>
-                      </div>
-
-                      <Button
-                        fullWidth
-                        disabled={isActive || isActionLoading}
-                        onClick={() => handleChangePlan(plan.id)}
-                        className={`text-[10px] py-1.5 rounded-xl font-bold cursor-pointer ${
-                          isActive 
-                            ? 'bg-slate-100 text-slate-400 border border-slate-200/50' 
-                            : 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                        }`}
-                      >
-                        {isActive ? 'طرح فعال شما' : 'تغییر به این طرح'}
-                      </Button>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Plan Benefits Information */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-black text-slate-800">جزئیات و مزایای لایسنس دانشجویی رایا</h3>
-            
-            <Card className="border border-slate-100/80 bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-black text-slate-800 block">ثبت کلاس‌های درسی فعال</span>
-                    <p className="text-[10px] text-slate-400 leading-relaxed mt-0.5 font-bold">سازماندهی درختی برای تمامی واحدهای دانشگاهی این ترم شما بر اساس سقف کلاس طرح.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-black text-slate-800 block">{toPersianDigits(subscriptionStatus.usage.maxRecordingHours)} ساعت سهمیه ضبط صدا</span>
-                    <p className="text-[10px] text-slate-400 leading-relaxed mt-0.5 font-bold">امکان بارگذاری ویس ضبط شده با فرمت‌های مختلف یا ضبط مستقیم از میکروفون در این ماه.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-black text-slate-800 block">ظرفیت کامل و بهینه روزانه AI</span>
-                    <p className="text-[10px] text-slate-400 leading-relaxed mt-0.5 font-bold">بازه روزانه ایده آل جهت تحلیل، ساخت سوالات چندگزینه‌ای و چت پیشرفته با ویس تدریس.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0 mt-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-black text-slate-800 block">چت هوشمند RAG و پاسخ مستند</span>
-                    <p className="text-[10px] text-slate-400 leading-relaxed mt-0.5 font-bold">تولید خودکار خلاصه، فرمول‌ها و مفاهیم کلیدی هر درس جهت تسهیل امتحانات.</p>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Future benefits */}
-              <div className="border-t border-slate-100/50 mt-5 pt-5 text-right space-y-3">
-                <span className="text-[10px] text-indigo-600 font-extrabold bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full">ویژگی‌های در دست احداث (Coming Soon)</span>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div className="text-right text-slate-400">
-                    <span className="text-xs font-black block">📁 بارگذاری فایل PDF و تصاویر جزوات</span>
-                    <p className="text-[9px] font-bold leading-normal mt-0.5">بارگذاری مستقیم کتاب‌ها و جزوه‌ها جهت هم‌افزایی با ویس تدریس استاد.</p>
-                  </div>
-                  <div className="text-right text-slate-400">
-                    <span className="text-xs font-black block">🤖 دستیار پیشرفته هوشمند عمیق رایا (RAYA)</span>
-                    <p className="text-[9px] font-bold leading-normal mt-0.5">تحلیل استدلال‌محور پیشرفته فرمول‌ها و مسائل فیزیک و مهندسی توسط هوش مصنوعی رایا.</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-
         </div>
 
-        {/* LEFT COLUMN: PAYMENT HISTORY LOGS */}
+        {/* SIDEBAR: PAYMENT HISTORY */}
         <div className="space-y-4">
           <h3 className="text-sm font-black text-slate-800 flex items-center gap-1.5">
             <Receipt className="w-4 h-4 text-indigo-600" />
-            <span>تاریخچه فاکتورها و تراکنش‌ها</span>
+            <span>تاریخچه تراکنش‌ها</span>
           </h3>
 
           <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] divide-y divide-slate-100/50">
             {history.length === 0 ? (
               <div className="text-center py-10 space-y-2">
                 <History className="w-8 h-8 text-slate-300 mx-auto" />
-                <span className="text-xs font-bold text-slate-400 block">هیع تراکنشی یافت نشد.</span>
+                <span className="text-xs font-bold text-slate-400 block">هیچ تراکنشی یافت نشد.</span>
               </div>
             ) : (
               history.map((log) => (
