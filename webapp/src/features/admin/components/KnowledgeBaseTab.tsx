@@ -91,22 +91,22 @@ export const KnowledgeBaseTab: React.FC = () => {
     // Phase 1: Uploading
     setTimeout(() => {
       setUploadProgress(35);
-      setUploadStep('بارگذاری کامل شد. در حال استخراج متون (PDF Extraction)...');
+      setUploadStep('بارگذاری کامل شد. در حال استخراج متون...');
       
       // Phase 2: Extraction
       setTimeout(() => {
         setUploadProgress(55);
-        setUploadStep('قطعه‌بندی محتوا بر اساس سرفصل‌ها (Smart Chunking)...');
+        setUploadStep('قطعه‌بندی محتوا بر اساس سرفصل‌ها...');
         
         // Phase 3: Chunking
         setTimeout(() => {
           setUploadProgress(80);
-          setUploadStep('تولید و استخراج امبدینگ‌های برداری هوشمند (AI Embeddings)...');
+          setUploadStep('تولید و استخراج محتوای هوشمند...');
           
           // Phase 4: Ingestion/Indexing
           setTimeout(() => {
             setUploadProgress(100);
-            setUploadStep('پایان عملیات: با موفقیت در پایگاه برداری ChromaDB ثبت و ایندکس شد.');
+            setUploadStep('پایان عملیات: با موفقیت در کتابخانه هوشمند ثبت شد.');
             
             // Add to list
             const newDoc: TextbookKnowledge = {
@@ -139,7 +139,7 @@ export const KnowledgeBaseTab: React.FC = () => {
   };
 
   const handleDeleteBook = (id: string) => {
-    if (confirm('آیا از حذف این منبع آموزشی و باطل کردن تمامی امبدینگ‌های برداری آن در ChromaDB اطمینان دارید؟')) {
+    if (confirm('آیا از حذف این منبع آموزشی و اطلاعات نمایه‌سازی شده آن اطمینان دارید؟')) {
       setTextbooks(prev => prev.filter(t => t.id !== id));
     }
   };
@@ -152,7 +152,7 @@ export const KnowledgeBaseTab: React.FC = () => {
         {/* Upload Ingestion Control (Left, 1 column) */}
         <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
           <div>
-            <h4 className="text-xs font-black text-slate-800">بارگذاری و ایندکس کتاب جدید</h4>
+            <h4 className="text-xs font-black text-slate-800">بارگذاری و افزودن کتاب جدید</h4>
             <span className="text-[9px] text-slate-400 font-bold block mt-0.5">افزودن خودکار مرجع آموزشی جدید به پایگاه دانش هوش مصنوعی</span>
           </div>
 
@@ -228,7 +228,7 @@ export const KnowledgeBaseTab: React.FC = () => {
               disabled={uploadProgress !== null}
               className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black transition-all cursor-pointer shadow-sm disabled:bg-slate-200 disabled:text-slate-400"
             >
-              شروع خودکار عملیات ایندکس متون
+              شروع خودکار عملیات پردازش متون
             </button>
 
           </form>
@@ -237,7 +237,7 @@ export const KnowledgeBaseTab: React.FC = () => {
           {uploadProgress !== null && (
             <div className="p-4 bg-slate-50 border border-indigo-100/60 rounded-2xl space-y-3 animate-in slide-in-from-bottom-2">
               <div className="flex items-center justify-between">
-                <span className="text-[9px] font-black text-indigo-600">روند ثبت در بردارها</span>
+                <span className="text-[9px] font-black text-indigo-600">روند پیشرفت عملیات</span>
                 <span className="text-[10px] font-mono text-slate-800 font-bold">{toPersianDigits(uploadProgress)}٪</span>
               </div>
               <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
@@ -255,8 +255,8 @@ export const KnowledgeBaseTab: React.FC = () => {
         {/* Existing Textbook knowledge list (Right, 2 columns) */}
         <Card className="lg:col-span-2 p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
           <div>
-            <h4 className="text-xs font-black text-slate-800">کتاب‌های مرجع ایندکس شده در سیستم</h4>
-            <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مشاهده حجم اطلاعات، تعداد قطعات (Chunks) و نسخه‌های فعال</span>
+            <h4 className="text-xs font-black text-slate-800">کتاب‌های مرجع ثبت شده در سیستم</h4>
+            <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مشاهده حجم اطلاعات، تعداد قطعات و نسخه‌های فعال</span>
           </div>
 
           <div className="space-y-3.5 max-h-[420px] overflow-y-auto pr-1">
@@ -279,7 +279,7 @@ export const KnowledgeBaseTab: React.FC = () => {
                 <div className="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100/50">
                   <div className="text-right sm:text-left">
                     <span className="text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-100/60 px-2 py-0.5 rounded-md font-bold block">
-                      ایندکس کامل ({toPersianDigits(b.chunkCount)} قطعه)
+                      پردازش کامل ({toPersianDigits(b.chunkCount)} قطعه)
                     </span>
                     <span className="text-[9px] text-slate-400 block mt-1 font-semibold">ثبت در {toPersianDigits(b.uploadedAt)}</span>
                   </div>
@@ -287,7 +287,7 @@ export const KnowledgeBaseTab: React.FC = () => {
                   <button
                     onClick={() => handleDeleteBook(b.id)}
                     className="w-7 h-7 text-slate-400 hover:bg-rose-50 hover:text-rose-600 rounded-lg flex items-center justify-center border border-slate-200/40 hover:border-rose-100/60 transition-colors cursor-pointer"
-                    title="حذف کتاب و امبدینگ‌ها"
+                    title="حذف کتاب و اطلاعات آن"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

@@ -112,7 +112,7 @@ export const OverviewTab: React.FC = () => {
           </div>
           <div>
             <h4 className="text-xs font-black">وضعیت کلی سرورها و پایگاه داده</h4>
-            <p className="text-[9px] text-slate-400 font-bold mt-0.5">تمامی اتصالات به ChromaDB، پایگاه داده PostgreSQL و FastAPI با موفقیت برقرار است.</p>
+            <p className="text-[9px] text-slate-400 font-bold mt-0.5">تمامی اتصالات به سرویس‌های پایگاه داده با موفقیت برقرار است.</p>
           </div>
         </div>
 
@@ -312,7 +312,7 @@ export const OverviewTab: React.FC = () => {
                <span className="text-slate-800 font-black">{toPersianDigits(1.2)} ثانیه در دقیقه</span>
             </div>
             <div className="flex justify-between text-xs font-bold">
-               <span className="text-slate-600">سرعت تولید امبدینگ و ثبت در بردار:</span>
+               <span className="text-slate-600">سرعت پردازش و ذخیره‌سازی اطلاعات:</span>
                <span className="text-slate-800 font-black">{toPersianDigits(350)} میلی‌ثانیه بر قطعه</span>
             </div>
             <div className="flex justify-between text-xs font-bold">

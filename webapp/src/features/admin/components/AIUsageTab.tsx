@@ -97,7 +97,7 @@ export const AIUsageTab: React.FC = () => {
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">هزینه حدودی سرور (ماهیانه)</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits('$۴۲.۵')} دلار</span>
-            <span className="text-[9px] text-slate-400 font-bold block">مجموع کل توکن‌های مصرف شده</span>
+            <span className="text-[9px] text-slate-400 font-bold block">مجموع کل مصرف شده</span>
           </div>
           <div className="w-9 h-9 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
             <DollarSign className="w-4.5 h-4.5" />
@@ -106,7 +106,7 @@ export const AIUsageTab: React.FC = () => {
 
         <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[10px] font-black text-slate-400 block">مدت گفتار تبدیل شده (Soniox)</span>
+            <span className="text-[10px] font-black text-slate-400 block">مدت گفتار تبدیل شده</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits(340)} ساعت صوتی</span>
             <span className="text-[9px] text-indigo-600 font-bold block">دقت همگام‌سازی کلمات: ۹۸.۹٪</span>
           </div>
@@ -131,7 +131,7 @@ export const AIUsageTab: React.FC = () => {
       {/* Background Processing Queue */}
       <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
         <div>
-          <h4 className="text-xs font-black text-slate-800">صف پردازش صوتی و ساخت امبدینگ‌ها (Active Workers)</h4>
+          <h4 className="text-xs font-black text-slate-800">صف پردازش صوتی هوشمند</h4>
           <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مشاهده زنده وظایف پس‌زمینه، تکرار وظایف شکست‌خورده و مدیریت ظرفیت</span>
         </div>
 
@@ -160,7 +160,7 @@ export const AIUsageTab: React.FC = () => {
                         ? 'bg-amber-50 text-amber-700 border border-amber-100/60'
                         : 'bg-indigo-50 text-indigo-700 border border-indigo-100/60'
                     }`}>
-                      {job.step === 'TRANSCRIBING' ? 'تبدیل گفتار به متن' : job.step === 'CHUNKING' ? 'قطعه‌بندی محتوا' : job.step === 'EMBEDDING' ? 'استخراج امبدینگ' : 'پردازش ناموفق'}
+                      {job.step === 'TRANSCRIBING' ? 'تبدیل گفتار به متن' : job.step === 'CHUNKING' ? 'قطعه‌بندی محتوا' : job.step === 'EMBEDDING' ? 'دسته‌بندی مفهومی اطلاعات' : 'پردازش ناموفق'}
                     </span>
                   </td>
                   <td className="p-3">

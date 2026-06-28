@@ -129,7 +129,7 @@ export const UsersTab: React.FC = () => {
   const handleResetTokens = (userId: string) => {
     setUsers(prev => prev.map(u => {
       if (u.id === userId) {
-        showNotification(`سهمیه توکن روزانه ${u.fullName} با موفقیت صفر شد.`);
+        showNotification(`سهمیه روزانه ${u.fullName} با موفقیت بازنشانی شد.`);
         const updated = { ...u, dailyTokensUsed: 0 };
         if (selectedUser?.id === userId) {
           setSelectedUser(updated);
@@ -246,7 +246,7 @@ export const UsersTab: React.FC = () => {
                 <th className="p-3.5">دانشگاه و رشته</th>
                 <th className="p-3.5">وضعیت اشتراک</th>
                 <th className="p-3.5">مصرف صوتی (ساعت)</th>
-                <th className="p-3.5">توکن امروز</th>
+                <th className="p-3.5">مصرف امروز</th>
                 <th className="p-3.5 text-left">عملیات</th>
               </tr>
             </thead>
@@ -358,7 +358,7 @@ export const UsersTab: React.FC = () => {
                   onClick={() => handleResetTokens(selectedUser.id)}
                   className="px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200/50 text-slate-700 text-[10px] font-black rounded-xl text-right flex items-center justify-between transition-all cursor-pointer"
                 >
-                  <span>صفر کردن توکن روزانه</span>
+                  <span>صفر کردن سهمیه روزانه</span>
                   <RotateCw className="w-4 h-4 text-slate-500" />
                 </button>
 

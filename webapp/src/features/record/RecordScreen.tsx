@@ -913,7 +913,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                         <span>مراحل پردازش فایل صوتی</span>
                         <div className="flex items-center gap-1 text-[10px] text-indigo-600">
                           <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          <span>تحلیل خودکار توسط موتورهای هوش مصنوعی</span>
+                           <span>تحلیل خودکار توسط هوش مصنوعی</span>
                         </div>
                       </div>
 
@@ -927,7 +927,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                           }`}>
                             {pipelineStage === 'uploading' ? '●' : <Check className="w-3 h-3" />}
                           </div>
-                          <span className={pipelineStage === 'uploading' ? 'text-indigo-600 font-black' : 'text-slate-400'}>بارگذاری صوت خام بر روی سرور</span>
+                          <span className={pipelineStage === 'uploading' ? 'text-indigo-600 font-black' : 'text-slate-400'}>بارگذاری فایل صوتی</span>
                         </div>
 
                         {/* Step 2: Queued */}
@@ -939,7 +939,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                           }`}>
                             {pipelineStage === 'queued' ? '●' : ['idle', 'uploading'].includes(pipelineStage) ? '۲' : <Check className="w-3 h-3" />}
                           </div>
-                          <span className={pipelineStage === 'queued' ? 'text-indigo-600 font-black' : 'text-slate-400'}>افزودن به صف نوبت ترنسکریپت</span>
+                          <span className={pipelineStage === 'queued' ? 'text-indigo-600 font-black' : 'text-slate-400'}>افزودن به صف پردازش هوشمند</span>
                         </div>
 
                         {/* Step 3: Soniox Transcription */}
@@ -951,7 +951,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                           }`}>
                             {pipelineStage === 'transcribing' ? '●' : ['idle', 'uploading', 'queued'].includes(pipelineStage) ? '۳' : <Check className="w-3 h-3" />}
                           </div>
-                          <span className={pipelineStage === 'transcribing' ? 'text-indigo-600 font-black' : 'text-slate-400'}>رونوشت کلامی با موتور Soniox (بومی فارسی)</span>
+                          <span className={pipelineStage === 'transcribing' ? 'text-indigo-600 font-black' : 'text-slate-400'}>رونوشت کلامی و تبدیل گفتار به متن</span>
                         </div>
 
                         {/* Step 4: Chunking */}
@@ -963,7 +963,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                           }`}>
                             {pipelineStage === 'chunking' ? '●' : ['idle', 'uploading', 'queued', 'transcribing'].includes(pipelineStage) ? '۴' : <Check className="w-3 h-3" />}
                           </div>
-                          <span className={pipelineStage === 'chunking' ? 'text-indigo-600 font-black' : 'text-slate-400'}>بخش‌بندی معنایی و پاراگراف‌بندی مطالب</span>
+                          <span className={pipelineStage === 'chunking' ? 'text-indigo-600 font-black' : 'text-slate-400'}>ساختاردهی و بخش‌بندی محتوا</span>
                         </div>
 
                         {/* Step 5: Embeddings */}
@@ -975,7 +975,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                           }`}>
                             {pipelineStage === 'embedding' ? '●' : ['idle', 'uploading', 'queued', 'transcribing', 'chunking'].includes(pipelineStage) ? '۵' : <Check className="w-3 h-3" />}
                           </div>
-                          <span className={pipelineStage === 'embedding' ? 'text-indigo-600 font-black' : 'text-slate-400'}>ساخت بردارهای ابعادی و تزریق به پایگاه ChromaDB</span>
+                          <span className={pipelineStage === 'embedding' ? 'text-indigo-600 font-black' : 'text-slate-400'}>دسته‌بندی مفهومی و ذخیره‌سازی دانش</span>
                         </div>
 
                       </div>
@@ -1011,7 +1011,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
             <div className="bg-slate-50 rounded-2xl p-4 text-right flex items-start gap-3 border border-slate-200/40">
               <Info className="w-4.5 h-4.5 text-indigo-600 shrink-0 mt-0.5" />
               <div>
-                <span className="text-xs font-black text-slate-800 block">درباره سیستم بارگذاری و پردازش</span>
+                 <span className="text-xs font-black text-slate-800 block">درباره فرآیند بارگذاری و پردازش</span>
                 <p className="text-[10px] text-slate-500 leading-relaxed font-bold mt-1">
                   پس از تایید فایل صوتی، فرآیند تبدیل گفتار به متن به صورت کاملاً غیرهمزمان در پس‌زمینه اجرا می‌شود و به هیچ عنوان صفحه شما منجمد نخواهد شد. مدت زمان مصرف‌شده مستقیماً از سهمیه لایسنس شما کسر می‌گردد.
                 </p>
@@ -1063,14 +1063,14 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                       switch (job.stage) {
                         case 'uploading': return 'در حال بارگذاری فایل صوتی...';
                         case 'queued': return 'در صف انتظار پردازش هوشمند';
-                        case 'preparing': return 'آماده‌سازی مخزن محاسباتی';
-                        case 'uploading_audio': return 'آپلود به فضای ابری پایدار';
-                        case 'transcribing': return 'الگوریتم تشخیص گفتار فارسی Soniox';
-                        case 'generating_transcript': return 'ساخت فایل رونوشت زمانی خام';
-                        case 'chunking': return 'پاراگراف‌بندی و تفکیک معنایی';
-                        case 'embedding': return 'محاسبه امبدینگ‌های دانش';
-                        case 'indexing': return 'نمایه‌سازی مفهومی در ChromaDB';
-                        case 'saving_metadata': return 'به‌روزرسانی نهایی پایگاه‌داده کلاس';
+                        case 'preparing': return 'آماده‌سازی برای پردازش';
+                        case 'uploading_audio': return 'ذخیره‌سازی امن فایل صوتی';
+                        case 'transcribing': return 'تبدیل دقیق گفتار به متن فارسی';
+                        case 'generating_transcript': return 'ساخت رونوشت زمانی گفتار';
+                        case 'chunking': return 'ساختاردهی و تفکیک محتوا';
+                        case 'embedding': return 'دسته‌بندی مفهومی اطلاعات';
+                        case 'indexing': return 'ذخیره‌سازی هوشمند اطلاعات';
+                        case 'saving_metadata': return 'به‌روزرسانی نهایی اطلاعات کلاس';
                         case 'completed': return 'فرآیند با موفقیت پایان یافت 🎉';
                         case 'failed': return 'خطایی رخ داد؛ پردازش لغو شد ❌';
                         default: return 'در حال تحلیل متن و صوت...';

@@ -37,7 +37,7 @@ export const DatabaseTab: React.FC = () => {
     setIsReindexing(true);
     setTimeout(() => {
       setIsReindexing(false);
-      alert('تمامی نماهای درختی ChromaDB و رکوردهای برداری با موفقیت بهینه‌سازی و مجددا ایندکس شدند.');
+      alert('تمامی خزانه‌های دانش با موفقیت بهینه‌سازی و بازنشانی شدند.');
     }, 2500);
   };
 
@@ -63,9 +63,9 @@ export const DatabaseTab: React.FC = () => {
         <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] font-black text-slate-400 block">موتور برداری ChromaDB</span>
+              <span className="text-[10px] font-black text-slate-400 block">پایگاه دانش هوشمند</span>
               <span className="text-sm font-black text-slate-800">۶ کالکشن تخصصی فعال</span>
-              <span className="text-[9px] text-indigo-600 font-bold block">۳۴,۵۰۰ قطعه امبدینگ ثبت شده</span>
+              <span className="text-[9px] text-indigo-600 font-bold block">۳۴,۵۰۰ قطعه اطلاعات ثبت شده</span>
             </div>
             <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
               <Layers className="w-4.5 h-4.5" />
@@ -76,8 +76,8 @@ export const DatabaseTab: React.FC = () => {
         <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-[10px] font-black text-slate-400 block">متوسط پاسخ بازیابی (RAG)</span>
-              <span className="text-sm font-black text-slate-800">۱۴۰ میلی‌ثانیه جستجوی برداری</span>
+              <span className="text-[10px] font-black text-slate-400 block">متوسط زمان پاسخ هوشمند</span>
+              <span className="text-sm font-black text-slate-800">۱۴۰ میلی‌ثانیه جستجوی هوشمند</span>
               <span className="text-[9px] text-emerald-600 font-bold block">نرخ بازخوانی درست: ۹۹.۴٪</span>
             </div>
             <div className="w-9 h-9 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
@@ -94,8 +94,8 @@ export const DatabaseTab: React.FC = () => {
         <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100/50 pb-3">
             <div>
-              <h4 className="text-xs font-black text-slate-800">کالکشن‌های هوشمند ChromaDB</h4>
-              <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مدیریت لایبرری‌ها، دسته‌بندی و کوئری بردارها</span>
+              <h4 className="text-xs font-black text-slate-800">خزانه‌های دانش هوشمند</h4>
+              <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مدیریت مخازن، دسته‌بندی و جستجوی دانش</span>
             </div>
 
             <button
@@ -104,7 +104,7 @@ export const DatabaseTab: React.FC = () => {
               className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-100 disabled:text-slate-400 text-white text-[10px] font-black rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <RotateCw className={`w-3.5 h-3.5 ${isReindexing ? 'animate-spin' : ''}`} />
-              <span>{isReindexing ? 'درحال بهینه‌سازی...' : 'بهینه‌سازی بردارها'}</span>
+              <span>{isReindexing ? 'درحال بهینه‌سازی...' : 'بهینه‌سازی دانش'}</span>
             </button>
           </div>
 

@@ -330,7 +330,7 @@ export const SettingsScreen: React.FC = () => {
 
               {/* Language preference */}
               <div className="space-y-2">
-                <span className="text-[10px] font-black text-slate-400 block">زبان پیش‌فرض موتور هوش مصنوعی</span>
+                <span className="text-[10px] font-black text-slate-400 block">زبان پیش‌فرض هوش مصنوعی</span>
                 <div className="p-3 bg-slate-50/50 border border-slate-100/60 rounded-xl text-xs font-bold text-slate-700 flex items-center justify-between shadow-xs">
                   <span>فارسی (RTL - راست‌چین)</span>
                   <span className="text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-md">بومی</span>

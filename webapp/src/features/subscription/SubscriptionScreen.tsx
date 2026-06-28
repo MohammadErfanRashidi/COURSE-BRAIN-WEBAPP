@@ -222,7 +222,7 @@ export const SubscriptionScreen: React.FC = () => {
                     <span className="text-sm font-black text-slate-800 block">
                       {toPersianDigits(Math.max(0, Math.min(100, Math.round(((subscriptionStatus.usage.maxDailyTokens - subscriptionStatus.usage.dailyTokensUsed) / subscriptionStatus.usage.maxDailyTokens) * 100))))}٪ در دسترس
                     </span>
-                    <span className="text-[9px] text-slate-400 block font-bold">از {toPersianDigits(subscriptionStatus.usage.maxDailyTokens)} توکن ورودی روزانه</span>
+                    <span className="text-[9px] text-slate-400 block font-bold">از {toPersianDigits(subscriptionStatus.usage.maxDailyTokens)} سهمیه ورودی روزانه</span>
                   </div>
 
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
@@ -254,7 +254,7 @@ export const SubscriptionScreen: React.FC = () => {
                   <div className="w-5 h-5 bg-emerald-50 border border-emerald-100/60 text-emerald-600 rounded-md flex items-center justify-center shrink-0">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-[10px] font-bold text-slate-700">{toPersianDigits(subscriptionStatus.usage.maxDailyTokens)} توکن هوش مصنوعی در روز</span>
+                  <span className="text-[10px] font-bold text-slate-700">{toPersianDigits(subscriptionStatus.usage.maxDailyTokens)} پاسخ هوش مصنوعی در روز</span>
                 </div>
               </div>
 

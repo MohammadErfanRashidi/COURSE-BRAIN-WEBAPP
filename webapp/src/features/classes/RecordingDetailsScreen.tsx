@@ -687,7 +687,7 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
                   <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
                   <div>
                     <h3 className="text-sm font-black text-slate-800">خلاصه علمی هوشمند و مفاهیم آموزشی</h3>
-                    <p className="text-[10px] text-slate-400 font-bold">تولید شده به وسیله پردازش موتور استدلالی بر پایه صحبت‌های استاد</p>
+                    <p className="text-[10px] text-slate-400 font-bold">تولید شده به وسیله هوش مصنوعی بر اساس صحبت‌های استاد</p>
                   </div>
                 </div>
 

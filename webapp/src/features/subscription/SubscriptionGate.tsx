@@ -123,7 +123,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
                   <Check className="w-3 h-3 text-indigo-600" />
                 </div>
                 <div className="text-xs">
-                  <span className="text-slate-700 font-bold">سیستم چت RAG هوشمند</span>
+                  <span className="text-slate-700 font-bold">سیستم چت هوشمند با ارجاع به منبع</span>
                   <span className="text-slate-400 block text-[10px] mt-0.5">پاسخ‌های دقیق مستند به مرجع</span>
                 </div>
               </div>

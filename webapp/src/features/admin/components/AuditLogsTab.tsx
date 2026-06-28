@@ -37,7 +37,7 @@ export const AuditLogsTab: React.FC = () => {
       timestamp: '۱۴۰۵/۰۴/۰۳ ۱۰:۰۵',
       adminName: 'سارا رضایی',
       adminRole: 'ADMINISTRATOR',
-      action: 'ریست سهمیه توکن‌های مصرف شده امروز فاطمه علوی',
+      action: 'بازنشانی سهمیه مصرف شده امروز فاطمه علوی',
       affectedUser: '09199876543',
       ipAddress: '192.168.1.88',
       status: 'SUCCESS'
