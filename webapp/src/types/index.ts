@@ -105,6 +105,7 @@ export interface SubscriptionStatus {
     maxRecordingHours: number;
     dailyTokensUsed: number;
     maxDailyTokens: number;
+    lastDailyReset?: string;
   };
 }
 

@@ -188,6 +188,11 @@ const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours: number
   }
 };
 
+// Daily reset: returns YYYY-MM-DD in Asia/Tehran timezone
+function getTodayDateString(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(new Date());
+}
+
 let simulatedSubscription: SubscriptionStatus = (() => {
   try {
     const cached = localStorage.getItem('cb_simulated_subscription');
@@ -224,6 +229,7 @@ let simulatedSubscription: SubscriptionStatus = (() => {
       maxRecordingHours: 10,
       dailyTokensUsed: 12450,
       maxDailyTokens: 60000,
+      lastDailyReset: getTodayDateString(),
     }
   };
 })();
@@ -532,6 +538,13 @@ export const SubscriptionService = {
         const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
         simulatedSubscription.usage.recordingHoursUsed = Number((totalSeconds / 3600).toFixed(1));
         
+        // Daily AI token reset
+        const todayStr = getTodayDateString();
+        if (simulatedSubscription.usage.lastDailyReset !== todayStr) {
+          simulatedSubscription.usage.dailyTokensUsed = 0;
+          simulatedSubscription.usage.lastDailyReset = todayStr;
+        }
+
         // Sync active classes count
         const classes = getSimulatedClasses();
         simulatedSubscription.usage.classesCount = classes.length;
