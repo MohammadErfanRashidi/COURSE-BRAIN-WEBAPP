@@ -7,7 +7,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Mic, 
   Upload, 
-  Clock, 
   AlertTriangle, 
   Sparkles, 
   FileAudio, 
@@ -32,7 +31,7 @@ import { ClassService, RecordingService, SubscriptionService } from '../../servi
 import { Class, Recording, SubscriptionStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { ProcessingQueueService, ProcessJob, JobStage } from '../../services/processingQueue';
-import { formatPersianDuration, toPersianDigits as farsiDigitsUtil } from '../../utils/timeFormatter';
+
 
 interface RecordScreenProps {
   onNavigate: (tab: string, arg?: any) => void;
@@ -63,8 +62,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
   const [isLoadingClasses, setIsLoadingClasses] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Remaining limits displayed at top (Refreshed from backend)
-  const [limitsLoading, setLimitsLoading] = useState(false);
+
 
   // -------------------------------------------------------------------------
   // 1. LIVE RECORDING STATE
@@ -236,13 +234,10 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
   }, [isRecording, isPaused]);
 
   const syncUsageData = async () => {
-    setLimitsLoading(true);
     try {
       await syncSubscription();
     } catch (err) {
       console.warn('Failed to sync limits', err);
-    } finally {
-      setLimitsLoading(false);
     }
   };
 
@@ -545,56 +540,15 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  // Limit check logic
-  const maxHours = subscriptionStatus?.usage.maxRecordingHours || 10;
-  const hoursUsed = subscriptionStatus?.usage.recordingHoursUsed || 0;
-  const remainingHours = maxHours - hoursUsed;
-
   return (
     <div className="font-sans text-right space-y-6 animate-in fade-in duration-300">
       
-      {/* Top Remaining Limits Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100/50 pb-5">
-        <div>
-          <h1 className="text-xl font-black text-slate-900">پردازش و بارگذاری تدریس صوتی</h1>
-          <p className="text-xs text-slate-400 mt-1 font-medium">
-            جلسات صوتی کلاس درس را ضبط کنید یا فایل‌های پیش‌فرض استاد را جهت پیاده‌سازی متنی هوشمند بارگذاری نمایید.
-          </p>
-        </div>
-
-        {subscriptionStatus && (
-          <div className="flex flex-col items-end gap-1.5 shrink-0 self-start sm:self-auto">
-            <Card className="border border-slate-100/80 bg-white px-4 py-2.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex items-center gap-3">
-              <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
-                {limitsLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Clock className="w-4 h-4" />
-                )}
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] text-slate-400 block font-bold leading-none">زمان ضبط باقی‌مانده این ماه</span>
-                <span className="text-xs font-black text-indigo-600 block mt-1.5">
-                  {formatPersianDuration(remainingHours)}
-                </span>
-                <span className="text-[9px] text-slate-400 block mt-1 font-bold">
-                  از کل {toPersianDigits(maxHours)} ساعت سهمیه مجاز دوره
-                </span>
-              </div>
-            </Card>
-            {/* Low remaining warning */}
-            {remainingHours <= (maxHours * 0.2) && remainingHours > 0 && (
-              <p className="text-[9px] text-amber-600 font-extrabold leading-normal text-right max-w-xs animate-pulse">
-                ⚠️ کمتر از ۲۰٪ از سهمیه ضبط این ماه شما باقی مانده است.
-              </p>
-            )}
-            {remainingHours <= 0 && (
-              <p className="text-[9px] text-rose-600 font-extrabold leading-normal text-right max-w-xs">
-                🚫 سهمیه ضبط صوتی این دوره به پایان رسیده است. در تمدید بعدی بازنشانی می‌شود.
-              </p>
-            )}
-          </div>
-        )}
+      {/* Header */}
+      <div className="border-b border-slate-100/50 pb-5">
+        <h1 className="text-xl font-black text-slate-900">پردازش و بارگذاری تدریس صوتی</h1>
+        <p className="text-xs text-slate-400 mt-1 font-medium">
+          جلسات صوتی کلاس درس را ضبط کنید یا فایل‌های پیش‌فرض استاد را جهت پیاده‌سازی متنی هوشمند بارگذاری نمایید.
+        </p>
       </div>
 
       {/* ERROR TOAST */}

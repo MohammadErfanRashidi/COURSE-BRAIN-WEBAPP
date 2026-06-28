@@ -31,7 +31,7 @@ import { useAuthStore } from '../../store/authStore';
 import { ClassService, RecordingService, SubscriptionService } from '../../services/api';
 import { Class, Recording, SubscriptionStatus } from '../../types';
 import { usePlayerStore } from '../../store/playerStore';
-import { formatPersianDuration, toPersianDigits as farsiDigitsUtil } from '../../utils/timeFormatter';
+import { formatPersianDuration } from '../../utils/timeFormatter';
 
 interface DashboardScreenProps {
   onNavigate: (tab: string, arg?: any) => void;
@@ -564,7 +564,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 ? "نامحدود" 
                 : remainingHours <= 0 
                   ? "حد مجاز به پایان رسید" 
-                  : `${toPersianDigits(Math.floor(remainingHours))} ساعت و ${toPersianDigits(Math.round((remainingHours % 1) * 60))} دقیقه باقی‌مانده`}
+                  : formatPersianDuration(remainingHours)}
             </div>
             
             {!isUnlimitedRecording && (
