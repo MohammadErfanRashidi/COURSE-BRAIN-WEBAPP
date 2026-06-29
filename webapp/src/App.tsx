@@ -425,7 +425,7 @@ export default function App() {
                   </div>
                   <div className="text-right overflow-hidden flex-1">
                     <span className="text-xs font-black text-slate-800 group-hover:text-indigo-600 block truncate transition-colors duration-300">{user.fullName || 'دانشجوی مهمان'}</span>
-                    <span className="text-[9px] text-slate-400 font-bold block mt-0.5 truncate">{user.academicProfile?.majorName || 'تکمیل پروفایل'}</span>
+                    <span className="text-[9px] text-slate-400 font-bold block mt-0.5 truncate">{user.academicProfile?.degree === 'md' ? 'دکترای پزشکی عمومی' : 'تکمیل پروفایل'}</span>
                   </div>
                 </div>
 

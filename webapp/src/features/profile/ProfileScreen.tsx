@@ -24,7 +24,7 @@ import { Button } from '../../components/Button';
 import { Select } from '../../components/Select';
 import { useAuthStore } from '../../store/authStore';
 import { AcademicService } from '../../services/api';
-import { University, Major, Semester, User } from '../../types';
+import { University, User } from '../../types';
 import { formatPersianDuration } from '../../utils/timeFormatter';
 
 interface ProfileScreenProps {
@@ -36,8 +36,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
 
   // Academic selections lists loaded from service
   const [universities, setUniversities] = useState<University[]>([]);
-  const [majors, setMajors] = useState<Major[]>([]);
-  const [semesters, setSemesters] = useState<Semester[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,9 +44,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
   // Form State
   const [fullName, setFullName] = useState('');
   const [selectedUniversity, setSelectedUniversity] = useState('');
-  const [selectedMajor, setSelectedMajor] = useState('');
-  const [selectedSemester, setSelectedSemester] = useState('');
-  const [selectedDegree, setSelectedDegree] = useState('bachelor');
 
   const toPersianDigits = (str: string | number) => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -59,22 +54,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
     async function loadData() {
       setIsLoading(true);
       try {
-        const [uniList, majorList, semList] = await Promise.all([
-          AcademicService.getUniversities(),
-          AcademicService.getMajors(),
-          AcademicService.getSemesters()
-        ]);
+        const uniList = await AcademicService.getUniversities();
         setUniversities(uniList);
-        setMajors(majorList);
-        setSemesters(semList);
 
         if (user) {
           setFullName(user.fullName || '');
           if (user.academicProfile) {
             setSelectedUniversity(user.academicProfile.universityId);
-            setSelectedMajor(user.academicProfile.majorId);
-            setSelectedSemester(user.academicProfile.semesterId);
-            setSelectedDegree(user.academicProfile.degree || 'bachelor');
           }
         }
       } catch (err: any) {
@@ -96,8 +82,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
 
     try {
       const selectedUniName = universities.find(u => u.id === selectedUniversity)?.name || '';
-      const selectedMajorName = majors.find(m => m.id === selectedMajor)?.name || '';
-      const selectedSemesterName = semesters.find(s => s.id === selectedSemester)?.name || '';
 
       const updatedUser: User = {
         ...user,
@@ -105,13 +89,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
         academicProfile: {
           universityId: selectedUniversity,
           universityName: selectedUniName,
-          degree: selectedDegree,
-          majorId: selectedMajor,
-          majorName: selectedMajorName,
-          semesterId: selectedSemester,
-          semesterName: selectedSemesterName,
-          classIds: user.academicProfile?.classIds || [],
-          classes: user.academicProfile?.classes || []
+          degree: 'md',
         }
       };
 
@@ -196,7 +174,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
 
               {isLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {[1, 2, 3, 4, 5].map(i => (
+                  {[1, 2, 3].map(i => (
                     <div key={i} className="space-y-2">
                       <div className="h-3 w-20 bg-slate-200 animate-pulse rounded-md" />
                       <div className="h-11 w-full bg-slate-50 border border-slate-100/50 animate-pulse rounded-xl" />
@@ -219,21 +197,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
                     />
                   </div>
 
-                  {/* Degree Selection */}
+                  {/* Degree Display (MD only, locked) */}
                   <div className="space-y-1.5">
-                    <Select
-                      label="مقطع تحصیلی"
-                      placeholder="مقطع تحصیلی خود را انتخاب کنید"
-                      options={[
-                        { value: 'associate', label: 'کاردانی' },
-                        { value: 'bachelor', label: 'کارشناسی (لیسانس)' },
-                        { value: 'master', label: 'کارشناسی ارشد (فوق لیسانس)' },
-                        { value: 'phd', label: 'دکتری تخصصی (PhD)' },
-                      ]}
-                      value={selectedDegree}
-                      onChange={setSelectedDegree}
-                      searchable={false}
-                    />
+                    <label className="text-[10px] font-black text-slate-500 block">مقطع تحصیلی</label>
+                    <div className="w-full bg-slate-50 border border-slate-200/40 rounded-xl px-4 py-2.5 text-xs text-slate-500 font-bold">
+                      دکترای پزشکی عمومی (MD)
+                    </div>
                   </div>
 
                   {/* University Selector */}
@@ -244,32 +213,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
                       options={universities.map(uni => ({ value: uni.id, label: uni.name }))}
                       value={selectedUniversity}
                       onChange={setSelectedUniversity}
-                      searchable
-                      required
-                    />
-                  </div>
-
-                  {/* Major Selector */}
-                  <div className="space-y-1.5">
-                    <Select
-                      label="رشته تخصصی تحصیلی"
-                      placeholder="-- انتخاب رشته تحصیلی --"
-                      options={majors.map(mj => ({ value: mj.id, label: mj.name }))}
-                      value={selectedMajor}
-                      onChange={setSelectedMajor}
-                      searchable
-                      required
-                    />
-                  </div>
-
-                  {/* Semester Selector */}
-                  <div className="space-y-1.5">
-                    <Select
-                      label="نیمسال تحصیلی فعال"
-                      placeholder="-- انتخاب نیمسال جاری --"
-                      options={semesters.map(sem => ({ value: sem.id, label: sem.name }))}
-                      value={selectedSemester}
-                      onChange={setSelectedSemester}
                       searchable
                       required
                     />

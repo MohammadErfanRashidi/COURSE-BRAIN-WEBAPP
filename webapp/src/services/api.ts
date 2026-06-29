@@ -7,8 +7,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { 
   User, 
   University, 
-  Major, 
-  Semester, 
+  Course,
   Class, 
   SubscriptionStatus, 
   AuthResponse,
@@ -45,47 +44,68 @@ const MOCK_UNIVERSITIES: University[] = [
   { id: '8', name: 'دانشگاه علوم پزشکی تهران', city: 'تهران' },
 ];
 
-const MOCK_MAJORS: Major[] = [
-  { id: 'm1', name: 'مهندسی کامپیوتر' },
-  { id: 'm2', name: 'مهندسی برق' },
-  { id: 'm3', name: 'مهندسی صنایع' },
-  { id: 'm4', name: 'مهندسی مکانیک' },
-  { id: 'm5', name: 'علوم کامپیوتر' },
-  { id: 'm6', name: 'مدیریت بازرگانی' },
-  { id: 'm7', name: 'روانشناسی' },
-  { id: 'm8', name: 'پزشکی عمومی' },
-  { id: 'm9', name: 'حقوق' },
+const MD_COURSES: Course[] = [
+  // Semester 1
+  { id: 'md_s1_c1', name: 'مقدمه علوم تشریح', degree: 'md', semester: 1 },
+  { id: 'md_s1_c2', name: 'اصول خدمات سلامت', degree: 'md', semester: 1 },
+  { id: 'md_s1_c3', name: 'آشنایی با رایانه نظری و عملی', degree: 'md', semester: 1 },
+  { id: 'md_s1_c4', name: 'فیزیک پزشکی', degree: 'md', semester: 1 },
+  { id: 'md_s1_c5', name: 'زبان مقدماتی', degree: 'md', semester: 1 },
+  { id: 'md_s1_c6', name: 'بیوشیمی مولکول و سلول (نظری)', degree: 'md', semester: 1 },
+  { id: 'md_s1_c7', name: 'بیوشیمی مولکول و سلول (عملی)', degree: 'md', semester: 1 },
+  // Semester 2
+  { id: 'md_s2_c1', name: 'آداب پزشکی ۱', degree: 'md', semester: 2 },
+  { id: 'md_s2_c2', name: 'بیوشیمی دیسیپلین نظری', degree: 'md', semester: 2 },
+  { id: 'md_s2_c3', name: 'بیوشیمی دیسیپلین عملی', degree: 'md', semester: 2 },
+  { id: 'md_s2_c4', name: 'اصول اپیدمیولوژی', degree: 'md', semester: 2 },
+  { id: 'md_s2_c5', name: 'زبان تخصصی ۱', degree: 'md', semester: 2 },
+  { id: 'md_s2_c6', name: 'روانشناسی سلامت', degree: 'md', semester: 2 },
+  { id: 'md_s2_c7', name: 'فیزیولوژی سلول', degree: 'md', semester: 2 },
+  { id: 'md_s2_c8', name: 'علوم تشریح اسکلتی–عضلانی (نظری)', degree: 'md', semester: 2 },
+  { id: 'md_s2_c9', name: 'علوم تشریح اسکلتی–عضلانی (عملی)', degree: 'md', semester: 2 },
+  // Semester 3
+  { id: 'md_s3_c1', name: 'زبان تخصصی ۲', degree: 'md', semester: 3 },
+  { id: 'md_s3_c2', name: 'آداب پزشکی ۲', degree: 'md', semester: 3 },
+  { id: 'md_s3_c3', name: 'علوم تشریح حواس ویژه (نظری–عملی)', degree: 'md', semester: 3 },
+  { id: 'md_s3_c4', name: 'علوم تشریح غدد درون‌ریز (نظری–عملی)', degree: 'md', semester: 3 },
+  { id: 'md_s3_c5', name: 'فیزیولوژی اعصاب و حواس ویژه', degree: 'md', semester: 3 },
+  { id: 'md_s3_c6', name: 'قارچ‌شناسی', degree: 'md', semester: 3 },
+  { id: 'md_s3_c7', name: 'علوم تشریح سر و گردن (نظری)', degree: 'md', semester: 3 },
+  { id: 'md_s3_c8', name: 'علوم تشریح سر و گردن (عملی)', degree: 'md', semester: 3 },
+  // Semester 4
+  { id: 'md_s4_c1', name: 'آداب پزشکی ۳', degree: 'md', semester: 4 },
+  { id: 'md_s4_c2', name: 'فیزیولوژی گردش خون', degree: 'md', semester: 4 },
+  { id: 'md_s4_c3', name: 'باکتری‌شناسی عملی', degree: 'md', semester: 4 },
+  { id: 'md_s4_c4', name: 'فیزیولوژی قلب', degree: 'md', semester: 4 },
+  { id: 'md_s4_c5', name: 'باکتری‌شناسی نظری', degree: 'md', semester: 4 },
+  { id: 'md_s4_c6', name: 'اصول کلی تغذیه', degree: 'md', semester: 4 },
+  { id: 'md_s4_c7', name: 'ژنتیک پزشکی', degree: 'md', semester: 4 },
+  { id: 'md_s4_c8', name: 'علوم تشریح دستگاه قلب و عروق (نظری)', degree: 'md', semester: 4 },
+  { id: 'md_s4_c9', name: 'علوم تشریح دستگاه قلب و عروق (عملی)', degree: 'md', semester: 4 },
+  { id: 'md_s4_c10', name: 'ایمنی‌شناسی پزشکی', degree: 'md', semester: 4 },
+  { id: 'md_s4_c11', name: 'علوم تشریح دستگاه تنفس (نظری–عملی)', degree: 'md', semester: 4 },
+  { id: 'md_s4_c12', name: 'فیزیولوژی خون', degree: 'md', semester: 4 },
+  // Semester 5
+  { id: 'md_s5_c1', name: 'کلیات پاتولوژی و آسیب سلولی', degree: 'md', semester: 5 },
+  { id: 'md_s5_c2', name: 'اصول پایه فارماکولوژی پزشکی', degree: 'md', semester: 5 },
+  { id: 'md_s5_c3', name: 'پاتولوژی اختلالات سیستم ایمنی بدن انسان', degree: 'md', semester: 5 },
+  { id: 'md_s5_c4', name: 'بیوشیمی کلیه', degree: 'md', semester: 5 },
+  { id: 'md_s5_c5', name: 'ویروس‌شناسی پزشکی', degree: 'md', semester: 5 },
+  { id: 'md_s5_c6', name: 'پاتولوژی اختلالات ژنتیک و بیماری‌های دوره کودکی', degree: 'md', semester: 5 },
+  { id: 'md_s5_c7', name: 'پاتولوژی نئوپلازی', degree: 'md', semester: 5 },
+  { id: 'md_s5_c8', name: 'آداب پزشکی ۴', degree: 'md', semester: 5 },
+  { id: 'md_s5_c9', name: 'پاتولوژی بیماری‌های محیطی، تغذیه‌ای و عفونی', degree: 'md', semester: 5 },
+  { id: 'md_s5_c10', name: 'علوم تشریح گوارش (نظری)', degree: 'md', semester: 5 },
+  { id: 'md_s5_c11', name: 'علوم تشریح گوارش (عملی)', degree: 'md', semester: 5 },
+  { id: 'md_s5_c12', name: 'علوم تشریح ادراری تناسلی (نظری–عملی)', degree: 'md', semester: 5 },
+  { id: 'md_s5_c13', name: 'فیزیولوژی گوارش', degree: 'md', semester: 5 },
+  { id: 'md_s5_c14', name: 'فیزیولوژی کلیه', degree: 'md', semester: 5 },
+  { id: 'md_s5_c15', name: 'فیزیولوژی غدد و تولیدمثل', degree: 'md', semester: 5 },
+  { id: 'md_s5_c16', name: 'فیزیولوژی عملی', degree: 'md', semester: 5 },
+  { id: 'md_s5_c17', name: 'بیوشیمی هورمون‌ها', degree: 'md', semester: 5 },
+  { id: 'md_s5_c18', name: 'آسیب، ترمیم بافتی و اختلالات همودینامیک', degree: 'md', semester: 5 },
+  { id: 'md_s5_c19', name: 'پاتولوژی عملی', degree: 'md', semester: 5 },
 ];
-
-const MOCK_SEMESTERS: Semester[] = [
-  { id: 's1', name: 'نیمسال اول ۱۴۰۴-۱۴۰۵ (مهر ۱۴۰۴)' },
-  { id: 's2', name: 'نیمسال دوم ۱۴۰۴-۱۴۰۵ (بهمن ۱۴۰۴)' },
-  { id: 's3', name: 'نیمسال اول ۱۴۰۵-۱۴۰۶ (مهر ۱۴۰۵)' },
-];
-
-const MOCK_CLASSES: Record<string, Class[]> = {
-  's1': [
-    { id: 'c1', name: 'ریاضی عمومی ۱', code: 'math-101', instructor: 'دکتر علوی' },
-    { id: 'c2', name: 'برنامه‌سازی پیشرفته', code: 'comp-102', instructor: 'دکتر رضوی' },
-    { id: 'c3', name: 'فیزیک هالیدی ۱', code: 'phys-101', instructor: 'دکتر اکبری' },
-    { id: 'c4', name: 'مبانی هوش مصنوعی', code: 'ai-201', instructor: 'دکتر محمدی' },
-    { id: 'c5', name: 'طراحی الگوریتم', code: 'algo-301', instructor: 'دکتر حسینی' },
-    { id: 'c6', name: 'معماری کامپیوتر', code: 'arch-202', instructor: 'دکتر کریمی' },
-  ],
-  's2': [
-    { id: 'c7', name: 'ریاضی عمومی ۲', code: 'math-102', instructor: 'دکتر علوی' },
-    { id: 'c8', name: 'ساختمان داده‌ها', code: 'comp-201', instructor: 'دکتر رضوی' },
-    { id: 'c9', name: 'مدارهای منطقی', code: 'elec-101', instructor: 'دکتر سلیمانی' },
-    { id: 'c10', name: 'نظریه زبان‌ها و ماشین‌ها', code: 'comp-303', instructor: 'دکتر امینی' },
-    { id: 'c11', name: 'پایگاه داده‌ها', code: 'db-205', instructor: 'دکتر تهرانی' },
-  ],
-  's3': [
-    { id: 'c1', name: 'ریاضی عمومی ۱', code: 'math-101', instructor: 'دکتر علوی' },
-    { id: 'c12', name: 'مبانی شبکه‌های کامپیوتری', code: 'net-301', instructor: 'دکتر احمدی' },
-    { id: 'c13', name: 'سیستم‌های عامل', code: 'os-302', instructor: 'دکتر حیدری' },
-    { id: 'c14', name: 'مهندسی نرم‌افزار', code: 'se-204', instructor: 'دکتر باقری' },
-  ]
-};
 
 // Simulated storage state for robust mock fallback
 let simulatedUser: User | null = (() => {
@@ -101,12 +121,6 @@ export const getSimulatedClasses = (): Class[] => {
   try {
     const cached = localStorage.getItem('cb_simulated_classes');
     if (cached) return JSON.parse(cached);
-    
-    if (simulatedUser?.academicProfile?.classes) {
-      const clsList = simulatedUser.academicProfile.classes;
-      localStorage.setItem('cb_simulated_classes', JSON.stringify(clsList));
-      return clsList;
-    }
     return [];
   } catch {
     return [];
@@ -241,16 +255,6 @@ export const saveSimulatedSubscription = (sub: SubscriptionStatus) => {
 
 export const saveSimulatedClasses = (classes: Class[]) => {
   localStorage.setItem('cb_simulated_classes', JSON.stringify(classes));
-  
-  // Also sync with simulatedUser academicProfile
-  if (simulatedUser && simulatedUser.academicProfile) {
-    simulatedUser.academicProfile.classes = classes;
-    simulatedUser.academicProfile.classIds = classes.map(c => c.id);
-    localStorage.setItem(USER_DATA_KEY, JSON.stringify(simulatedUser));
-    if (simulatedUser.phoneNumber) {
-      localStorage.setItem(`cb_user_${simulatedUser.phoneNumber}`, JSON.stringify(simulatedUser));
-    }
-  }
   
   // Update subscription usage count
   simulatedSubscription.usage.classesCount = classes.length;
@@ -436,42 +440,19 @@ export const AcademicService = {
     );
   },
 
-  getMajors: async (): Promise<Major[]> => {
+  getMDCourses: async (): Promise<Course[]> => {
     return apiCall(
       async () => {
-        const response = await api.get<Major[]>('/academic/majors');
+        const response = await api.get<Course[]>('/academic/courses/md');
         return response.data;
       },
-      () => MOCK_MAJORS
-    );
-  },
-
-  getSemesters: async (): Promise<Semester[]> => {
-    return apiCall(
-      async () => {
-        const response = await api.get<Semester[]>('/academic/semesters');
-        return response.data;
-      },
-      () => MOCK_SEMESTERS
-    );
-  },
-
-  getClasses: async (semesterId: string): Promise<Class[]> => {
-    return apiCall(
-      async () => {
-        const response = await api.get<Class[]>(`/academic/classes?semesterId=${semesterId}`);
-        return response.data;
-      },
-      () => MOCK_CLASSES[semesterId] || MOCK_CLASSES['s1']
+      () => MD_COURSES
     );
   },
 
   submitOnboarding: async (data: {
     universityId: string;
     degree: string;
-    majorId: string;
-    semesterId: string;
-    classIds: string[];
   }): Promise<User> => {
     return apiCall(
       async () => {
@@ -483,21 +464,11 @@ export const AcademicService = {
         if (!simulatedUser) throw new Error('کاربر یافت نشد. مجددا وارد شوید.');
 
         const selectedUni = MOCK_UNIVERSITIES.find(u => u.id === data.universityId);
-        const selectedMajor = MOCK_MAJORS.find(m => m.id === data.majorId);
-        const selectedSem = MOCK_SEMESTERS.find(s => s.id === data.semesterId);
-        const allAvailable = MOCK_CLASSES[data.semesterId] || MOCK_CLASSES['s1'];
-        const selectedClasses = allAvailable.filter(c => data.classIds.includes(c.id));
 
         const academicProfile: AcademicProfile = {
           universityId: data.universityId,
           universityName: selectedUni?.name || 'دانشگاه پیش‌فرض',
           degree: data.degree,
-          majorId: data.majorId,
-          majorName: selectedMajor?.name || 'رشته پیش‌فرض',
-          semesterId: data.semesterId,
-          semesterName: selectedSem?.name || 'نیمسال پیش‌فرض',
-          classIds: data.classIds,
-          classes: selectedClasses
         };
 
         const updatedUser: User = {
@@ -509,9 +480,6 @@ export const AcademicService = {
         simulatedUser = updatedUser;
         localStorage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
         localStorage.setItem(`cb_user_${updatedUser.phoneNumber}`, JSON.stringify(updatedUser));
-
-        // Update active subscription limits based on selected classes
-        saveSimulatedClasses(selectedClasses);
 
         return updatedUser;
       }

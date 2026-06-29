@@ -17,13 +17,7 @@ export interface User {
 export interface AcademicProfile {
   universityId: string;
   universityName: string;
-  degree: string; // 'bachelor' | 'master' | 'phd' | 'associate'
-  majorId: string;
-  majorName: string;
-  semesterId: string;
-  semesterName: string;
-  classIds: string[];
-  classes: Class[];
+  degree: string; // 'md' for Doctor of Medicine, extensible later
 }
 
 export interface University {
@@ -32,14 +26,11 @@ export interface University {
   city?: string;
 }
 
-export interface Major {
+export interface Course {
   id: string;
   name: string;
-}
-
-export interface Semester {
-  id: string;
-  name: string; // e.g., "نیمسال اول ۱۴۰۴-۱۴۰۵"
+  degree: string;
+  semester: number;
 }
 
 export interface Class {

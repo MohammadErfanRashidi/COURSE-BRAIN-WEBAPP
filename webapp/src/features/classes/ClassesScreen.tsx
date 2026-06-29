@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { 
   BookOpen, 
   Trash2, 
@@ -26,14 +26,14 @@ import {
   FileText,
   X,
   MoreVertical,
-  Headphones
+  Headphones,
+  GraduationCap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
-import { Select } from '../../components/Select';
-import { ClassService, RecordingService, SubscriptionService, ChatService } from '../../services/api';
-import { Class, Recording, SubscriptionStatus } from '../../types';
+import { AcademicService, ClassService, RecordingService, SubscriptionService, ChatService } from '../../services/api';
+import { Class, Course, Recording, SubscriptionStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { ClassChat } from './ClassChat';
 import { TranscriptViewer } from '../../components/TranscriptViewer';
@@ -79,11 +79,10 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
   const [showResetChatConfirm, setShowResetChatConfirm] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
   
-  // Create Class Form State
-  const [templates, setTemplates] = useState<string[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState('');
-  const [instructor, setInstructor] = useState('');
-  const [classCode, setClassCode] = useState('');
+  // MD Course Catalog States
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedSemesters, setExpandedSemesters] = useState<Set<number>>(new Set([1]));
 
   // Close overflow menus on click outside or Escape
   useClickOutside({
@@ -110,14 +109,14 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
     setIsLoading(true);
     try {
       await syncSubscription();
-      const [fetchedClasses, fetchedRecordings, fetchedTemplates] = await Promise.all([
+      const [fetchedClasses, fetchedRecordings, fetchedCourses] = await Promise.all([
         ClassService.getClasses(),
         RecordingService.getRecordings(),
-        ClassService.getAvailableTemplates()
+        AcademicService.getMDCourses()
       ]);
       setClasses(fetchedClasses);
       setRecordings(fetchedRecordings);
-      setTemplates(fetchedTemplates);
+      setCourses(fetchedCourses);
 
       if (openClassId) {
         const cls = fetchedClasses.find(c => c.id === openClassId);
@@ -147,9 +146,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
   useEffect(() => {
     if (shouldOpenCreateModal) {
       setError(null);
-      setSelectedTemplate('');
-      setInstructor('');
-      setClassCode('');
+      setSearchQuery('');
       setShowCreateModal(true);
       if (onCloseCreateModal) {
         onCloseCreateModal();
@@ -157,23 +154,62 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
     }
   }, [shouldOpenCreateModal, onCloseCreateModal]);
 
-  const handleCreateClass = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedTemplate) return;
+  const handleCreateClass = async (course: Course) => {
+    if (classes.length >= 5) {
+      setError('شما به حداکثر ۵ کلاس مجاز در طرح جاری رسیده‌اید.');
+      return;
+    }
     setIsSubmitLoading(true);
     setError(null);
 
     try {
-      await ClassService.createClass(selectedTemplate, instructor, classCode);
+      await ClassService.createClass(course.name, '', course.id);
       setShowCreateModal(false);
-      setSelectedTemplate('');
-      setInstructor('');
-      setClassCode('');
+      setSearchQuery('');
       await loadData();
     } catch (err: any) {
       setError(err.message || 'خطا در ثبت کلاس جدید');
     } finally {
       setIsSubmitLoading(false);
+    }
+  };
+
+  // Group courses by semester
+  const coursesBySemester = useMemo(() => {
+    const map = new Map<number, Course[]>();
+    courses.forEach(c => {
+      if (!map.has(c.semester)) map.set(c.semester, []);
+      map.get(c.semester)!.push(c);
+    });
+    return map;
+  }, [courses]);
+
+  // Filter courses by search query
+  const filteredSemesters = useMemo(() => {
+    if (!searchQuery.trim()) return coursesBySemester;
+    const q = searchQuery.trim().toLowerCase();
+    const result = new Map<number, Course[]>();
+    coursesBySemester.forEach((courseList, sem) => {
+      const filtered = courseList.filter(c => c.name.toLowerCase().includes(q));
+      if (filtered.length > 0) result.set(sem, filtered);
+    });
+    return result;
+  }, [coursesBySemester, searchQuery]);
+
+  const toggleSemester = (sem: number) => {
+    setExpandedSemesters(prev => {
+      const next = new Set(prev);
+      if (next.has(sem)) next.delete(sem);
+      else next.add(sem);
+      return next;
+    });
+  };
+
+  const toggleAllSemesters = () => {
+    if (expandedSemesters.size === filteredSemesters.size) {
+      setExpandedSemesters(new Set());
+    } else {
+      setExpandedSemesters(new Set(filteredSemesters.keys()));
     }
   };
 
@@ -469,9 +505,8 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
             <button
               onClick={() => {
                 setError(null);
-                setSelectedTemplate('');
-                setInstructor('');
-                setClassCode('');
+                setSearchQuery('');
+                setExpandedSemesters(new Set([1]));
                 setShowCreateModal(true);
               }}
               disabled={activeClasses.length >= 5}
@@ -605,7 +640,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
       )}
 
       {/* ========================================================
-         MODAL: CREATE CLASS
+         MODAL: ADD CLASS FROM MD COURSE CATALOG
          ======================================================== */}
       <AnimatePresence>
         {showCreateModal && (
@@ -614,12 +649,13 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white border border-slate-100/80 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] p-6 space-y-5 text-right font-sans"
+              className="bg-white border border-slate-100/80 rounded-3xl w-full max-w-lg overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] text-right font-sans flex flex-col max-h-[85vh]"
             >
-              <div className="flex items-center justify-between border-b border-slate-100/50 pb-3">
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 pt-6 pb-3 border-b border-slate-100/50 shrink-0">
                 <h3 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-indigo-600" />
-                  <span>ثبت کلاس درسی جدید</span>
+                  <GraduationCap className="w-4 h-4 text-indigo-600" />
+                  <span>انتخاب درس از برنامه MD</span>
                 </h3>
                 <button 
                   onClick={() => setShowCreateModal(false)}
@@ -629,67 +665,125 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                 </button>
               </div>
 
-              <form onSubmit={handleCreateClass} className="space-y-4">
-                
-                {/* Available Classes Template Selection */}
-                <div className="space-y-1.5">
-                  <Select
-                    label="انتخاب عنوان درس (لیست مجاز دانشگاه)"
-                    placeholder="-- لطفا یک عنوان درس را انتخاب کنید --"
-                    options={templates.map(temp => ({ value: temp, label: temp }))}
-                    value={selectedTemplate}
-                    onChange={setSelectedTemplate}
-                    searchable
-                    required
-                  />
-                  <span className="text-[9px] text-slate-400 block font-bold leading-normal">
-                    * جهت انطباق علمی در سرورهای مرکزی، عنوان کلاس باید از قالب سرفصل‌های دانشگاه انتخاب شود.
-                  </span>
-                </div>
-
-                {/* Instructor Name Input */}
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-500 block">نام استاد مدرس (اختیاری)</label>
+              {/* Search Input */}
+              <div className="px-6 pt-4 pb-2 shrink-0">
+                <div className="relative">
+                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
-                    value={instructor}
-                    onChange={(e) => setInstructor(e.target.value)}
-                    placeholder="مثال: دکتر علوی"
-className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold transition-all duration-200"
-                    />
-                </div>
-
-                {/* Class Code Input */}
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-black text-slate-500 block">کد یا شماره کلاس (اختیاری)</label>
-                  <input
-                    type="text"
-                    value={classCode}
-                    onChange={(e) => setClassCode(e.target.value)}
-                    placeholder="مثال: math-101"
-                    className="w-full bg-white border border-slate-200/40 rounded-xl px-3.5 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-mono text-left font-bold transition-all duration-200"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="جستجوی درس..."
+                    className="w-full bg-slate-50 border border-slate-200/40 rounded-xl pr-9 pl-3 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 font-bold transition-all duration-200"
                   />
                 </div>
+              </div>
 
-                <div className="pt-4 border-t border-slate-100/50 flex items-center justify-end gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateModal(false)}
-                    className="px-4 py-2 border border-slate-100/80 hover:border-slate-200/60 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 transition-all cursor-pointer shadow-3xs"
-                  >
-                    انصراف
-                  </button>
-                  <Button
-                    type="submit"
-                    disabled={isSubmitLoading || !selectedTemplate}
-                    isLoading={isSubmitLoading}
-                    className="px-5 py-2 bg-indigo-600 text-white hover:bg-indigo-700 text-xs font-black rounded-xl transition-all shadow-sm cursor-pointer"
-                  >
-                    تایید و ثبت نهایی
-                  </Button>
-                </div>
+              {/* Toggle all button */}
+              <div className="px-6 pb-2 shrink-0 flex items-center justify-between">
+                <span className="text-[10px] text-slate-400 font-bold">
+                  {courses.length} درس در {coursesBySemester.size} نیمسال
+                </span>
+                <button
+                  onClick={toggleAllSemesters}
+                  className="text-[10px] text-indigo-600 font-black hover:text-indigo-800 cursor-pointer"
+                >
+                  {expandedSemesters.size === filteredSemesters.size ? 'بستن همه' : 'باز کردن همه'}
+                </button>
+              </div>
 
-              </form>
+              {/* Scrollable Course List */}
+              <div className="overflow-y-auto px-6 pb-6 space-y-2 flex-1 min-h-0">
+                {filteredSemesters.size === 0 ? (
+                  <div className="text-center py-8 text-xs text-slate-400 font-bold">
+                    هیچ درسی با جستجوی شما مطابقت نداشت.
+                  </div>
+                ) : (
+                  Array.from(filteredSemesters.entries()).sort(([a], [b]) => a - b).map(([sem, courseList]) => {
+                    const isOpen = expandedSemesters.has(sem);
+                    return (
+                      <div key={sem} className="border border-slate-100/80 rounded-2xl overflow-hidden">
+                        {/* Semester Header */}
+                        <button
+                          onClick={() => toggleSemester(sem)}
+                          className="w-full flex items-center justify-between px-4 py-3 bg-slate-50/50 hover:bg-slate-100/30 transition-colors cursor-pointer text-right"
+                        >
+                          <span className="text-xs font-black text-slate-700">
+                            نیمسال {toPersianDigits(sem)}
+                          </span>
+                          <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Course Items */}
+                        <AnimatePresence>
+                          {isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="divide-y divide-slate-50 overflow-hidden"
+                            >
+                              {courseList.map(course => {
+                                const alreadyAdded = classes.some(c => c.code === course.id);
+                                return (
+                                  <div
+                                    key={course.id}
+                                    onClick={() => {
+                                      if (!alreadyAdded) handleCreateClass(course);
+                                    }}
+                                    className={`
+                                      flex items-center justify-between px-4 py-3 cursor-pointer transition-colors
+                                      ${alreadyAdded 
+                                        ? 'bg-slate-50/50 text-slate-400 cursor-not-allowed' 
+                                        : 'hover:bg-indigo-50/30 text-slate-800'
+                                      }
+                                    `}
+                                  >
+                                    <span className={`text-xs font-bold ${alreadyAdded ? '' : 'font-black'}`}>
+                                      {course.name}
+                                    </span>
+                                    {alreadyAdded ? (
+                                      <span className="text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-100/60 px-2 py-0.5 rounded font-bold shrink-0">
+                                        ثبت شده
+                                      </span>
+                                    ) : (
+                                      <div className="w-5 h-5 border border-slate-300 bg-slate-50 rounded flex items-center justify-center shrink-0">
+                                        <Plus className="w-3.5 h-3.5 text-slate-400" />
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })
+                )}
+
+                {/* Loading overlay */}
+                {isSubmitLoading && (
+                  <div className="text-center py-4">
+                    <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+                    <span className="text-[10px] text-slate-400 font-bold block mt-2">در حال ثبت...</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="px-6 py-4 border-t border-slate-100/50 shrink-0 flex items-center justify-between">
+                <span className="text-[10px] text-slate-400 font-bold">
+                  {classes.length} از ۵ کلاس فعال
+                </span>
+                <button
+                  onClick={() => setShowCreateModal(false)}
+                  className="px-4 py-2 border border-slate-100/80 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 transition-all cursor-pointer shadow-3xs"
+                >
+                  بستن
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
