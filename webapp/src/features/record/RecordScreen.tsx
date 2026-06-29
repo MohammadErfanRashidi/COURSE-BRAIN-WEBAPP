@@ -645,7 +645,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
             
             <div className="space-y-2">
               <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full font-extrabold inline-block">
-                ضبط از میکروفون مرورگر (فرمت وب)
+                ضبط از میکروفون مرورگر
               </span>
               <h2 className="text-base font-black text-slate-800">ایستگاه ضبط صدای رایا</h2>
               <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
@@ -850,7 +850,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
               <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full font-extrabold inline-block">
                 بارگذاری تدریس صوتی ضبط شده خارجی
               </span>
-              <h2 className="text-base font-black text-slate-800">بارگذاری تدریس صوتی آماده</h2>
+              <h2 className="text-base font-black text-slate-800">بارگذاری صوت تدریس</h2>
               <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
                 فرمت‌های مجاز فایل صوتی شامل MP3, WAV, AAC, M4A, OGG, FLAC با حداکثر ظرفیت ۱۰۰ مگابایت می‌باشند.
               </p>

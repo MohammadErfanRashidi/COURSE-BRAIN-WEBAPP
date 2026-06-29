@@ -169,7 +169,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
               
               <div className="flex items-center gap-2 pb-3 border-b border-slate-100/50">
                 <GraduationCap className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-xs font-black text-slate-800">مشخصات تحصیلی و شناسنامه‌ای</h3>
+                <h3 className="text-xs font-black text-slate-800">مشخصات تحصیلی</h3>
               </div>
 
               {isLoading ? (
@@ -186,7 +186,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
                   
                   {/* Full Name Input */}
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-[10px] font-black text-slate-500 block">نام و نام خانوادگی دانشجو</label>
+                    <label className="text-[10px] font-black text-slate-500 block">نام و نام خانوادگی</label>
                     <input
                       type="text"
                       value={fullName}
