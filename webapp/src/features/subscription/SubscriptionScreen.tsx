@@ -188,7 +188,7 @@ export const SubscriptionScreen: React.FC = () => {
                 </div>
               </div>
               <span className="bg-white/20 text-[10px] font-bold px-3 py-1 rounded-full text-white">
-                {subscriptionStatus.active ? 'فعال و معتبر' : 'بدون اشتراک فعال'}
+                {subscriptionStatus.active ? 'فعال' : 'بدون اشتراک فعال'}
               </span>
             </div>
 

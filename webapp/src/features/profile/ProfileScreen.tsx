@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   User as UserIcon, 
   Phone, 
@@ -13,12 +13,18 @@ import {
   Clock, 
   BookOpen, 
   ChevronLeft,
-  Settings,
   Mail,
-  Building
+  Building,
+  Save,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 import { Card } from '../../components/Card';
+import { Button } from '../../components/Button';
+import { Select } from '../../components/Select';
 import { useAuthStore } from '../../store/authStore';
+import { AcademicService } from '../../services/api';
+import { University, Major, Semester, User } from '../../types';
 import { formatPersianDuration } from '../../utils/timeFormatter';
 
 interface ProfileScreenProps {
@@ -26,11 +32,99 @@ interface ProfileScreenProps {
 }
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
-  const { user, subscriptionStatus } = useAuthStore();
+  const { user, updateUser, subscriptionStatus } = useAuthStore();
+
+  // Academic selections lists loaded from service
+  const [universities, setUniversities] = useState<University[]>([]);
+  const [majors, setMajors] = useState<Major[]>([]);
+  const [semesters, setSemesters] = useState<Semester[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Form State
+  const [fullName, setFullName] = useState('');
+  const [selectedUniversity, setSelectedUniversity] = useState('');
+  const [selectedMajor, setSelectedMajor] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState('');
+  const [selectedDegree, setSelectedDegree] = useState('bachelor');
 
   const toPersianDigits = (str: string | number) => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     return String(str).replace(/[0-9]/g, (w) => farsiDigits[parseInt(w)]);
+  };
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const [uniList, majorList, semList] = await Promise.all([
+          AcademicService.getUniversities(),
+          AcademicService.getMajors(),
+          AcademicService.getSemesters()
+        ]);
+        setUniversities(uniList);
+        setMajors(majorList);
+        setSemesters(semList);
+
+        if (user) {
+          setFullName(user.fullName || '');
+          if (user.academicProfile) {
+            setSelectedUniversity(user.academicProfile.universityId);
+            setSelectedMajor(user.academicProfile.majorId);
+            setSelectedSemester(user.academicProfile.semesterId);
+            setSelectedDegree(user.academicProfile.degree || 'bachelor');
+          }
+        }
+      } catch (err: any) {
+        setError(err.message || 'خطا در دریافت اطلاعات دانشگاهی');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadData();
+  }, [user]);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setIsSubmitLoading(true);
+    setError(null);
+    setSuccessMsg(null);
+
+    try {
+      const selectedUniName = universities.find(u => u.id === selectedUniversity)?.name || '';
+      const selectedMajorName = majors.find(m => m.id === selectedMajor)?.name || '';
+      const selectedSemesterName = semesters.find(s => s.id === selectedSemester)?.name || '';
+
+      const updatedUser: User = {
+        ...user,
+        fullName: fullName.trim(),
+        academicProfile: {
+          universityId: selectedUniversity,
+          universityName: selectedUniName,
+          degree: selectedDegree,
+          majorId: selectedMajor,
+          majorName: selectedMajorName,
+          semesterId: selectedSemester,
+          semesterName: selectedSemesterName,
+          classIds: user.academicProfile?.classIds || [],
+          classes: user.academicProfile?.classes || []
+        }
+      };
+
+      updateUser(updatedUser);
+      localStorage.setItem('cb_user_data', JSON.stringify(updatedUser));
+      localStorage.setItem(`cb_user_${user.phoneNumber}`, JSON.stringify(updatedUser));
+
+      setSuccessMsg('مشخصات تحصیلی و فردی شما با موفقیت ذخیره شد.');
+    } catch (err: any) {
+      setError(err.message || 'خطا در ثبت مشخصات');
+    } finally {
+      setIsSubmitLoading(false);
+    }
   };
 
   if (!user) return null;
@@ -39,28 +133,34 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
       
       {/* Profile Header */}
-      <div className="border-b border-slate-100/50 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-black text-slate-900">پروفایل کاربری دانشجو</h1>
-          <p className="text-xs text-slate-400 mt-1 font-medium">
-            اطلاعات شناسایی دانشجویی، مقطع و تخصص‌های علمی ثبت شده خود را مرور فرمایید.
-          </p>
-        </div>
-
-        <button
-          onClick={() => onNavigate('settings')}
-          className="px-4 py-2 bg-white border border-slate-100/80 hover:border-slate-200/60 text-slate-700 hover:bg-slate-50 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all cursor-pointer self-start sm:self-auto shadow-xs"
-        >
-          <Settings className="w-4 h-4" />
-          <span>ویرایش اطلاعات تحصیلی</span>
-        </button>
+      <div className="border-b border-slate-100/50 pb-5">
+        <h1 className="text-xl font-black text-slate-900">پروفایل دانشجویی</h1>
+        <p className="text-xs text-slate-400 mt-1 font-medium">
+          اطلاعات شخصی، تحصیلی و مدیریت حساب کاربری خود را مشاهده و ویرایش کنید.
+        </p>
       </div>
+
+      {/* Error / Success Toasts */}
+      {error && (
+        <div className="p-4 bg-rose-50 border border-rose-100/60 rounded-2xl flex items-center gap-3 text-rose-700 text-xs font-bold shadow-xs">
+          <AlertTriangle className="w-5 h-5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {successMsg && (
+        <div className="p-4 bg-emerald-50 border border-emerald-100/60 rounded-2xl flex items-center gap-3 text-emerald-700 text-xs font-bold shadow-xs">
+          <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
+          <span>{successMsg}</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Right Details Card */}
+        {/* Right Column — Personal & Academic Info */}
         <div className="lg:col-span-2 space-y-6">
           
+          {/* Personal Information Card */}
           <Card className="border border-slate-100/80 bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-5">
               <div className="w-16 h-16 bg-indigo-50 border border-indigo-100/60 rounded-3xl flex items-center justify-center text-indigo-600 shrink-0">
@@ -72,8 +172,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 pt-4 border-t border-slate-50 text-right">
-              
+            <div className="pt-4 border-t border-slate-50 text-right">
               <div className="space-y-1">
                 <span className="text-[10px] text-slate-400 font-bold block flex items-center gap-1">
                   <Phone className="w-3 h-3 text-slate-400" />
@@ -83,79 +182,119 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
                   {toPersianDigits(user.phoneNumber)}
                 </span>
               </div>
-
-              <div className="space-y-1">
-                <span className="text-[10px] text-slate-400 font-bold block flex items-center gap-1">
-                  <GraduationCap className="w-3 h-3 text-slate-400" />
-                  <span>مقطع تحصیلی</span>
-                </span>
-                <span className="text-xs font-black text-slate-800 block">
-                  {user.academicProfile?.degree === 'associate' ? 'کاردانی' : 
-                   user.academicProfile?.degree === 'bachelor' ? 'کارشناسی' : 
-                   user.academicProfile?.degree === 'master' ? 'کارشناسی ارشد' : 'دکتری تخصصی'}
-                </span>
-              </div>
-
-              <div className="space-y-1 sm:col-span-2">
-                <span className="text-[10px] text-slate-400 font-bold block flex items-center gap-1">
-                  <Building className="w-3 h-3 text-slate-400" />
-                  <span>دانشگاه محل تحصیل</span>
-                </span>
-                <span className="text-xs font-black text-slate-800 block">
-                  {user.academicProfile?.universityName || 'ثبت نشده'}
-                </span>
-              </div>
-
-              <div className="space-y-1 sm:col-span-2">
-                <span className="text-[10px] text-slate-400 font-bold block flex items-center gap-1">
-                  <BookOpen className="w-3 h-3 text-slate-400" />
-                  <span>رشته تخصصی تحصیلی</span>
-                </span>
-                <span className="text-xs font-black text-slate-800 block">
-                  {user.academicProfile?.majorName || 'ثبت نشده'}
-                </span>
-              </div>
-
-              <div className="space-y-1 sm:col-span-2">
-                <span className="text-[10px] text-slate-400 font-bold block flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-slate-400" />
-                  <span>ترم و نیمسال تحصیلی فعال</span>
-                </span>
-                <span className="text-xs font-black text-slate-800 block">
-                  {user.academicProfile?.semesterName || 'ثبت نشده'}
-                </span>
-              </div>
-
             </div>
           </Card>
 
-          {/* Account Details */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-black text-slate-800">امنیت و میزبانی حساب کاربری</h3>
-            <Card className="border border-slate-100/80 bg-white rounded-3xl p-6 text-right shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-50 pb-3 gap-2">
-                <div>
-                  <span className="text-xs font-black text-slate-800 block">روش احراز هویت پیامکی (SMS OTP)</span>
-                  <p className="text-[10px] text-slate-400 mt-0.5 leading-normal font-bold">ورود امن و بدون نیاز به کلمه عبور با استفاده از تایید هویت دو مرحله‌ای.</p>
-                </div>
-                <span className="text-[9px] font-black text-emerald-700 bg-emerald-50 border border-emerald-100/60 px-2 py-0.5 rounded-md">فعال و ایمن</span>
+          {/* Educational Information — Editable Form */}
+          <form onSubmit={handleSaveProfile}>
+            <Card className="border border-slate-100/80 bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-6">
+              
+              <div className="flex items-center gap-2 pb-3 border-b border-slate-100/50">
+                <GraduationCap className="w-5 h-5 text-indigo-600" />
+                <h3 className="text-xs font-black text-slate-800">مشخصات تحصیلی و شناسنامه‌ای</h3>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                <div>
-                  <span className="text-xs font-black text-slate-800 block">تاریخ ایجاد حساب</span>
-                  <p className="text-[10px] text-slate-400 mt-0.5 leading-normal font-bold">زمان اولین ثبت‌نام و فعال‌سازی اکانت دانشجو در سامانه.</p>
+              {isLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className="space-y-2">
+                      <div className="h-3 w-20 bg-slate-200 animate-pulse rounded-md" />
+                      <div className="h-11 w-full bg-slate-50 border border-slate-100/50 animate-pulse rounded-xl" />
+                    </div>
+                  ))}
                 </div>
-                <span className="text-xs font-bold text-slate-700">
-                  {toPersianDigits(new Date(user.createdAt).toLocaleDateString('fa-IR'))}
-                </span>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  
+                  {/* Full Name Input */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-[10px] font-black text-slate-500 block">نام و نام خانوادگی دانشجو</label>
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                      placeholder="مثال: امیرحسین علوی"
+                      className="w-full bg-white border border-slate-200/40 rounded-xl px-4 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
+                    />
+                  </div>
+
+                  {/* Degree Selection */}
+                  <div className="space-y-1.5">
+                    <Select
+                      label="مقطع تحصیلی"
+                      placeholder="مقطع تحصیلی خود را انتخاب کنید"
+                      options={[
+                        { value: 'associate', label: 'کاردانی' },
+                        { value: 'bachelor', label: 'کارشناسی (لیسانس)' },
+                        { value: 'master', label: 'کارشناسی ارشد (فوق لیسانس)' },
+                        { value: 'phd', label: 'دکتری تخصصی (PhD)' },
+                      ]}
+                      value={selectedDegree}
+                      onChange={setSelectedDegree}
+                      searchable={false}
+                    />
+                  </div>
+
+                  {/* University Selector */}
+                  <div className="space-y-1.5">
+                    <Select
+                      label="مؤسسه یا دانشگاه محل تحصیل"
+                      placeholder="-- انتخاب دانشگاه --"
+                      options={universities.map(uni => ({ value: uni.id, label: uni.name }))}
+                      value={selectedUniversity}
+                      onChange={setSelectedUniversity}
+                      searchable
+                      required
+                    />
+                  </div>
+
+                  {/* Major Selector */}
+                  <div className="space-y-1.5">
+                    <Select
+                      label="رشته تخصصی تحصیلی"
+                      placeholder="-- انتخاب رشته تحصیلی --"
+                      options={majors.map(mj => ({ value: mj.id, label: mj.name }))}
+                      value={selectedMajor}
+                      onChange={setSelectedMajor}
+                      searchable
+                      required
+                    />
+                  </div>
+
+                  {/* Semester Selector */}
+                  <div className="space-y-1.5">
+                    <Select
+                      label="نیمسال تحصیلی فعال"
+                      placeholder="-- انتخاب نیمسال جاری --"
+                      options={semesters.map(sem => ({ value: sem.id, label: sem.name }))}
+                      value={selectedSemester}
+                      onChange={setSelectedSemester}
+                      searchable
+                      required
+                    />
+                  </div>
+
+                </div>
+              )}
+
+              <div className="pt-4 border-t border-slate-100/50 flex justify-end">
+                <Button
+                  type="submit"
+                  isLoading={isSubmitLoading}
+                  className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black shadow-sm flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>ذخیره مشخصات دانشجویی</span>
+                </Button>
               </div>
+
             </Card>
-          </div>
+          </form>
 
         </div>
 
-        {/* Left Stats Sidebar */}
+        {/* Left Sidebar — Subscription & Stats */}
         <div className="space-y-6">
           
           {/* Subscription Tier badge */}

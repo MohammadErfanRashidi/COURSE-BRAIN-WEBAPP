@@ -18,7 +18,6 @@ import { ClassesScreen } from './features/classes/ClassesScreen';
 import { RecordScreen } from './features/record/RecordScreen';
 import { SubscriptionScreen } from './features/subscription/SubscriptionScreen';
 import { ProfileScreen } from './features/profile/ProfileScreen';
-import { SettingsScreen } from './features/settings/SettingsScreen';
 import { BookmarksScreen } from './features/bookmarks/BookmarksScreen';
 
 // Admin Operations Dashboard
@@ -45,7 +44,6 @@ import {
   Award,
   Compass,
   Mic,
-  Settings,
   ChevronLeft,
   Menu,
   X,
@@ -68,8 +66,7 @@ type ActiveTab =
   | 'record' 
   | 'bookmarks'
   | 'subscription' 
-  | 'profile' 
-  | 'settings';
+  | 'profile';
 
 export default function App() {
   const { 
@@ -305,7 +302,6 @@ export default function App() {
     { id: 'bookmarks', label: 'نشان‌شده‌های من', icon: Bookmark },
     { id: 'subscription', label: 'اشتراک و لایسنس', icon: CreditCard },
     { id: 'profile', label: 'پروفایل دانشجویی', icon: UserIcon },
-    { id: 'settings', label: 'تنظیمات سیستم', icon: Settings },
   ], []);
 
   if (isAdminMode) {
@@ -537,10 +533,6 @@ export default function App() {
 
                   {activeTab === 'profile' && (
                     <ProfileScreen onNavigate={handleDashboardNavigate} />
-                  )}
-
-                  {activeTab === 'settings' && (
-                    <SettingsScreen />
                   )}
                 </motion.div>
               </AnimatePresence>
