@@ -142,6 +142,29 @@ export const getSimulatedRecordings = (): Recording[] => {
   }
 };
 
+interface PurchaseRecord {
+  id: string;
+  amount: number;
+  date: string;
+  status: 'success' | 'failed';
+  refId: string;
+  description: string;
+}
+
+function getPurchaseHistory(): PurchaseRecord[] {
+  try {
+    const cached = localStorage.getItem(getStorageKey('cb_purchase_history'));
+    if (cached) return JSON.parse(cached);
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+function savePurchaseHistory(records: PurchaseRecord[]): void {
+  localStorage.setItem(getStorageKey('cb_purchase_history'), JSON.stringify(records));
+}
+
 export const UNIVERSITY_PLAN_ID = 'plan_university_v1';
 
 export const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours: number; maxClasses: number; maxDailyTokens: number; price: number }> = {
@@ -544,6 +567,18 @@ export const SubscriptionService = {
         sub.usage.recordingHoursUsed = 0;
         saveSimulatedSubscription(sub);
 
+        // Record the purchase
+        const purchases = getPurchaseHistory();
+        purchases.push({
+          id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          amount: PLANS_CONFIG[UNIVERSITY_PLAN_ID]?.price || 499999,
+          date: new Date().toISOString(),
+          status: 'success',
+          refId: `IRN-${Math.floor(100000000 + Math.random() * 900000000)}`,
+          description: 'اشتراک ماهانه رایا'
+        });
+        savePurchaseHistory(purchases);
+
         return {
           success: true,
           user: updatedUser
@@ -570,6 +605,19 @@ export const SubscriptionService = {
         sub.autoRenew = true;
         
         saveSimulatedSubscription(sub);
+
+        // Record the renewal as a new purchase
+        const purchases = getPurchaseHistory();
+        purchases.push({
+          id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          amount: PLANS_CONFIG[UNIVERSITY_PLAN_ID]?.price || 499999,
+          date: now.toISOString(),
+          status: 'success',
+          refId: `IRN-${Math.floor(100000000 + Math.random() * 900000000)}`,
+          description: 'اشتراک ماهانه رایا (تمدید ۳۰ روزه)'
+        });
+        savePurchaseHistory(purchases);
+
         return sub;
       }
     );
@@ -615,27 +663,8 @@ export const SubscriptionService = {
   },
 
   getPaymentHistory: async (): Promise<any[]> => {
-    const sub = loadSubscriptionForCurrentUser();
-    const currentPrice = PLANS_CONFIG[sub.planId]?.price || 39000;
-    const currentName = PLANS_CONFIG[sub.planId]?.planName || 'طرح آغازین';
-    return [
-      {
-        id: 'tx_101',
-        amount: currentPrice,
-        date: sub.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString(),
-        status: 'success',
-        refId: 'IRN-987654321',
-        description: `${currentName} (۳۰ روزه)`
-      },
-      {
-        id: 'tx_100',
-        amount: 39000,
-        date: new Date(Date.now() - 35 * 24 * 3600 * 1000).toISOString(),
-        status: 'success',
-        refId: 'IRN-123456789',
-        description: 'طرح آغازین (Starter) (۳۰ روزه)'
-      }
-    ];
+    const history = getPurchaseHistory();
+    return [...history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }
 };
 
