@@ -205,8 +205,13 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         setClasses(fetchedClasses);
         setAllRecordings(fetchedRecordings);
 
+        // Determine user-scoped key for recent chats
+        const userId = user?.id || '';
+        const recentChatsKey = userId ? `cb_recent_chats_${userId}` : 'cb_recent_chats_preauth';
+        const chatPrefix = userId ? `cb_chat_messages_${userId}_` : 'cb_chat_messages_preauth_';
+
         // Load recent chats from localStorage
-        const storedChatsRaw = localStorage.getItem('cb_recent_chats');
+        const storedChatsRaw = localStorage.getItem(recentChatsKey);
         let parsedChats: RecentChatActivity[] = [];
         if (storedChatsRaw) {
           try {
@@ -216,13 +221,13 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           }
         }
 
-        // Fallback/Recovery: scan localStorage keys for existing chat histories if cb_recent_chats is empty
+        // Fallback/Recovery: scan localStorage keys for existing chat histories if empty
         if (parsedChats.length === 0) {
           const keys = Object.keys(localStorage);
-          const chatKeys = keys.filter(k => k.startsWith('cb_chat_messages_'));
+          const chatKeys = keys.filter(k => k.startsWith(chatPrefix));
           
           chatKeys.forEach(key => {
-            const classId = key.replace('cb_chat_messages_', '');
+            const classId = key.replace(chatPrefix, '');
             const matchingClass = fetchedClasses.find(c => c.id === classId);
             if (matchingClass) {
               const rawMsgs = localStorage.getItem(key);
@@ -251,7 +256,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           
           // Save back so it is persistent
           if (parsedChats.length > 0) {
-            localStorage.setItem('cb_recent_chats', JSON.stringify(parsedChats));
+            localStorage.setItem(recentChatsKey, JSON.stringify(parsedChats));
           }
         }
 

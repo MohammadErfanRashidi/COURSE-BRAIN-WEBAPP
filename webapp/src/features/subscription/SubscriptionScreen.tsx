@@ -17,7 +17,7 @@ import {
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { useAuthStore } from '../../store/authStore';
-import { SubscriptionService } from '../../services/api';
+import { SubscriptionService, PLANS_CONFIG, UNIVERSITY_PLAN_ID } from '../../services/api';
 import { SubscriptionStatus } from '../../types';
 import { formatPersianDuration } from '../../utils/timeFormatter';
 
@@ -42,6 +42,12 @@ export const SubscriptionScreen: React.FC = () => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     return String(str).replace(/[0-9]/g, (w) => farsiDigits[parseInt(w)]);
   };
+
+  const formatPrice = (amount: number) => {
+    return toPersianDigits(amount.toLocaleString('fa-IR'));
+  };
+
+  const activePlan = PLANS_CONFIG[UNIVERSITY_PLAN_ID];
 
   const loadHistoryAndStatus = async () => {
     setIsLoading(true);
@@ -196,7 +202,7 @@ export const SubscriptionScreen: React.FC = () => {
               
               {/* Price */}
               <div className="text-center border-b border-slate-100/50 pb-5">
-                <span className="text-2xl font-black text-slate-900">۴۹۹٬۹۹۹</span>
+                <span className="text-2xl font-black text-slate-900">{formatPrice(activePlan.price)}</span>
                 <span className="text-xs text-slate-400 font-bold mr-1">تومان / ماه</span>
               </div>
 

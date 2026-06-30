@@ -5,6 +5,22 @@
 
 import { RecordingService } from './api';
 
+function getCurrentUserId(): string | null {
+  try {
+    const raw = localStorage.getItem('cb_user_data');
+    if (raw) {
+      const user = JSON.parse(raw);
+      return user.id || null;
+    }
+  } catch {}
+  return null;
+}
+
+function getJobsStorageKey(): string {
+  const uid = getCurrentUserId();
+  return uid ? `cb_processing_jobs_${uid}` : 'cb_processing_jobs_preauth';
+}
+
 export type JobStage =
   | 'uploading'
   | 'queued'
@@ -35,12 +51,10 @@ export interface ProcessJob {
   queuePosition?: number;
 }
 
-const JOBS_STORAGE_KEY = 'cb_processing_jobs';
-
 export const ProcessingQueueService = {
   getJobs: (): ProcessJob[] => {
     try {
-      const cached = localStorage.getItem(JOBS_STORAGE_KEY);
+      const cached = localStorage.getItem(getJobsStorageKey());
       return cached ? JSON.parse(cached) : [];
     } catch {
       return [];
@@ -49,7 +63,7 @@ export const ProcessingQueueService = {
 
   saveJobs: (jobs: ProcessJob[]): void => {
     try {
-      localStorage.setItem(JOBS_STORAGE_KEY, JSON.stringify(jobs));
+      localStorage.setItem(getJobsStorageKey(), JSON.stringify(jobs));
       window.dispatchEvent(new CustomEvent('cb-jobs-changed'));
     } catch (e) {
       console.error('Error saving jobs', e);

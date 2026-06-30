@@ -25,8 +25,8 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onComplete }) => {
 
   const slides: Slide[] = [
     {
-      title: 'سامانه هوشمند کمک‌آموزشی رایا',
-      description: 'به Raya خوش آمدید! پلتفرمی تجاری و پیشرفته بر پایه هوش مصنوعی که رفیق شفیق شما در طول نیمسال تحصیلی است. در این پلتفرم می‌توانید ویس کلاس‌ها را پیاده‌سازی و جزوات هوشمند بسازید.',
+      title: 'رایا',
+      description: 'به رایا خوش آمدید، اینجا میتونی هوش مصنوعی رو کنارت داشته باشی تا اونجا که حواست نیست حواسش باشه!',
       icon: <GraduationCap className="w-10 h-10 text-indigo-600 animate-bounce" />,
       color: 'text-indigo-600 border-indigo-100/60',
       bgColor: 'bg-indigo-50/60'

@@ -41,7 +41,7 @@ interface ClassChatProps {
 }
 
 export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMessagesChange }) => {
-  const { subscriptionStatus, syncSubscription } = useAuthStore();
+  const { user, subscriptionStatus, syncSubscription } = useAuthStore();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [searchMode, setSearchMode] = useState<'lecture' | 'hybrid'>('hybrid');
@@ -133,8 +133,10 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
   useEffect(() => {
     if (!classId || !className) return;
 
+    const recentChatsKey = user?.id ? `cb_recent_chats_${user.id}` : 'cb_recent_chats_preauth';
+
     const updateRecentChats = () => {
-      const stored = localStorage.getItem('cb_recent_chats');
+      const stored = localStorage.getItem(recentChatsKey);
       let list: any[] = [];
       if (stored) {
         try {
@@ -173,7 +175,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
       // Keep only top 10 most recent chats
       list = list.slice(0, 10);
 
-      localStorage.setItem('cb_recent_chats', JSON.stringify(list));
+      localStorage.setItem(recentChatsKey, JSON.stringify(list));
     };
 
     // Run update with a tiny delay to ensure state and localStorage are synced

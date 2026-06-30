@@ -223,6 +223,7 @@ export default function App() {
       } else if (!user.hasActiveSubscription) {
         setCurrentScreen('SUBSCRIPTION_GATE');
       } else {
+        setActiveTab('dashboard');
         setCurrentScreen('APP_DASHBOARD_PREVIEW');
       }
     }
@@ -235,7 +236,7 @@ export default function App() {
   };
 
   const handleOtpVerified = () => {
-    // Post authentication routing is handled by the useEffect above
+    setActiveTab('dashboard');
   };
 
   const handleWelcomeTourComplete = () => {
@@ -243,6 +244,7 @@ export default function App() {
   };
 
   const handleAcademicSetupComplete = () => {
+    setActiveTab('dashboard');
     if (user?.hasActiveSubscription) {
       setCurrentScreen('APP_DASHBOARD_PREVIEW');
     } else {
@@ -251,6 +253,7 @@ export default function App() {
   };
 
   const handleSubscriptionActive = () => {
+    setActiveTab('dashboard');
     setCurrentScreen('APP_DASHBOARD_PREVIEW');
   };
 

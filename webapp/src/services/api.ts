@@ -117,9 +117,14 @@ let simulatedUser: User | null = (() => {
   }
 })();
 
+function getStorageKey(base: string): string {
+  const uid = simulatedUser?.id;
+  return uid ? `${base}_${uid}` : `${base}_preauth`;
+}
+
 export const getSimulatedClasses = (): Class[] => {
   try {
-    const cached = localStorage.getItem('cb_simulated_classes');
+    const cached = localStorage.getItem(getStorageKey('cb_simulated_classes'));
     if (cached) return JSON.parse(cached);
     return [];
   } catch {
@@ -129,56 +134,17 @@ export const getSimulatedClasses = (): Class[] => {
 
 export const getSimulatedRecordings = (): Recording[] => {
   try {
-    const cached = localStorage.getItem('cb_simulated_recordings');
+    const cached = localStorage.getItem(getStorageKey('cb_simulated_recordings'));
     if (cached) return JSON.parse(cached);
-    
-    const initialRecs: Recording[] = [
-      {
-        id: 'rec_1',
-        name: 'جلسه اول: مقدمه‌ای بر مباحث درس و سرفصل‌ها',
-        duration: 120, // 2 mins for demo ease
-        size: 45000000,
-        classId: 'c1',
-        className: 'ریاضی عمومی ۱',
-        createdAt: new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString(),
-        status: 'completed',
-        transcriptStatus: 'completed',
-        transcript: 'سلام و خوش‌آمد به همگی. امروز قصد داریم جلسه اول کلاس ریاضی عمومی ۱ رو شروع کنیم. در این ترم مباحث حد، پیوستگی، مشتق و همچنین انتگرال‌ها و کاربردهای اون‌ها رو بررسی می‌کنیم. مرجع اصلی ما کتاب حساب دیفرانسیل و انتگرال توماس هست و امتحان پایان‌ترم ۷۰ درصد نمره رو شامل می‌شه. از جلسات آینده حضور و غیاب منظم انجام می‌شه و کوئیزهای کلاسی برای نمره مستمر اهمیت زیادی دارند.',
-        segments: [
-          { start: 0, end: 15, text: 'سلام و خوش‌آمد به همگی. امروز قصد داریم جلسه اول کلاس ریاضی عمومی ۱ رو شروع کنیم.', speaker: 'استاد ریاضی' },
-          { start: 15, end: 45, text: 'در این ترم مباحث حد، پیوستگی، مشتق و همچنین انتگرال‌ها و کاربردهای اون‌ها رو بررسی می‌کنیم.', speaker: 'استاد ریاضی', isAiReferenced: true },
-          { start: 45, end: 75, text: 'مرجع اصلی ما کتاب حساب دیفرانسیل و انتگرال توماس هست و امتحان پایان‌ترم ۷۰ درصد نمره رو شامل می‌شه.', speaker: 'استاد ریاضی' },
-          { start: 75, end: 120, text: 'از جلسات آینده حضور و غیاب منظم انجام می‌شه و کوئیزهای کلاسی برای نمره مستمر اهمیت زیادی دارند.', speaker: 'استاد ریاضی', isAiReferenced: true }
-        ]
-      },
-      {
-        id: 'rec_2',
-        name: 'جلسه دوم: حد و پیوستگی توابع',
-        duration: 150, // 2.5 mins for demo ease
-        size: 78000000,
-        classId: 'c1',
-        className: 'ریاضی عمومی ۱',
-        createdAt: new Date(Date.now() - 1 * 24 * 3600 * 1000).toISOString(),
-        status: 'completed',
-        transcriptStatus: 'completed',
-        transcript: 'امروز موضوع حد رو به صورت رسمی شروع می‌کنیم. حد توصیف‌کننده رفتار تابع در نزدیکی یک نقطه‌ست. فرمول ریاضی حد یعنی وقتی x به سمت a میل می‌کنه، f(x) به مقدار L نزدیک می‌شه. برای پیوستگی در یک نقطه مثل a، حد چپ و راست باید برابر باشند و این حد برابر مقدار f(a) باشه. بسیار خب، اجازه بدید یک مثال حل کنیم. تابع کسری f(x) = (x^2 - 9)/(x-3) رو در نظر بگیرید. همون‌طور که می‌بینید، در نقطه x=3 مخرج صفر می‌شه اما با تجزیه صورت کسر حد برابر ۶ می‌شه.',
-        segments: [
-          { start: 0, end: 18, text: 'امروز موضوع حد رو به صورت رسمی شروع می‌کنیم. حد توصیف‌کننده رفتار تابع در نزدیکی یک نقطه‌ست.', speaker: 'استاد ریاضی' },
-          { start: 18, end: 50, text: 'فرمول ریاضی حد یعنی وقتی x به سمت a میل می‌کنه، f(x) به مقدار L نزدیک می‌شه.', speaker: 'استاد ریاضی', isAiReferenced: true },
-          { start: 50, end: 95, text: 'برای پیوستگی در یک نقطه مثل a، حد چپ و راست باید برابر باشند و این حد برابر مقدار f(a) باشه.', speaker: 'استاد ریاضی', isAiReferenced: true },
-          { start: 95, end: 125, text: 'بسیار خب، اجازه بدید یک مثال حل کنیم. تابع کسری f(x) = (x^2 - 9)/(x-3) رو در نظر بگیرید.', speaker: 'استاد ریاضی' },
-          { start: 125, end: 150, text: 'همون‌طور که می‌بینید، در نقطه x=3 مخرج صفر می‌شه اما با تجزیه صورت کسر حد برابر ۶ می‌شه.', speaker: 'استاد ریاضی', isAiReferenced: true }
-        ]
-      }
-    ];
-    localStorage.setItem('cb_simulated_recordings', JSON.stringify(initialRecs));
-    return initialRecs;
+    return [];
   } catch {
     return [];
   }
 };
 
-const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours: number; maxClasses: number; maxDailyTokens: number; price: number }> = {
+export const UNIVERSITY_PLAN_ID = 'plan_university_v1';
+
+export const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours: number; maxClasses: number; maxDailyTokens: number; price: number }> = {
   plan_starter_v1: {
     planName: 'طرح آغازین (Starter)',
     maxRecordingHours: 10,
@@ -199,6 +165,13 @@ const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours: number
     maxClasses: 100,
     maxDailyTokens: 500000,
     price: 149000
+  },
+  [UNIVERSITY_PLAN_ID]: {
+    planName: 'طرح استاندارد دانشگاهی (تک‌کاربره)',
+    maxRecordingHours: 10,
+    maxClasses: 5,
+    maxDailyTokens: 60000,
+    price: 499999
   }
 };
 
@@ -207,72 +180,85 @@ function getTodayDateString(): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(new Date());
 }
 
-let simulatedSubscription: SubscriptionStatus = (() => {
+let simulatedSubscription: SubscriptionStatus | null = null;
+let lastSubscriptionUserId: string | null = null;
+
+function loadSubscriptionForCurrentUser(): SubscriptionStatus {
+  const uid = simulatedUser?.id || null;
+  if (simulatedSubscription && lastSubscriptionUserId === uid) {
+    return simulatedSubscription;
+  }
+  
+  const key = getStorageKey('cb_simulated_subscription');
   try {
-    const cached = localStorage.getItem('cb_simulated_subscription');
+    const cached = localStorage.getItem(key);
     if (cached) {
-      const parsed = JSON.parse(cached);
+      const parsed = JSON.parse(cached) as SubscriptionStatus;
       if (simulatedUser) {
         parsed.active = simulatedUser.hasActiveSubscription;
       }
-      return parsed;
+      simulatedSubscription = parsed;
+      lastSubscriptionUserId = uid;
+      return simulatedSubscription;
     }
   } catch {}
   
-  const initialClasses = getSimulatedClasses();
-  const initialRecordings = getSimulatedRecordings();
-  const defaultLastRenewalAt = new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
-  
-  // Filter recordings within current billing month
-  const currentBillingCycleRecs = initialRecordings.filter(r => new Date(r.createdAt).getTime() >= new Date(defaultLastRenewalAt).getTime());
-  const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
-  const totalHours = Number((totalSeconds / 3600).toFixed(1));
-
-  return {
+  const newSub: SubscriptionStatus = {
     active: simulatedUser?.hasActiveSubscription || false,
     planId: 'plan_starter_v1',
     planName: 'طرح آغازین (Starter)',
-    expiresAt: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
-    lastRenewalAt: defaultLastRenewalAt,
-    autoRenew: true,
+    expiresAt: null,
+    lastRenewalAt: undefined,
+    autoRenew: false,
     isCancelled: false,
     usage: {
-      classesCount: initialClasses.length,
+      classesCount: 0,
       maxClasses: 5,
-      recordingHoursUsed: totalHours,
+      recordingHoursUsed: 0,
       maxRecordingHours: 10,
-      dailyTokensUsed: 12450,
+      dailyTokensUsed: 0,
       maxDailyTokens: 60000,
       lastDailyReset: getTodayDateString(),
     }
   };
-})();
+  localStorage.setItem(key, JSON.stringify(newSub));
+  simulatedSubscription = newSub;
+  lastSubscriptionUserId = uid;
+  return simulatedSubscription;
+}
+
+function resetSubscriptionCache(): void {
+  simulatedSubscription = null;
+  lastSubscriptionUserId = null;
+}
 
 export const saveSimulatedSubscription = (sub: SubscriptionStatus) => {
   simulatedSubscription = sub;
-  localStorage.setItem('cb_simulated_subscription', JSON.stringify(sub));
+  lastSubscriptionUserId = simulatedUser?.id || null;
+  localStorage.setItem(getStorageKey('cb_simulated_subscription'), JSON.stringify(sub));
 };
 
 export const saveSimulatedClasses = (classes: Class[]) => {
-  localStorage.setItem('cb_simulated_classes', JSON.stringify(classes));
+  localStorage.setItem(getStorageKey('cb_simulated_classes'), JSON.stringify(classes));
   
   // Update subscription usage count
-  simulatedSubscription.usage.classesCount = classes.length;
-  saveSimulatedSubscription(simulatedSubscription);
+  const sub = loadSubscriptionForCurrentUser();
+  sub.usage.classesCount = classes.length;
+  saveSimulatedSubscription(sub);
 };
 
 export const saveSimulatedRecordings = (recs: Recording[]) => {
-  localStorage.setItem('cb_simulated_recordings', JSON.stringify(recs));
+  localStorage.setItem(getStorageKey('cb_simulated_recordings'), JSON.stringify(recs));
   
   // Calculate total recording duration in hours since lastRenewalAt
-  const lastRenewal = simulatedSubscription.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
+  const sub = loadSubscriptionForCurrentUser();
+  const lastRenewal = sub.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
   const currentBillingCycleRecs = recs.filter(r => new Date(r.createdAt).getTime() >= new Date(lastRenewal).getTime());
   const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
   const totalHours = Number((totalSeconds / 3600).toFixed(1));
   
-  // Update simulated subscription hours
-  simulatedSubscription.usage.recordingHoursUsed = totalHours;
-  saveSimulatedSubscription(simulatedSubscription);
+  sub.usage.recordingHoursUsed = totalHours;
+  saveSimulatedSubscription(sub);
 };
 
 // Attach access token to headers
@@ -407,6 +393,7 @@ export const AuthService = {
 
         // Cache simulated state
         simulatedUser = user;
+        resetSubscriptionCache();
         localStorage.setItem(ACCESS_TOKEN_KEY, 'mock_access_token_jwt');
         localStorage.setItem(REFRESH_TOKEN_KEY, 'mock_refresh_token_jwt');
         localStorage.setItem(USER_DATA_KEY, JSON.stringify(user));
@@ -426,6 +413,7 @@ export const AuthService = {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(USER_DATA_KEY);
     simulatedUser = null;
+    resetSubscriptionCache();
   }
 };
 
@@ -495,30 +483,31 @@ export const SubscriptionService = {
         return response.data;
       },
       () => {
+        const sub = loadSubscriptionForCurrentUser();
         if (simulatedUser) {
-          simulatedSubscription.active = simulatedUser.hasActiveSubscription;
+          sub.active = simulatedUser.hasActiveSubscription;
         }
         
         // Recalculate recording usage hours dynamically based on current billing cycle (since lastRenewalAt)
         const recs = getSimulatedRecordings();
-        const lastRenewal = simulatedSubscription.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
+        const lastRenewal = sub.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
         const currentBillingCycleRecs = recs.filter(r => new Date(r.createdAt).getTime() >= new Date(lastRenewal).getTime());
         const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
-        simulatedSubscription.usage.recordingHoursUsed = Number((totalSeconds / 3600).toFixed(1));
+        sub.usage.recordingHoursUsed = Number((totalSeconds / 3600).toFixed(1));
         
         // Daily AI token reset
         const todayStr = getTodayDateString();
-        if (simulatedSubscription.usage.lastDailyReset !== todayStr) {
-          simulatedSubscription.usage.dailyTokensUsed = 0;
-          simulatedSubscription.usage.lastDailyReset = todayStr;
+        if (sub.usage.lastDailyReset !== todayStr) {
+          sub.usage.dailyTokensUsed = 0;
+          sub.usage.lastDailyReset = todayStr;
         }
 
         // Sync active classes count
         const classes = getSimulatedClasses();
-        simulatedSubscription.usage.classesCount = classes.length;
+        sub.usage.classesCount = classes.length;
         
-        saveSimulatedSubscription(simulatedSubscription);
-        return simulatedSubscription;
+        saveSimulatedSubscription(sub);
+        return sub;
       }
     );
   },
@@ -539,20 +528,21 @@ export const SubscriptionService = {
         };
 
         simulatedUser = updatedUser;
-        simulatedSubscription.active = true;
-        simulatedSubscription.isCancelled = false;
-        simulatedSubscription.autoRenew = true;
-        simulatedSubscription.lastRenewalAt = new Date().toISOString();
-        simulatedSubscription.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        const sub = loadSubscriptionForCurrentUser();
+        sub.active = true;
+        sub.isCancelled = false;
+        sub.autoRenew = true;
+        sub.lastRenewalAt = new Date().toISOString();
+        sub.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
         
         localStorage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
         localStorage.setItem(`cb_user_${updatedUser.phoneNumber}`, JSON.stringify(updatedUser));
 
         // Sync initial subscription classes
         const initialClasses = getSimulatedClasses();
-        simulatedSubscription.usage.classesCount = initialClasses.length;
-        simulatedSubscription.usage.recordingHoursUsed = 0; // reset
-        saveSimulatedSubscription(simulatedSubscription);
+        sub.usage.classesCount = initialClasses.length;
+        sub.usage.recordingHoursUsed = 0;
+        saveSimulatedSubscription(sub);
 
         return {
           success: true,
@@ -570,16 +560,17 @@ export const SubscriptionService = {
       },
       () => {
         const now = new Date();
+        const sub = loadSubscriptionForCurrentUser();
         const extendedExpiry = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
-        simulatedSubscription.expiresAt = extendedExpiry;
-        simulatedSubscription.lastRenewalAt = now.toISOString();
-        simulatedSubscription.usage.recordingHoursUsed = 0; // reset usage for new billing month
-        simulatedSubscription.usage.dailyTokensUsed = 1200; // soft reset usage metric
-        simulatedSubscription.isCancelled = false;
-        simulatedSubscription.autoRenew = true;
+        sub.expiresAt = extendedExpiry;
+        sub.lastRenewalAt = now.toISOString();
+        sub.usage.recordingHoursUsed = 0;
+        sub.usage.dailyTokensUsed = 1200;
+        sub.isCancelled = false;
+        sub.autoRenew = true;
         
-        saveSimulatedSubscription(simulatedSubscription);
-        return simulatedSubscription;
+        saveSimulatedSubscription(sub);
+        return sub;
       }
     );
   },
@@ -594,14 +585,15 @@ export const SubscriptionService = {
         const plan = PLANS_CONFIG[planId];
         if (!plan) throw new Error('طرح انتخاب شده معتبر نمی‌باشد.');
         
-        simulatedSubscription.planId = planId;
-        simulatedSubscription.planName = plan.planName;
-        simulatedSubscription.usage.maxRecordingHours = plan.maxRecordingHours;
-        simulatedSubscription.usage.maxClasses = plan.maxClasses;
-        simulatedSubscription.usage.maxDailyTokens = plan.maxDailyTokens;
+        const sub = loadSubscriptionForCurrentUser();
+        sub.planId = planId;
+        sub.planName = plan.planName;
+        sub.usage.maxRecordingHours = plan.maxRecordingHours;
+        sub.usage.maxClasses = plan.maxClasses;
+        sub.usage.maxDailyTokens = plan.maxDailyTokens;
         
-        saveSimulatedSubscription(simulatedSubscription);
-        return simulatedSubscription;
+        saveSimulatedSubscription(sub);
+        return sub;
       }
     );
   },
@@ -613,22 +605,24 @@ export const SubscriptionService = {
         return response.data;
       },
       () => {
-        simulatedSubscription.autoRenew = false;
-        simulatedSubscription.isCancelled = true;
-        saveSimulatedSubscription(simulatedSubscription);
-        return simulatedSubscription;
+        const sub = loadSubscriptionForCurrentUser();
+        sub.autoRenew = false;
+        sub.isCancelled = true;
+        saveSimulatedSubscription(sub);
+        return sub;
       }
     );
   },
 
   getPaymentHistory: async (): Promise<any[]> => {
-    const currentPrice = PLANS_CONFIG[simulatedSubscription.planId]?.price || 39000;
-    const currentName = PLANS_CONFIG[simulatedSubscription.planId]?.planName || 'طرح آغازین';
+    const sub = loadSubscriptionForCurrentUser();
+    const currentPrice = PLANS_CONFIG[sub.planId]?.price || 39000;
+    const currentName = PLANS_CONFIG[sub.planId]?.planName || 'طرح آغازین';
     return [
       {
         id: 'tx_101',
         amount: currentPrice,
-        date: simulatedSubscription.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString(),
+        date: sub.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString(),
         status: 'success',
         refId: 'IRN-987654321',
         description: `${currentName} (۳۰ روزه)`
@@ -834,6 +828,10 @@ export const RecordingService = {
   }
 };
 
+function getChatKey(classId: string): string {
+  return getStorageKey(`cb_chat_messages_${classId}`);
+}
+
 export const ChatService = {
   getMessages: async (classId: string): Promise<ChatMessage[]> => {
     return apiCall(
@@ -842,8 +840,7 @@ export const ChatService = {
         return response.data;
       },
       () => {
-        const key = `cb_chat_messages_${classId}`;
-        const cached = localStorage.getItem(key);
+        const cached = localStorage.getItem(getChatKey(classId));
         if (cached) return JSON.parse(cached);
         return [];
       }
@@ -851,8 +848,7 @@ export const ChatService = {
   },
 
   saveMessages: async (classId: string, messages: ChatMessage[]): Promise<void> => {
-    const key = `cb_chat_messages_${classId}`;
-    localStorage.setItem(key, JSON.stringify(messages));
+    localStorage.setItem(getChatKey(classId), JSON.stringify(messages));
     try {
       await api.post(`/chat/messages?classId=${classId}`, { messages });
     } catch (e) {
@@ -867,8 +863,7 @@ export const ChatService = {
         return response.data;
       },
       () => {
-        const key = `cb_chat_messages_${classId}`;
-        localStorage.removeItem(key);
+        localStorage.removeItem(getChatKey(classId));
         return { success: true };
       }
     );
@@ -1152,7 +1147,8 @@ $$f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}$$
         }
 
         // 5. Update backend token usage
-        const updatedSubscription = { ...simulatedSubscription };
+        const currentSubscription = loadSubscriptionForCurrentUser();
+        const updatedSubscription = { ...currentSubscription };
         updatedSubscription.usage.dailyTokensUsed = Math.min(
           updatedSubscription.usage.maxDailyTokens,
           updatedSubscription.usage.dailyTokensUsed + estimatedTokens

@@ -4,10 +4,10 @@
  */
 
 import React, { useState } from 'react';
-import { CreditCard, Check, ShieldCheck, X, HelpCircle, Activity, Hourglass } from 'lucide-react';
+import { CreditCard, Check, ShieldCheck, HelpCircle, Activity, Hourglass } from 'lucide-react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
-import { SubscriptionService } from '../../services/api';
+import { SubscriptionService, PLANS_CONFIG, UNIVERSITY_PLAN_ID } from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
 
 interface SubscriptionGateProps {
@@ -46,6 +46,8 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
     return toPersianDigits(amount.toLocaleString('fa-IR'));
   };
 
+  const activePlan = PLANS_CONFIG[UNIVERSITY_PLAN_ID];
+
   return (
     <div className="w-full max-w-xl mx-auto px-4 flex flex-col justify-center min-h-[90vh] font-sans">
       {/* Visual Header Banner */}
@@ -53,9 +55,9 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
         <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-3.5 border border-indigo-100/80 shadow-xs">
           <CreditCard className="w-6 h-6 text-indigo-600" />
         </div>
-        <h1 className="text-xl font-black text-slate-950">فعال‌سازی لایسنس اشتراک</h1>
+        <h1 className="text-xl font-black text-slate-950">فعال‌سازی اشتراک</h1>
         <p className="text-xs text-slate-400 mt-2 font-medium max-w-xs leading-relaxed">
-          حفاظت از یکپارچگی پردازش هوش مصنوعی؛ استفاده از خدمات تحلیلی رایا نیازمند اشتراک فعال دانشجویی است.
+          با فعال‌سازی اشتراک، به تمامی قابلیت‌های هوش مصنوعی رایا دسترسی پیدا کنید.
         </p>
       </div>
 
@@ -74,18 +76,18 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
           </div>
 
           <div className="pb-5 border-b border-slate-100/50 text-right">
-            <h2 className="text-base font-extrabold text-slate-800">طرح استاندارد دانشگاهی (تک‌کاربره)</h2>
+            <h2 className="text-base font-extrabold text-slate-800">{activePlan.planName}</h2>
             <p className="text-xs text-slate-400 mt-1">ویژه همگام‌سازی، ویس، جزوات و چت آزمون دانشگاهی</p>
             
             <div className="mt-4 flex items-baseline gap-1.5">
-              <span className="text-2xl font-black text-indigo-600">{formatPrice(79000)}</span>
+              <span className="text-2xl font-black text-indigo-600">{formatPrice(activePlan.price)}</span>
               <span className="text-xs text-slate-400 font-medium">تومان / ماهانه</span>
             </div>
           </div>
 
           {/* Premium Features List */}
           <div className="py-6 space-y-4 text-right">
-            <h3 className="text-xs font-bold text-slate-700 tracking-tight">سقف امکانات فنی طرح پایه:</h3>
+            <h3 className="text-xs font-bold text-slate-700 tracking-tight">امکانات طرح:</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="flex items-start gap-2">
@@ -129,23 +131,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
               </div>
             </div>
 
-            <h3 className="text-xs font-bold text-slate-500 tracking-tight pt-2 border-t border-slate-50">محدودیت‌های طرح در نسخه آزمایشی فعلی:</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 opacity-75">
-              <div className="flex items-center gap-2 text-xs">
-                <div className="w-5 h-5 bg-slate-100 rounded-md flex items-center justify-center shrink-0">
-                  <X className="w-3 h-3 text-slate-400" />
-                </div>
-                <span className="text-slate-400">آپلود فایل‌های PDF (عدم امکان در طرح پایه)</span>
-              </div>
-
-              <div className="flex items-center gap-2 text-xs">
-                <div className="w-5 h-5 bg-slate-100 rounded-md flex items-center justify-center shrink-0">
-                  <X className="w-3 h-3 text-slate-400" />
-                </div>
-                <span className="text-slate-400">آپلود تصاویر و جداول نموداری</span>
-              </div>
-            </div>
           </div>
 
           <div className="pt-4 border-t border-slate-100/50 space-y-3.5">

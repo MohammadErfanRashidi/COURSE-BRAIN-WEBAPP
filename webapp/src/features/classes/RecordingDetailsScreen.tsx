@@ -208,6 +208,17 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
     document.body.removeChild(element);
   };
 
+  const getRecordingsKey = (): string => {
+    try {
+      const raw = localStorage.getItem('cb_user_data');
+      if (raw) {
+        const u = JSON.parse(raw);
+        if (u?.id) return `cb_simulated_recordings_${u.id}`;
+      }
+    } catch {}
+    return 'cb_simulated_recordings_preauth';
+  };
+
   const handleRename = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) return;
@@ -220,13 +231,13 @@ export const RecordingDetailsScreen: React.FC<RecordingDetailsScreenProps> = ({
         const mockUpdated = { ...recording, name: newName.trim() };
         setRecording(mockUpdated);
         // update list in localstorage
-        const cached = localStorage.getItem('cb_simulated_recordings');
+        const cached = localStorage.getItem(getRecordingsKey());
         if (cached) {
           const parsed = JSON.parse(cached) as Recording[];
           const idx = parsed.findIndex(r => r.id === recording.id);
           if (idx !== -1) {
             parsed[idx].name = newName.trim();
-            localStorage.setItem('cb_simulated_recordings', JSON.stringify(parsed));
+            localStorage.setItem(getRecordingsKey(), JSON.stringify(parsed));
           }
         }
       }

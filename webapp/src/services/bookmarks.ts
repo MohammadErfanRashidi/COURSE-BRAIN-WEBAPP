@@ -23,12 +23,26 @@ export interface BookmarkItem {
   };
 }
 
-const BOOKMARKS_STORAGE_KEY = 'cb_premium_bookmarks';
+function getCurrentUserId(): string | null {
+  try {
+    const raw = localStorage.getItem('cb_user_data');
+    if (raw) {
+      const user = JSON.parse(raw);
+      return user.id || null;
+    }
+  } catch {}
+  return null;
+}
+
+function getBookmarksKey(): string {
+  const uid = getCurrentUserId();
+  return uid ? `cb_premium_bookmarks_${uid}` : 'cb_premium_bookmarks_preauth';
+}
 
 export const BookmarkService = {
   getBookmarks: (): BookmarkItem[] => {
     try {
-      const cached = localStorage.getItem(BOOKMARKS_STORAGE_KEY);
+      const cached = localStorage.getItem(getBookmarksKey());
       return cached ? JSON.parse(cached) : [];
     } catch {
       return [];
@@ -37,7 +51,7 @@ export const BookmarkService = {
 
   saveBookmarks: (bookmarks: BookmarkItem[]): void => {
     try {
-      localStorage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(bookmarks));
+      localStorage.setItem(getBookmarksKey(), JSON.stringify(bookmarks));
       // Dispatch custom event to notify other screens
       window.dispatchEvent(new CustomEvent('cb-bookmarks-changed'));
     } catch (e) {
