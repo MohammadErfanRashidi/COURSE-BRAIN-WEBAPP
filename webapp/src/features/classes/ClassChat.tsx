@@ -10,7 +10,6 @@ import {
   BookOpen, 
   Copy, 
   Check, 
-  Trash2, 
   RotateCcw, 
   StopCircle, 
   Activity, 
@@ -345,12 +344,6 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
     });
   };
 
-  const handleDeleteMessage = async (msgId: string) => {
-    const updated = messages.filter(m => m.id !== msgId);
-    setMessages(updated);
-    ChatEngine.saveMessages(classId, updated);
-  };
-
   const handleRegenerate = (msgIndex: number) => {
     if (aiStatus !== 'completed') return;
     
@@ -623,15 +616,6 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
                             ) : (
                               <Copy className="w-3.5 h-3.5" />
                             )}
-                          </button>
-
-                          {/* Delete individual message */}
-                          <button
-                            onClick={() => handleDeleteMessage(msg.id)}
-                            className="p-1 rounded-full transition-all cursor-pointer text-slate-500 hover:bg-rose-50 hover:text-rose-600"
-                            title="حذف این پیام"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
 
                           {/* Bookmark message if Assistant */}
