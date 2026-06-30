@@ -858,7 +858,14 @@ export const RecordingService = {
 };
 
 function getChatKey(classId: string): string {
-  return getStorageKey(`cb_chat_messages_${classId}`);
+  try {
+    const raw = localStorage.getItem(USER_DATA_KEY);
+    if (raw) {
+      const user = JSON.parse(raw);
+      if (user?.id) return `cb_chat_messages_${user.id}_${classId}`;
+    }
+  } catch {}
+  return `cb_chat_messages_preauth_${classId}`;
 }
 
 export const ChatService = {

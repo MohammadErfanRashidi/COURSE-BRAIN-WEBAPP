@@ -33,6 +33,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { AcademicService, ClassService, RecordingService, SubscriptionService, ChatService } from '../../services/api';
+import { ChatEngine } from '../../services/chatEngine';
 import { Class, Course, Recording, SubscriptionStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { ClassChat } from './ClassChat';
@@ -235,6 +236,9 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
     if (!selectedClass) return;
     setIsResetLoading(true);
     try {
+      // Abort any in-flight AI generation and clear local state
+      ChatEngine.clearConversation(selectedClass.id);
+      // Also clear server-side / localStorage via API service
       await ChatService.deleteConversation(selectedClass.id);
       setChatKey(prev => prev + 1);
       setHasMessages(false);
