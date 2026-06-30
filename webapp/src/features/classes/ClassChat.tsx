@@ -469,20 +469,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full pt-4">
-              <button 
-                onClick={() => setInput('استاد در طول تدریس این ترم، چه موضوعاتی را جزو مباحث کلیدی قرار داده است؟')}
-                className="p-3 bg-white hover:bg-slate-50 border border-slate-200/50 rounded-2xl text-right text-[11px] font-bold text-slate-600 hover:text-slate-800 transition-all shadow-2xs"
-              >
-                📝 خلاصه کلیدی مباحث مهم کلاسی
-              </button>
-              <button 
-                onClick={() => setInput('از جزوات و تدریس‌های این کلاس یک کوییز خودکار تستی ۳ سواله بساز.')}
-                className="p-3 bg-white hover:bg-slate-50 border border-slate-200/50 rounded-2xl text-right text-[11px] font-bold text-slate-600 hover:text-slate-800 transition-all shadow-2xs"
-              >
-                ✏️ طراحی آزمون سنجش آمادگی (کوییز)
-              </button>
-            </div>
+
           </div>
         ) : (
           /* Group messages by date and render them */
