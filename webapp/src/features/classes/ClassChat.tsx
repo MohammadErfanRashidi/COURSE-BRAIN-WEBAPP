@@ -27,7 +27,7 @@ import {
   Layers
 } from 'lucide-react';
 import Markdown from 'react-markdown';
-import { ChatService } from '../../services/api';
+import { ChatEngine } from '../../services/chatEngine';
 import { ChatMessage, ChatSource, AIStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { motion, AnimatePresence } from 'motion/react';
@@ -91,35 +91,60 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
     }
   }, [input]);
   
-  // Abort controller for stopping stream generation
-  const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
 
+  // Track the latest messages so the cleanup effect never reads stale state
+  const messagesRef = useRef<ChatMessage[]>([]);
+  messagesRef.current = messages;
+
+  // Persist current messages to localStorage when leaving this conversation
+  // (unmount or classId change). Does NOT abort the AI stream — the engine
+  // keeps running in the background until completion.
+  useEffect(() => {
+    return () => {
+      if (classId && messagesRef.current.length > 0) {
+        ChatEngine.saveMessages(classId, messagesRef.current);
+      }
+    };
+  }, [classId]);
+
+  // Subscribe to live updates from the background engine
+  useEffect(() => {
+    const handleChatUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail === classId) {
+        setMessages(ChatEngine.getMessages(classId));
+        if (!ChatEngine.isGenerating(classId)) {
+          setAiStatus('completed');
+        }
+      }
+    };
+    window.addEventListener('cb-chat-updated', handleChatUpdate);
+    return () => window.removeEventListener('cb-chat-updated', handleChatUpdate);
+  }, [classId]);
+
   // Load chat history on mount or when class changes
   useEffect(() => {
-    // Abort any ongoing stream
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    
     setMessages([]);
-    setAiStatus('completed');
     setError(null);
     currentSourcesRef.current = [];
     setShouldAutoScroll(true);
 
-    async function loadHistory() {
-      try {
-        const history = await ChatService.getMessages(classId);
-        setMessages(history);
-      } catch (err: any) {
-        console.error('Error loading chat history:', err);
-        setError('خطا در بارگذاری تاریخچه گفتگو.');
+    const history = ChatEngine.getMessages(classId);
+    setMessages(history);
+    // If the last message is an active stream, reflect the generating state
+    if (history.length > 0) {
+      const last = history[history.length - 1];
+      if (last.role === 'assistant' && last.isStreaming) {
+        setAiStatus(last.status || 'generating');
+      } else {
+        setAiStatus('completed');
       }
+    } else {
+      setAiStatus('completed');
     }
-    loadHistory();
   }, [classId]);
 
   // Handle auto-scroll
@@ -235,28 +260,9 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
 
   // Stop Generation
   const handleStopGeneration = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-      abortControllerRef.current = null;
-    }
-    
-    // Finalize the last message in state as completed/stopped
-    setMessages(prev => {
-      if (prev.length === 0) return prev;
-      const last = prev[prev.length - 1];
-      if (last.role === 'assistant' && last.isStreaming) {
-        return [
-          ...prev.slice(0, prev.length - 1),
-          { ...last, isStreaming: false, status: 'completed' }
-        ];
-      }
-      return prev;
-    });
+    ChatEngine.stopGeneration(classId);
+    setMessages(ChatEngine.getMessages(classId));
     setAiStatus('completed');
-    // Save messages state
-    setTimeout(() => {
-      ChatService.saveMessages(classId, messages);
-    }, 100);
   };
 
   // Main Stream Sender
@@ -283,126 +289,12 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
       setInput('');
     }
 
-    // Prepare User Message
-    const userMsg: ChatMessage = {
-      id: `msg_u_${Math.random().toString(36).substring(2, 9)}`,
-      role: 'user',
-      content: textToSend,
-      timestamp: new Date().toISOString()
-    };
-
-    // Prepare Assistant placeholder
-    const assistantMsgId = `msg_a_${Math.random().toString(36).substring(2, 9)}`;
-    const assistantMsgPlaceholder: ChatMessage = {
-      id: assistantMsgId,
-      role: 'assistant',
-      content: '',
-      timestamp: new Date().toISOString(),
-      searchMode,
-      status: 'thinking',
-      isStreaming: true,
-      sources: []
-    };
-
-    const newMessages = [...messages, userMsg, assistantMsgPlaceholder];
-    setMessages(newMessages);
-    setAiStatus('thinking');
+    // Delegate to the background engine — the request continues even if
+    // this component unmounts.
+    ChatEngine.startGeneration(classId, className, textToSend, searchMode);
+    setMessages(ChatEngine.getMessages(classId));
+    setAiStatus('generating');
     setShouldAutoScroll(true);
-
-    // Create abort signal
-    const controller = new AbortController();
-    abortControllerRef.current = controller;
-
-    try {
-      await ChatService.sendMessageStream(
-        classId,
-        className,
-        textToSend,
-        searchMode,
-        // Status callback
-        (status) => {
-          setAiStatus(status);
-          setMessages(prev => {
-            const list = [...prev];
-            const idx = list.findIndex(m => m.id === assistantMsgId);
-            if (idx !== -1) {
-              list[idx] = { ...list[idx], status };
-            }
-            return list;
-          });
-        },
-        // Chunk callback
-        (chunk) => {
-          setMessages(prev => {
-            const list = [...prev];
-            const idx = list.findIndex(m => m.id === assistantMsgId);
-            if (idx !== -1) {
-              list[idx] = { ...list[idx], content: list[idx].content + chunk };
-            }
-            return list;
-          });
-        },
-        // Sources callback
-        (sources) => {
-          currentSourcesRef.current = sources;
-          setMessages(prev => {
-            const list = [...prev];
-            const idx = list.findIndex(m => m.id === assistantMsgId);
-            if (idx !== -1) {
-              list[idx] = { ...list[idx], sources };
-            }
-            return list;
-          });
-        },
-        // Usage update callback
-        () => {
-          // Sync subscription counts
-          syncSubscription();
-        },
-        // On completion callback
-        async (fullText) => {
-          const finalMessages = [
-            ...newMessages.slice(0, newMessages.length - 1),
-            { 
-              ...assistantMsgPlaceholder, 
-              content: fullText, 
-              isStreaming: false, 
-              status: 'completed',
-              sources: currentSourcesRef.current
-            } as ChatMessage
-          ];
-          setMessages(finalMessages);
-          await ChatService.saveMessages(classId, finalMessages);
-          setAiStatus('completed');
-          abortControllerRef.current = null;
-        },
-        // On error callback
-        (err) => {
-          console.error('Streaming error callback:', err);
-          setMessages(prev => {
-            const list = [...prev];
-            const idx = list.findIndex(m => m.id === assistantMsgId);
-            if (idx !== -1) {
-              list[idx] = { 
-                ...list[idx], 
-                isStreaming: false, 
-                status: 'failed',
-                content: list[idx].content || 'متأسفانه ارتباط با دستیار قطع شد. لطفاً دوباره تلاش کنید.'
-              };
-            }
-            return list;
-          });
-          setError('خطا در برقراری ارتباط با سرور چت.');
-          setAiStatus('completed');
-          abortControllerRef.current = null;
-        },
-        controller.signal
-      );
-    } catch (e: any) {
-      console.error('Unhandled sendMessageStream outer error:', e);
-      setError('خطای غیرمنتظره در ارسال پیام.');
-      setAiStatus('completed');
-    }
   };
 
   // Message Actions
@@ -456,7 +348,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
   const handleDeleteMessage = async (msgId: string) => {
     const updated = messages.filter(m => m.id !== msgId);
     setMessages(updated);
-    await ChatService.saveMessages(classId, updated);
+    ChatEngine.saveMessages(classId, updated);
   };
 
   const handleRegenerate = (msgIndex: number) => {
@@ -476,8 +368,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
     // Remove the assistant's response and any messages after it
     const trimmedHistory = messages.slice(0, msgIndex);
     setMessages(trimmedHistory);
+    ChatEngine.saveMessages(classId, trimmedHistory);
     
-    // Trigger send stream
     setTimeout(() => {
       handleSendMessage(userText);
     }, 100);

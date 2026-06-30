@@ -125,6 +125,7 @@ export interface ChatSource {
 }
 
 export type AIStatus = 
+  | 'queued'
   | 'thinking' 
   | 'searching_lecture' 
   | 'searching_textbook' 
