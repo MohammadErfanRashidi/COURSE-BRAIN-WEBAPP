@@ -101,11 +101,12 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
   // Persist current messages to localStorage when leaving this conversation
   // (unmount or classId change). Does NOT abort the AI stream — the engine
   // keeps running in the background until completion.
-  // Skips persistence when the conversation was cleared (e.g. via Reset Chat),
-  // detected by checking whether the engine no longer has messages for this class.
+  // Uses the `wasCleared` flag introduced by ChatEngine.clearConversation()
+  // instead of checking localStorage (which can return wrong results after
+  // logout when the user-data key has been removed).
   useEffect(() => {
     return () => {
-      if (classId && messagesRef.current.length > 0 && ChatEngine.getMessages(classId).length > 0) {
+      if (classId && messagesRef.current.length > 0 && !ChatEngine.wasCleared(classId)) {
         ChatEngine.saveMessages(classId, messagesRef.current);
       }
     };

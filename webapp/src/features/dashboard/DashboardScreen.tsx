@@ -29,6 +29,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/Card';
 import { useAuthStore } from '../../store/authStore';
 import { ClassService, RecordingService, SubscriptionService } from '../../services/api';
+import { getCurrentUserId } from '../../services/chatEngine';
 import { Class, Recording, SubscriptionStatus } from '../../types';
 import { usePlayerStore } from '../../store/playerStore';
 import { formatPersianDuration } from '../../utils/timeFormatter';
@@ -206,7 +207,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         setAllRecordings(fetchedRecordings);
 
         // Determine user-scoped key for recent chats
-        const userId = user?.id || '';
+        // Use the same user ID resolution as ChatEngine for consistency
+        const userId = user?.id || getCurrentUserId() || '';
         const recentChatsKey = userId ? `cb_recent_chats_${userId}` : 'cb_recent_chats_preauth';
         const chatPrefix = userId ? `cb_chat_messages_${userId}_` : 'cb_chat_messages_preauth_';
 

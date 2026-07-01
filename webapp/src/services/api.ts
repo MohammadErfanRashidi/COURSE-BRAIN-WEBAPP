@@ -857,7 +857,10 @@ export const RecordingService = {
   }
 };
 
-function getChatKey(classId: string): string {
+// Re-export key helpers so api.ts stays the single source of truth for
+// the chat storage keys without circular import issues.
+// The logic mirrors ChatEngine key generation in chatEngine.ts.
+export function getChatKeyForUser(classId: string): string {
   try {
     const raw = localStorage.getItem(USER_DATA_KEY);
     if (raw) {
@@ -876,7 +879,7 @@ export const ChatService = {
         return response.data;
       },
       () => {
-        const cached = localStorage.getItem(getChatKey(classId));
+        const cached = localStorage.getItem(getChatKeyForUser(classId));
         if (cached) return JSON.parse(cached);
         return [];
       }
@@ -884,7 +887,7 @@ export const ChatService = {
   },
 
   saveMessages: async (classId: string, messages: ChatMessage[]): Promise<void> => {
-    localStorage.setItem(getChatKey(classId), JSON.stringify(messages));
+    localStorage.setItem(getChatKeyForUser(classId), JSON.stringify(messages));
     try {
       await api.post(`/chat/messages?classId=${classId}`, { messages });
     } catch (e) {
@@ -899,7 +902,7 @@ export const ChatService = {
         return response.data;
       },
       () => {
-        localStorage.removeItem(getChatKey(classId));
+        localStorage.removeItem(getChatKeyForUser(classId));
         return { success: true };
       }
     );

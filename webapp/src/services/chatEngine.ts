@@ -3,20 +3,97 @@ import { ChatService } from './api';
 
 const activeGenerations = new Map<string, AbortController>();
 
-function getChatKey(classId: string): string {
+/** Tracks classIds whose conversation was intentionally cleared */
+const clearedConversations = new Set<string>();
+
+// ──────────────────────────────────────────────
+// Key helpers — single source of truth for both
+// chatEngine.ts and the rest of the app.
+// ──────────────────────────────────────────────
+
+export function getCurrentUserId(): string | null {
   try {
     const raw = localStorage.getItem('cb_user_data');
     if (raw) {
       const user = JSON.parse(raw);
-      if (user?.id) return `cb_chat_messages_${user.id}_${classId}`;
+      return user?.id || null;
     }
-  } catch {}
+  } catch {
+    // ignore parse errors
+  }
+  return null;
+}
+
+export function buildChatKey(classId: string): string {
+  const userId = getCurrentUserId();
+  return userId
+    ? `cb_chat_messages_${userId}_${classId}`
+    : `cb_chat_messages_preauth_${classId}`;
+}
+
+export function buildPreauthChatKey(classId: string): string {
   return `cb_chat_messages_preauth_${classId}`;
 }
 
-function loadMessages(classId: string): ChatMessage[] {
+/**
+ * Migrate any preauth conversation for this classId to the current
+ * user's key.  Does nothing if:
+ *  - The user is not authenticated
+ *  - There is no preauth data to migrate
+ *  - The user key already has data (never overwrite)
+ */
+export function migratePreauthToUser(classId: string): void {
+  const userId = getCurrentUserId();
+  if (!userId) return;
+
+  const preauthKey = buildPreauthChatKey(classId);
+  const userKey = buildChatKey(classId);
+
+  // Don't overwrite existing user-specific data
+  if (localStorage.getItem(userKey)) return;
+
+  const preauthData = localStorage.getItem(preauthKey);
+  if (preauthData) {
+    localStorage.setItem(userKey, preauthData);
+    localStorage.removeItem(preauthKey);
+  }
+}
+
+/**
+ * Migrate ALL preauth chats to the current user's keys at once.
+ * Called when the user logs in to ensure no orphaned data.
+ */
+export function migrateAllPreauthChats(): void {
+  const userId = getCurrentUserId();
+  if (!userId) return;
+
   try {
-    const cached = localStorage.getItem(getChatKey(classId));
+    const keys = Object.keys(localStorage);
+    const preauthPrefix = 'cb_chat_messages_preauth_';
+
+    for (const key of keys) {
+      if (key.startsWith(preauthPrefix)) {
+        const classId = key.slice(preauthPrefix.length);
+        if (classId) {
+          migratePreauthToUser(classId);
+        }
+      }
+    }
+  } catch {
+    // ignore errors during migration
+  }
+}
+
+// ──────────────────────────────────────────────
+// Internal persistence helpers
+// ──────────────────────────────────────────────
+
+function loadMessages(classId: string): ChatMessage[] {
+  // First, migrate any preauth data for this class
+  migratePreauthToUser(classId);
+
+  try {
+    const cached = localStorage.getItem(buildChatKey(classId));
     return cached ? JSON.parse(cached) : [];
   } catch {
     return [];
@@ -24,12 +101,16 @@ function loadMessages(classId: string): ChatMessage[] {
 }
 
 function persistMessages(classId: string, messages: ChatMessage[]): void {
-  localStorage.setItem(getChatKey(classId), JSON.stringify(messages));
+  localStorage.setItem(buildChatKey(classId), JSON.stringify(messages));
 }
 
 function notifyUpdated(classId: string): void {
   window.dispatchEvent(new CustomEvent('cb-chat-updated', { detail: classId }));
 }
+
+// ──────────────────────────────────────────────
+// Public Engine API
+// ──────────────────────────────────────────────
 
 export const ChatEngine = {
   isGenerating(classId: string): boolean {
@@ -41,10 +122,16 @@ export const ChatEngine = {
   },
 
   saveMessages(classId: string, messages: ChatMessage[]): void {
+    // A save after a clear means a new conversation has started
+    clearedConversations.delete(classId);
     persistMessages(classId, messages);
     notifyUpdated(classId);
   },
 
+  /**
+   * Start a new AI generation for the given class.
+   * The request continues in the background even if the UI unmounts.
+   */
   startGeneration(
     classId: string,
     className: string,
@@ -52,6 +139,8 @@ export const ChatEngine = {
     searchMode: 'lecture' | 'hybrid'
   ): void {
     if (activeGenerations.has(classId)) return;
+    // Starting a new generation means any prior clear flag is stale
+    clearedConversations.delete(classId);
 
     const messages = loadMessages(classId);
 
@@ -175,12 +264,17 @@ export const ChatEngine = {
     }
   },
 
+  wasCleared(classId: string): boolean {
+    return clearedConversations.has(classId);
+  },
+
   clearConversation(classId: string): void {
+    clearedConversations.add(classId);
     if (activeGenerations.has(classId)) {
       activeGenerations.get(classId)!.abort();
       activeGenerations.delete(classId);
     }
-    localStorage.removeItem(getChatKey(classId));
+    localStorage.removeItem(buildChatKey(classId));
     notifyUpdated(classId);
   }
 };

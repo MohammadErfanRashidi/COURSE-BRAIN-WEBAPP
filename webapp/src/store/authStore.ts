@@ -6,6 +6,7 @@
 import { create } from 'zustand';
 import { User, SubscriptionStatus } from '../types';
 import { AuthService, SubscriptionService } from '../services/api';
+import { migrateAllPreauthChats } from '../services/chatEngine';
 
 interface AuthState {
   user: User | null;
@@ -42,6 +43,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
       // Fetch subscription status immediately after successful auth
       await get().syncSubscription();
+      // Migrate any preauth conversations to this user's account
+      migrateAllPreauthChats();
+      window.dispatchEvent(new CustomEvent('cb-user-authenticated'));
       return response.user;
     } catch (err: any) {
       const errMsg = err.message || 'خطا در تایید کد پیامک شده';
@@ -73,6 +77,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         });
         // Sync subscription from backend
         await get().syncSubscription();
+        // Migrate any preauth conversations to this user's account
+        migrateAllPreauthChats();
       } else {
         set({ isAuthenticated: false, isLoading: false });
       }
