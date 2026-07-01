@@ -133,6 +133,44 @@ export type AIStatus =
   | 'completed' 
   | 'failed';
 
+// ──────────────────────────────────────────────
+// Support / Live Chat types
+// ──────────────────────────────────────────────
+
+export type SupportSenderRole = 'user' | 'admin';
+
+export type ConversationStatus = 'open' | 'waiting_user' | 'waiting_support' | 'resolved' | 'closed';
+
+export type SupportCategory = 'TECHNICAL' | 'BILLING' | 'ACADEMIC' | 'GENERAL';
+
+export interface SupportMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  senderRole: SupportSenderRole;
+  senderName: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface SupportConversation {
+  id: string;
+  userId: string;
+  userName: string;
+  userPhone: string;
+  status: ConversationStatus;
+  category: SupportCategory;
+  subject: string;
+  lastMessageAt: string;
+  lastMessagePreview: string;
+  unreadCount: number;
+  assignedTo?: string;
+  assignedToName?: string;
+  createdAt: string;
+  messages: SupportMessage[];
+}
+
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';

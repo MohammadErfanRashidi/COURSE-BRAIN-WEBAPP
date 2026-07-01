@@ -27,6 +27,7 @@ import { AdminDashboardScreen } from './features/admin/AdminDashboardScreen';
 
 // UI components
 import { AudioPlayer } from './components/AudioPlayer';
+import { SupportChat } from './components/SupportChat';
 import HamburgerButton from './components/HamburgerButton';
 import MobileMenu from './components/MobileMenu';
 import { useMobileMenuStore } from './store/mobileMenuStore';
@@ -653,6 +654,9 @@ export default function App() {
         recording={activePlayingRecording} 
         onClose={() => setActivePlayingRecording(null)} 
       />
+
+      {/* Global Floating Support Chat Widget - only visible on Dashboard */}
+      <SupportChat activeTab={activeTab} />
 
 
 

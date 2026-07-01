@@ -65,6 +65,8 @@ export interface SupportTicket {
   }[];
 }
 
+
+
 export interface TextbookKnowledge {
   id: string;
   title: string;
