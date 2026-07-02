@@ -315,18 +315,37 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
     setShouldAutoScroll(true);
   };
 
-  // Message Actions
-  const [bookmarkedMessageIds, setBookmarkedMessageIds] = useState<string[]>([]);
+  // Message Actions - Bookmark state initialized synchronously from storage
+  const [bookmarkedMessageIds, setBookmarkedMessageIds] = useState<string[]>(() => {
+    return BookmarkService.getBookmarks()
+      .filter(b => b.type === 'response' && b.metadata.messageId)
+      .map(b => b.metadata.messageId as string);
+  });
 
+  // Listen for bookmark changes from other tabs/components to stay in sync
   useEffect(() => {
-    const list = BookmarkService.getBookmarks().map(b => b.id);
-    setBookmarkedMessageIds(list);
+    const handleBookmarksChanged = () => {
+      const ids = BookmarkService.getBookmarks()
+        .filter(b => b.type === 'response' && b.metadata.messageId)
+        .map(b => b.metadata.messageId as string);
+      setBookmarkedMessageIds(ids);
+    };
+    window.addEventListener('cb-bookmarks-changed', handleBookmarksChanged);
+    return () => window.removeEventListener('cb-bookmarks-changed', handleBookmarksChanged);
+  }, []);
+
+  // Also refresh bookmark state when messages change (e.g., after sending a new message)
+  useEffect(() => {
+    const ids = BookmarkService.getBookmarks()
+      .filter(b => b.type === 'response' && b.metadata.messageId)
+      .map(b => b.metadata.messageId as string);
+    setBookmarkedMessageIds(ids);
   }, [messages]);
 
   const handleToggleBookmarkMessage = (msg: ChatMessage) => {
     const isBookmarked = bookmarkedMessageIds.includes(msg.id);
     if (isBookmarked) {
-      BookmarkService.removeBookmark(msg.id);
+      BookmarkService.removeBookmarkByMetadata('response', 'messageId', msg.id);
       setBookmarkedMessageIds(prev => prev.filter(id => id !== msg.id));
     } else {
       // Find the user prompt right before this assistant message

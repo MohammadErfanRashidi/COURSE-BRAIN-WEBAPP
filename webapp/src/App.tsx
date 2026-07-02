@@ -26,7 +26,6 @@ import { AdminLoginScreen } from './features/admin/AdminLoginScreen';
 import { AdminDashboardScreen } from './features/admin/AdminDashboardScreen';
 
 // UI components
-import { AudioPlayer } from './components/AudioPlayer';
 import { SupportChat } from './components/SupportChat';
 import HamburgerButton from './components/HamburgerButton';
 import MobileMenu from './components/MobileMenu';
@@ -115,9 +114,6 @@ export default function App() {
   const [focusRecord, setFocusRecord] = useState(false);
   const [focusUpload, setFocusUpload] = useState(false);
   const [preselectClassId, setPreselectClassId] = useState<string | null>(null);
-
-  // Global Audio Player state
-  const [activePlayingRecording, setActivePlayingRecording] = useState<Recording | null>(null);
 
   // Boolean flag to trigger class creation modal from the dashboard
   const [shouldOpenCreateModal, setShouldOpenCreateModal] = useState(false);
@@ -290,7 +286,6 @@ export default function App() {
   }, []);
 
   const handleClearClassId = useCallback(() => setOpenClassId(null), []);
-  const handlePlayRecording = useCallback((rec: Recording) => setActivePlayingRecording(rec), []);
   const handleCloseCreateModal = useCallback(() => setShouldOpenCreateModal(false), []);
 
   const toPersianDigits = (str: string | number) => {
@@ -512,7 +507,6 @@ export default function App() {
                       onNavigate={handleDashboardNavigate} 
                       openClassId={openClassId}
                       onClearClassId={handleClearClassId}
-                      onPlayRecording={handlePlayRecording}
                       shouldOpenCreateModal={shouldOpenCreateModal}
                       onCloseCreateModal={handleCloseCreateModal}
                     />
@@ -648,12 +642,6 @@ export default function App() {
           </motion.button>
         </nav>
       )}
-
-      {/* Global persistent Floating Audio Player */}
-      <AudioPlayer 
-        recording={activePlayingRecording} 
-        onClose={() => setActivePlayingRecording(null)} 
-      />
 
       {/* Global Floating Support Chat Widget - only visible on Dashboard */}
       <SupportChat activeTab={activeTab} />
