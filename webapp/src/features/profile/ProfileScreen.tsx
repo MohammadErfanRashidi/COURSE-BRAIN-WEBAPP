@@ -282,7 +282,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
             <div className="flex items-center justify-between text-xs font-bold">
               <span className="text-slate-500">سقف استفاده روزانه AI</span>
               <span className="text-emerald-700 font-black">
-                سهمیه کامل روزانه (فعال)
+                فعال
               </span>
             </div>
           </Card>
