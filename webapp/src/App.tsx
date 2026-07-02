@@ -643,8 +643,12 @@ export default function App() {
         </nav>
       )}
 
-      {/* Global Floating Support Chat Widget - only visible on Dashboard */}
-      <SupportChat activeTab={activeTab} />
+      {/* Global Floating Support Chat Widget - only visible on the
+          authenticated Dashboard page (not during onboarding/auth). */}
+      <SupportChat
+        activeTab={activeTab}
+        isFullAppDashboard={currentScreen === 'APP_DASHBOARD_PREVIEW' && activeTab === 'dashboard'}
+      />
 
 
 

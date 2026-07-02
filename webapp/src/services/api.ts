@@ -32,6 +32,10 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// "سایر" (Others) options — the custom id 'other' is used to detect
+// when the user wants to type a free-text university name.
+const OTHER_UNIVERSITY_ID = 'other';
+
 // Mock Master Data for fallback & sandbox testing
 const MOCK_UNIVERSITIES: University[] = [
   { id: '1', name: 'دانشگاه تهران', city: 'تهران' },
@@ -42,6 +46,8 @@ const MOCK_UNIVERSITIES: University[] = [
   { id: '6', name: 'دانشگاه فردوسی مشهد', city: 'مشهد' },
   { id: '7', name: 'دانشگاه صنعتی اصفهان', city: 'اصفهان' },
   { id: '8', name: 'دانشگاه علوم پزشکی تهران', city: 'تهران' },
+  { id: '9', name: 'دانشگاه آزاد اسلامی', city: '' },
+  { id: OTHER_UNIVERSITY_ID, name: 'سایر (Others)', city: '' },
 ];
 
 const MD_COURSES: Course[] = [
@@ -464,6 +470,8 @@ export const AcademicService = {
   submitOnboarding: async (data: {
     universityId: string;
     degree: string;
+    fullName?: string;
+    customUniversityName?: string;
   }): Promise<User> => {
     return apiCall(
       async () => {
@@ -475,15 +483,20 @@ export const AcademicService = {
         if (!simulatedUser) throw new Error('کاربر یافت نشد. مجددا وارد شوید.');
 
         const selectedUni = MOCK_UNIVERSITIES.find(u => u.id === data.universityId);
+        const isOther = data.universityId === OTHER_UNIVERSITY_ID;
 
         const academicProfile: AcademicProfile = {
           universityId: data.universityId,
-          universityName: selectedUni?.name || 'دانشگاه پیش‌فرض',
+          universityName: isOther && data.customUniversityName
+            ? data.customUniversityName
+            : (selectedUni?.name || 'دانشگاه پیش‌فرض'),
           degree: data.degree,
+          customUniversityName: isOther ? data.customUniversityName : undefined,
         };
 
         const updatedUser: User = {
           ...simulatedUser,
+          fullName: data.fullName || simulatedUser.fullName,
           onboardingCompleted: true,
           academicProfile
         };

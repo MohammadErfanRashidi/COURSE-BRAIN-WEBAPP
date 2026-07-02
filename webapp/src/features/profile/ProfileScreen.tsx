@@ -27,6 +27,8 @@ import { AcademicService } from '../../services/api';
 import { University, User } from '../../types';
 import { formatPersianDuration } from '../../utils/timeFormatter';
 
+const OTHER_UNIVERSITY_ID = 'other';
+
 interface ProfileScreenProps {
   onNavigate: (tab: string) => void;
 }
@@ -44,11 +46,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
   // Form State
   const [fullName, setFullName] = useState('');
   const [selectedUniversity, setSelectedUniversity] = useState('');
+  const [customUniversityName, setCustomUniversityName] = useState('');
 
   const toPersianDigits = (str: string | number) => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     return String(str).replace(/[0-9]/g, (w) => farsiDigits[parseInt(w)]);
   };
+
+  // Derived — show custom uni input only when "سایر" is selected
+  const isOtherSelected = selectedUniversity === OTHER_UNIVERSITY_ID;
 
   useEffect(() => {
     async function loadData() {
@@ -61,6 +67,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
           setFullName(user.fullName || '');
           if (user.academicProfile) {
             setSelectedUniversity(user.academicProfile.universityId);
+            setCustomUniversityName(user.academicProfile.customUniversityName || '');
           }
         }
       } catch (err: any) {
@@ -81,15 +88,20 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
     setSuccessMsg(null);
 
     try {
-      const selectedUniName = universities.find(u => u.id === selectedUniversity)?.name || '';
+      const selectedUni = universities.find(u => u.id === selectedUniversity);
+      const selectedUniName = selectedUni?.name || '';
+      const isOther = selectedUniversity === OTHER_UNIVERSITY_ID;
 
       const updatedUser: User = {
         ...user,
         fullName: fullName.trim(),
         academicProfile: {
           universityId: selectedUniversity,
-          universityName: selectedUniName,
+          universityName: isOther && customUniversityName.trim()
+            ? customUniversityName.trim()
+            : selectedUniName,
           degree: 'md',
+          customUniversityName: isOther ? customUniversityName.trim() : undefined,
         }
       };
 
@@ -212,11 +224,32 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
                       placeholder="-- انتخاب دانشگاه --"
                       options={universities.map(uni => ({ value: uni.id, label: uni.name }))}
                       value={selectedUniversity}
-                      onChange={setSelectedUniversity}
+                      onChange={(val) => {
+                        setSelectedUniversity(val);
+                        if (val !== OTHER_UNIVERSITY_ID) {
+                          setCustomUniversityName('');
+                        }
+                      }}
                       searchable
                       required
                     />
                   </div>
+
+                  {/* Custom University Name Field — only when "سایر" is selected */}
+                  {isOtherSelected && (
+                    <div className="space-y-1.5 animate-in fade-in duration-200">
+                      <label className="text-[10px] font-black text-slate-500 block">نام دانشگاه <span className="text-rose-500">*</span></label>
+                      <input
+                        type="text"
+                        value={customUniversityName}
+                        onChange={(e) => setCustomUniversityName(e.target.value)}
+                        placeholder="نام دانشگاه خود را وارد کنید"
+                        required
+                        className="w-full bg-white border border-slate-200/40 rounded-xl px-4 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
+                        dir="auto"
+                      />
+                    </div>
+                  )}
 
                 </div>
               )}

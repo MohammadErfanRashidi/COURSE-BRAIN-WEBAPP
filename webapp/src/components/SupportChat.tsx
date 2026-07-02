@@ -6,6 +6,13 @@
  *
  * Renders a fixed-position floating button (bottom-right) and an animated
  * chat window.  Uses the application's existing design language.
+ *
+ * Visibility rules:
+ *   - Only rendered when authenticated AND the user is viewing the full
+ *     application Dashboard (not onboarding, login, etc.).
+ *   - Pass isFullAppDashboard={true} only when the user has completed
+ *     onboarding and is on the APP_DASHBOARD_PREVIEW screen with the
+ *     'dashboard' tab active.
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -53,9 +60,13 @@ const formatDateGroup = (isoString: string) => {
 
 interface SupportChatProps {
   activeTab?: string;
+  /** Must be true to render the button — only set when the user is fully
+   *  authenticated, has completed onboarding, and is on the native Dashboard
+   *  tab (APP_DASHBOARD_PREVIEW + activeTab === 'dashboard'). */
+  isFullAppDashboard?: boolean;
 }
 
-export const SupportChat: React.FC<SupportChatProps> = ({ activeTab }) => {
+export const SupportChat: React.FC<SupportChatProps> = ({ activeTab, isFullAppDashboard = false }) => {
   const { isAuthenticated } = useAuthStore();
   const {
     isOpen,
@@ -75,9 +86,6 @@ export const SupportChat: React.FC<SupportChatProps> = ({ activeTab }) => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  // Only show on Dashboard page
-  const isDashboard = activeTab === 'dashboard';
 
   // Maximum message length from the engine
   const maxLength = SupportEngine.MAX_MESSAGE_LENGTH;
@@ -140,10 +148,15 @@ export const SupportChat: React.FC<SupportChatProps> = ({ activeTab }) => {
     }
   }, [isOpen]);
 
-  if (!isAuthenticated) return null;
-
-  // Do not render the floating button if not on Dashboard
-  if (!isDashboard && !isOpen) return null;
+  // ── Visibility guard ──────────────────────────────────────────────────
+  // The button must only render when:
+  //   1. The user is authenticated AND
+  //   2. The user is on the real Dashboard (not onboarding / admin / etc.)
+  if (!isAuthenticated || !isFullAppDashboard) {
+    // Even if the chat window was previously open, close it and hide
+    // everything when the user navigates away from the Dashboard.
+    return null;
+  }
 
   const messages = conversation?.messages || [];
   const statusLabel = conversation?.status || 'open';
@@ -166,49 +179,47 @@ export const SupportChat: React.FC<SupportChatProps> = ({ activeTab }) => {
   return (
     <>
       {/* Floating Support Button - only visible on Dashboard */}
-      {isDashboard && (
-        <div className="fixed bottom-[120px] md:bottom-6 right-6 z-50 flex flex-col items-center gap-2">
-          <AnimatePresence>
-            {!isOpen && unreadCount > 0 && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.5, y: -10 }}
-                className="bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg"
-              >
-                {toPersianDigits(unreadCount)}
-              </motion.div>
-            )}
-          </AnimatePresence>
+      <div className="fixed bottom-[120px] md:bottom-6 right-6 z-50 flex flex-col items-center gap-2">
+        <AnimatePresence>
+          {!isOpen && unreadCount > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: -10 }}
+              className="bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg"
+            >
+              {toPersianDigits(unreadCount)}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          <motion.button
-            onClick={toggle}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.92 }}
-            className="relative w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_8px_28px_rgba(79,70,229,0.35)] border border-indigo-400/30 flex items-center justify-center cursor-pointer transition-colors duration-200 active:scale-90"
-            aria-label="پشتیبانی"
-            title="پشتیبانی"
-          >
-            {isOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <MessageSquare className="w-6 h-6" />
-            )}
+        <motion.button
+          onClick={toggle}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+          className="relative w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_8px_28px_rgba(79,70,229,0.35)] border border-indigo-400/30 flex items-center justify-center cursor-pointer transition-colors duration-200 active:scale-90"
+          aria-label="پشتیبانی"
+          title="پشتیبانی"
+        >
+          {isOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <MessageSquare className="w-6 h-6" />
+          )}
 
-            {/* Notification indicator - grey by default, green when unread admin replies */}
-            {!isOpen && (
-              <span
-                className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 border-2 border-white rounded-full ${
-                  hasUnreadReplies ? 'bg-emerald-500' : 'bg-slate-400'
-                }`}
-              />
-            )}
+          {/* Notification indicator - grey by default, green when unread admin replies */}
+          {!isOpen && (
+            <span
+              className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 border-2 border-white rounded-full ${
+                hasUnreadReplies ? 'bg-emerald-500' : 'bg-slate-400'
+              }`}
+            />
+          )}
 
-            {/* Ripple ring */}
-            <span className="absolute inset-0 rounded-full bg-indigo-400/20 animate-ping opacity-30" />
-          </motion.button>
-        </div>
-      )}
+          {/* Ripple ring */}
+          <span className="absolute inset-0 rounded-full bg-indigo-400/20 animate-ping opacity-30" />
+        </motion.button>
+      </div>
 
       {/* Chat Window */}
       <AnimatePresence>

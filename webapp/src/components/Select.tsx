@@ -47,8 +47,8 @@ export const Select: React.FC<SelectProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
   const [portalStyle, setPortalStyle] = useState<{
-    top: number; left: number; width: number; above: boolean;
-  }>({ top: 0, left: 0, width: 0, above: false });
+    top: number; left: number; width: number; maxHeight: number;
+  }>({ top: 0, left: 0, width: 0, maxHeight: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -84,16 +84,88 @@ export const Select: React.FC<SelectProps> = ({
       const trigger = triggerRef.current;
       if (!trigger) return;
       const rect = trigger.getBoundingClientRect();
-      const estimatedHeight = Math.min(240, filteredOptions.length * 44 + (searchable ? 48 : 0) + 16);
-      const spaceBelow = window.innerHeight - rect.bottom - 8;
-      const spaceAbove = rect.top - 8;
-      const showAbove = spaceBelow < estimatedHeight && spaceAbove > spaceBelow;
+
+      // Constants for spacing
+      const VERTICAL_GAP = 6;
+      const MIN_HEIGHT = 80; // Minimum dropdown height
+      const MAX_HEIGHT_VH = 0.6; // 60% of viewport height
+      const MAX_HEIGHT_PX = window.innerHeight * MAX_HEIGHT_VH;
+
+      // Available space below and above the trigger
+      const spaceBelow = window.innerHeight - rect.bottom - VERTICAL_GAP;
+      const spaceAbove = rect.top - VERTICAL_GAP;
+
+      // Estimate the content height (each option ~44px, search bar ~56px)
+      const searchHeight = searchable ? 56 : 0;
+      const estimatedContentHeight = filteredOptions.length * 44 + searchHeight + 16;
+
+      // Determine if showing above or below
+      const fitsBelow = spaceBelow >= MIN_HEIGHT;
+      const fitsAbove = spaceAbove >= MIN_HEIGHT;
+
+      let maxHeight: number;
+      let top: number;
+
+      if (fitsBelow && !fitsAbove) {
+        // Show below — use space below capped at 60vh
+        maxHeight = Math.min(spaceBelow, MAX_HEIGHT_PX);
+        top = rect.bottom + VERTICAL_GAP;
+      } else if (fitsAbove && !fitsBelow) {
+        // Show above — use space above capped at 60vh
+        maxHeight = Math.min(spaceAbove, MAX_HEIGHT_PX);
+        top = rect.top - VERTICAL_GAP - maxHeight;
+        // If top goes off-screen, clamp it
+        if (top < VERTICAL_GAP) {
+          top = VERTICAL_GAP;
+          maxHeight = rect.top - VERTICAL_GAP * 2;
+        }
+      } else {
+        // Both fit or neither fits — prefer showing below if more space, else above
+        if (spaceBelow >= spaceAbove) {
+          maxHeight = Math.min(spaceBelow, MAX_HEIGHT_PX);
+          top = rect.bottom + VERTICAL_GAP;
+        } else {
+          maxHeight = Math.min(spaceAbove, MAX_HEIGHT_PX);
+          top = rect.top - VERTICAL_GAP - maxHeight;
+          if (top < VERTICAL_GAP) {
+            top = VERTICAL_GAP;
+            maxHeight = rect.top - VERTICAL_GAP * 2;
+          }
+        }
+      }
+
+      // Ensure maxHeight is at least MIN_HEIGHT and not negative
+      maxHeight = Math.max(MIN_HEIGHT, Math.min(maxHeight, window.innerHeight - VERTICAL_GAP * 2));
+
+      // Ensure the dropdown doesn't extend below the viewport
+      if (top + maxHeight > window.innerHeight - VERTICAL_GAP) {
+        maxHeight = window.innerHeight - VERTICAL_GAP - top;
+      }
+
+      // Ensure the dropdown doesn't extend above the viewport
+      if (top < VERTICAL_GAP) {
+        maxHeight = maxHeight - (VERTICAL_GAP - top);
+        top = VERTICAL_GAP;
+      }
+
+      // Final safety clamp
+      maxHeight = Math.max(MIN_HEIGHT, Math.min(maxHeight, window.innerHeight - VERTICAL_GAP * 2));
+
+      // Horizontal positioning — keep within viewport
+      const dropdownWidth = Math.max(rect.width, inline ? 200 : 0);
+      let left = rect.left;
+      if (left + dropdownWidth > window.innerWidth - VERTICAL_GAP) {
+        left = window.innerWidth - dropdownWidth - VERTICAL_GAP;
+      }
+      if (left < VERTICAL_GAP) {
+        left = VERTICAL_GAP;
+      }
 
       setPortalStyle({
-        top: showAbove ? rect.top - 8 : rect.bottom + 8,
-        left: rect.left,
-        width: Math.max(rect.width, inline ? 200 : 0),
-        above: showAbove,
+        top,
+        left,
+        width: dropdownWidth,
+        maxHeight,
       });
     };
 
@@ -200,19 +272,6 @@ export const Select: React.FC<SelectProps> = ({
 
   const handleTriggerClick = () => {
     if (!disabled) {
-      if (!isOpen && triggerRef.current) {
-        const rect = triggerRef.current.getBoundingClientRect();
-        const estimatedHeight = Math.min(240, filteredOptions.length * 44 + (searchable ? 48 : 0) + 16);
-        const spaceBelow = window.innerHeight - rect.bottom - 8;
-        const spaceAbove = rect.top - 8;
-        const showAbove = spaceBelow < estimatedHeight && spaceAbove > spaceBelow;
-        setPortalStyle({
-          top: showAbove ? rect.top - 8 : rect.bottom + 8,
-          left: rect.left,
-          width: Math.max(rect.width, inline ? 200 : 0),
-          above: showAbove,
-        });
-      }
       setIsOpen(prev => !prev);
       if (isOpen) setSearchQuery('');
     }
@@ -348,23 +407,23 @@ export const Select: React.FC<SelectProps> = ({
           role="listbox"
           aria-label={label}
           ref={listRef}
-          initial={{ opacity: 0, scale: 0.95, y: portalStyle.above ? 4 : -4 }}
+          initial={{ opacity: 0, scale: 0.95, y: -4 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: portalStyle.above ? 4 : -4 }}
+          exit={{ opacity: 0, scale: 0.95, y: -4 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
           style={{
             position: 'fixed',
             top: portalStyle.top,
             left: portalStyle.left,
             width: portalStyle.width,
-            maxHeight: 'min(240px, 60vh)',
-            transformOrigin: portalStyle.above ? 'bottom' : 'top',
+            maxHeight: portalStyle.maxHeight,
             zIndex: 100,
           }}
-          className="bg-white border border-slate-100/80 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden"
+          className="bg-white border border-slate-100/80 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col"
         >
           {searchable && !loading && renderSearchBar()}
-          <div className="overflow-y-auto no-scrollbar py-1" style={{ maxHeight: 'inherit' }}>
+          {/* Scrollable options container — takes remaining height */}
+          <div className="overflow-y-auto overscroll-contain py-1" style={{ maxHeight: searchable && !loading ? '100%' : '100%' }}>
             {renderOptions()}
           </div>
         </motion.div>

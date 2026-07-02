@@ -18,6 +18,7 @@ export interface AcademicProfile {
   universityId: string;
   universityName: string;
   degree: string; // 'md' for Doctor of Medicine, extensible later
+  customUniversityName?: string; // Custom name when "سایر (Others)" is selected
 }
 
 export interface University {
