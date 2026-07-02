@@ -10,7 +10,6 @@ import {
   BookOpen, 
   Copy, 
   Check, 
-  RotateCcw, 
   StopCircle, 
   Activity, 
   Coins, 
@@ -111,6 +110,23 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
       }
     };
   }, [classId]);
+
+  // Sync aiStatus with the actual state of the message list.
+  // This catches edge cases where the cb-chat-updated event
+  // fires before React has re-rendered, ensuring the
+  // Send/Stop button always reflects the real generation state.
+  useEffect(() => {
+    if (messages.length > 0) {
+      const last = messages[messages.length - 1];
+      if (last.role === 'assistant' && last.isStreaming) {
+        setAiStatus(last.status || 'generating');
+      } else if (aiStatus !== 'completed' && !last.isStreaming) {
+        setAiStatus('completed');
+      }
+    } else if (aiStatus !== 'completed') {
+      setAiStatus('completed');
+    }
+  }, [messages]);
 
   // Subscribe to live updates from the background engine
   useEffect(() => {
@@ -347,57 +363,6 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
     });
   };
 
-  const handleRegenerate = (msgIndex: number) => {
-    if (aiStatus !== 'completed') return;
-    
-    // Find previous user message
-    let userText = '';
-    for (let i = msgIndex; i >= 0; i--) {
-      if (messages[i].role === 'user') {
-        userText = messages[i].content;
-        break;
-      }
-    }
-
-    if (!userText) return;
-
-    // Remove the assistant's response and any messages after it
-    const trimmedHistory = messages.slice(0, msgIndex);
-    setMessages(trimmedHistory);
-    ChatEngine.saveMessages(classId, trimmedHistory);
-    
-    setTimeout(() => {
-      handleSendMessage(userText);
-    }, 100);
-  };
-
-  const handleRetryLast = () => {
-    if (messages.length === 0 || aiStatus !== 'completed') return;
-    const lastMsg = messages[messages.length - 1];
-    
-    if (lastMsg.role === 'assistant' && lastMsg.status === 'failed') {
-      handleRegenerate(messages.length - 1);
-    } else {
-      // Find last user message
-      let lastUserMsg: ChatMessage | null = null;
-      let lastUserIdx = -1;
-      for (let i = messages.length - 1; i >= 0; i--) {
-        if (messages[i].role === 'user') {
-          lastUserMsg = messages[i];
-          lastUserIdx = i;
-          break;
-        }
-      }
-      if (lastUserMsg) {
-        const trimmed = messages.slice(0, lastUserIdx + 1);
-        setMessages(trimmed);
-        setTimeout(() => {
-          handleSendMessage(lastUserMsg!.content);
-        }, 100);
-      }
-    }
-  };
-
   // Get localized status text
   const getStatusLabel = (status: AIStatus) => {
     switch (status) {
@@ -429,9 +394,11 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
       <div 
         ref={chatContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto px-5 pt-[72px] space-y-6 scrollbar-thin scrollbar-thumb-slate-200 relative"
+        className="flex-1 overflow-y-auto px-5 pt-[72px] scrollbar-thin scrollbar-thumb-slate-200 relative"
         style={{ paddingBottom: `${composerHeight + 16}px` }}
       >
+        {/* Desktop: constrain message width and center */}
+        <div className="md:max-w-4xl md:mx-auto space-y-6">
 
         {error && (
           <div className="p-4 bg-rose-50 border border-rose-150 rounded-2xl flex items-start gap-3 text-rose-800 text-xs font-bold leading-relaxed shadow-sm">
@@ -442,14 +409,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
                 <p className="text-[9px] text-rose-700 font-semibold mt-1">
                   سهمیه استفاده از هوش مصنوعی هر ۲۴ ساعت یکبار بازنشانی می‌شود. برای حذف محدودیت روزانه، از صفحه اشتراک پلن ویژه را تهیه کنید.
                 </p>
-              ) : (
-                <button 
-                  onClick={handleRetryLast}
-                  className="text-[10px] text-indigo-600 underline hover:text-indigo-700 mt-1 block cursor-pointer font-black"
-                >
-                  تلاش مجدد فرستادن آخرین پیام
-                </button>
-              )}
+              ) : null}
             </div>
           </div>
         )}
@@ -623,27 +583,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
                             </button>
                           )}
 
-                          {/* Regenerate if Assistant */}
-                          {!isUser && msg.status !== 'failed' && actualIndex > 0 && (
-                            <button
-                              onClick={() => handleRegenerate(actualIndex)}
-                              className="p-1 rounded-full transition-all cursor-pointer text-slate-500 hover:bg-slate-200 hover:text-slate-850"
-                              title="تولید مجدد پاسخ بر اساس همین پیام"
-                            >
-                              <RotateCcw className="w-3.5 h-3.5" />
-                            </button>
-                          )}
 
-                          {/* Retry if failed */}
-                          {!isUser && msg.status === 'failed' && (
-                            <button
-                              onClick={handleRetryLast}
-                              className="p-1 rounded-full transition-all cursor-pointer text-slate-500 hover:bg-indigo-50 hover:text-indigo-600"
-                              title="تلاش مجدد برای پاسخ"
-                            >
-                              <RotateCcw className="w-3.5 h-3.5" />
-                            </button>
-                          )}
                         </div>
 
                       </div>
@@ -683,6 +623,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
         )}
 
         <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Floating Scroll to Latest Button */}
@@ -692,7 +633,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
             setShouldAutoScroll(true);
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
           }}
-          style={{ bottom: `${composerHeight + 12}px` }}
+          style={{ bottom: `${composerHeight + 36}px` }}
           className="absolute left-1/2 -translate-x-1/2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full text-xs font-black shadow-[0_12px_32px_rgba(79,70,229,0.35)] border border-indigo-400/50 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-200 z-30 cursor-pointer active:scale-95 hover:scale-105 transition-all opacity-100"
         >
           <ArrowDown className="w-4 h-4 shrink-0" />
