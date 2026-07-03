@@ -183,3 +183,13 @@ export interface ChatMessage {
   isStreaming?: boolean;
 }
 
+export interface ChatConversation {
+  id: string;
+  classId: string;
+  title: string;
+  messages: ChatMessage[];
+  pinned: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+

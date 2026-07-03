@@ -2,14 +2,7 @@ import { ChatMessage, ChatSource } from '../types';
 import { ChatService } from './api';
 
 const activeGenerations = new Map<string, AbortController>();
-
-/** Tracks classIds whose conversation was intentionally cleared */
 const clearedConversations = new Set<string>();
-
-// ──────────────────────────────────────────────
-// Key helpers — single source of truth for both
-// chatEngine.ts and the rest of the app.
-// ──────────────────────────────────────────────
 
 export function getCurrentUserId(): string | null {
   try {
@@ -18,131 +11,84 @@ export function getCurrentUserId(): string | null {
       const user = JSON.parse(raw);
       return user?.id || null;
     }
-  } catch {
-    // ignore parse errors
-  }
+  } catch {}
   return null;
 }
 
-export function buildChatKey(classId: string): string {
+export function buildChatKey(conversationId: string): string {
   const userId = getCurrentUserId();
   return userId
-    ? `cb_chat_messages_${userId}_${classId}`
-    : `cb_chat_messages_preauth_${classId}`;
+    ? `cb_chat_messages_${userId}_${conversationId}`
+    : `cb_chat_messages_preauth_${conversationId}`;
 }
 
-export function buildPreauthChatKey(classId: string): string {
-  return `cb_chat_messages_preauth_${classId}`;
-}
-
-/**
- * Migrate any preauth conversation for this classId to the current
- * user's key.  Does nothing if:
- *  - The user is not authenticated
- *  - There is no preauth data to migrate
- *  - The user key already has data (never overwrite)
- */
-export function migratePreauthToUser(classId: string): void {
-  const userId = getCurrentUserId();
-  if (!userId) return;
-
-  const preauthKey = buildPreauthChatKey(classId);
-  const userKey = buildChatKey(classId);
-
-  // Don't overwrite existing user-specific data
-  if (localStorage.getItem(userKey)) return;
-
-  const preauthData = localStorage.getItem(preauthKey);
-  if (preauthData) {
-    localStorage.setItem(userKey, preauthData);
-    localStorage.removeItem(preauthKey);
-  }
-}
-
-/**
- * Migrate ALL preauth chats to the current user's keys at once.
- * Called when the user logs in to ensure no orphaned data.
- */
 export function migrateAllPreauthChats(): void {
   const userId = getCurrentUserId();
   if (!userId) return;
-
   try {
     const keys = Object.keys(localStorage);
-    const preauthPrefix = 'cb_chat_messages_preauth_';
-
+    const prefix = 'cb_chat_messages_preauth_';
     for (const key of keys) {
-      if (key.startsWith(preauthPrefix)) {
-        const classId = key.slice(preauthPrefix.length);
-        if (classId) {
-          migratePreauthToUser(classId);
+      if (key.startsWith(prefix)) {
+        const convId = key.slice(prefix.length);
+        if (convId) {
+          const userKey = buildChatKey(convId);
+          if (!localStorage.getItem(userKey)) {
+            const data = localStorage.getItem(key);
+            if (data) {
+              localStorage.setItem(userKey, data);
+              localStorage.removeItem(key);
+            }
+          }
         }
       }
     }
-  } catch {
-    // ignore errors during migration
-  }
+  } catch {}
 }
 
-// ──────────────────────────────────────────────
-// Internal persistence helpers
-// ──────────────────────────────────────────────
-
-function loadMessages(classId: string): ChatMessage[] {
-  // First, migrate any preauth data for this class
-  migratePreauthToUser(classId);
-
+function loadMessages(conversationId: string): ChatMessage[] {
   try {
-    const cached = localStorage.getItem(buildChatKey(classId));
+    const cached = localStorage.getItem(buildChatKey(conversationId));
     return cached ? JSON.parse(cached) : [];
   } catch {
     return [];
   }
 }
 
-function persistMessages(classId: string, messages: ChatMessage[]): void {
-  localStorage.setItem(buildChatKey(classId), JSON.stringify(messages));
+function persistMessages(conversationId: string, messages: ChatMessage[]): void {
+  localStorage.setItem(buildChatKey(conversationId), JSON.stringify(messages));
 }
 
-function notifyUpdated(classId: string): void {
-  window.dispatchEvent(new CustomEvent('cb-chat-updated', { detail: classId }));
+function notifyUpdated(conversationId: string): void {
+  window.dispatchEvent(new CustomEvent('cb-chat-updated', { detail: conversationId }));
 }
-
-// ──────────────────────────────────────────────
-// Public Engine API
-// ──────────────────────────────────────────────
 
 export const ChatEngine = {
-  isGenerating(classId: string): boolean {
-    return activeGenerations.has(classId);
+  isGenerating(conversationId: string): boolean {
+    return activeGenerations.has(conversationId);
   },
 
-  getMessages(classId: string): ChatMessage[] {
-    return loadMessages(classId);
+  getMessages(conversationId: string): ChatMessage[] {
+    return loadMessages(conversationId);
   },
 
-  saveMessages(classId: string, messages: ChatMessage[]): void {
-    // A save after a clear means a new conversation has started
-    clearedConversations.delete(classId);
-    persistMessages(classId, messages);
-    notifyUpdated(classId);
+  saveMessages(conversationId: string, messages: ChatMessage[]): void {
+    clearedConversations.delete(conversationId);
+    persistMessages(conversationId, messages);
+    notifyUpdated(conversationId);
   },
 
-  /**
-   * Start a new AI generation for the given class.
-   * The request continues in the background even if the UI unmounts.
-   */
   startGeneration(
+    conversationId: string,
     classId: string,
     className: string,
     text: string,
     searchMode: 'lecture' | 'hybrid'
   ): void {
-    if (activeGenerations.has(classId)) return;
-    // Starting a new generation means any prior clear flag is stale
-    clearedConversations.delete(classId);
+    if (activeGenerations.has(conversationId)) return;
+    clearedConversations.delete(conversationId);
 
-    const messages = loadMessages(classId);
+    const messages = loadMessages(conversationId);
 
     const userMsg: ChatMessage = {
       id: `msg_u_${Math.random().toString(36).substring(2, 9)}`,
@@ -164,11 +110,11 @@ export const ChatEngine = {
     };
 
     const newMessages = [...messages, userMsg, assistantMsg];
-    persistMessages(classId, newMessages);
-    notifyUpdated(classId);
+    persistMessages(conversationId, newMessages);
+    notifyUpdated(conversationId);
 
     const controller = new AbortController();
-    activeGenerations.set(classId, controller);
+    activeGenerations.set(conversationId, controller);
     let accumulatedSources: ChatSource[] = [];
 
     ChatService.sendMessageStream(
@@ -177,36 +123,30 @@ export const ChatEngine = {
       text,
       searchMode,
       (status) => {
-        const msgs = loadMessages(classId);
+        const msgs = loadMessages(conversationId);
         const idx = msgs.findIndex(m => m.id === assistantMsgId);
-        if (idx !== -1) {
-          msgs[idx] = { ...msgs[idx], status };
-        }
-        persistMessages(classId, msgs);
-        notifyUpdated(classId);
+        if (idx !== -1) msgs[idx] = { ...msgs[idx], status };
+        persistMessages(conversationId, msgs);
+        notifyUpdated(conversationId);
       },
       (chunk) => {
-        const msgs = loadMessages(classId);
+        const msgs = loadMessages(conversationId);
         const idx = msgs.findIndex(m => m.id === assistantMsgId);
-        if (idx !== -1) {
-          msgs[idx] = { ...msgs[idx], content: msgs[idx].content + chunk };
-        }
-        persistMessages(classId, msgs);
-        notifyUpdated(classId);
+        if (idx !== -1) msgs[idx] = { ...msgs[idx], content: msgs[idx].content + chunk };
+        persistMessages(conversationId, msgs);
+        notifyUpdated(conversationId);
       },
       (sources) => {
         accumulatedSources = sources;
-        const msgs = loadMessages(classId);
+        const msgs = loadMessages(conversationId);
         const idx = msgs.findIndex(m => m.id === assistantMsgId);
-        if (idx !== -1) {
-          msgs[idx] = { ...msgs[idx], sources };
-        }
-        persistMessages(classId, msgs);
-        notifyUpdated(classId);
+        if (idx !== -1) msgs[idx] = { ...msgs[idx], sources };
+        persistMessages(conversationId, msgs);
+        notifyUpdated(conversationId);
       },
       () => {},
       (fullText) => {
-        const msgs = loadMessages(classId);
+        const msgs = loadMessages(conversationId);
         const idx = msgs.findIndex(m => m.id === assistantMsgId);
         if (idx !== -1) {
           msgs[idx] = {
@@ -217,12 +157,12 @@ export const ChatEngine = {
             sources: accumulatedSources
           };
         }
-        persistMessages(classId, msgs);
-        notifyUpdated(classId);
-        activeGenerations.delete(classId);
+        persistMessages(conversationId, msgs);
+        notifyUpdated(conversationId);
+        activeGenerations.delete(conversationId);
       },
       (err) => {
-        const msgs = loadMessages(classId);
+        const msgs = loadMessages(conversationId);
         const idx = msgs.findIndex(m => m.id === assistantMsgId);
         if (idx !== -1) {
           msgs[idx] = {
@@ -232,50 +172,48 @@ export const ChatEngine = {
             content: msgs[idx].content || 'متأسفانه ارتباط با دستیار قطع شد. لطفاً دوباره تلاش کنید.'
           };
         }
-        persistMessages(classId, msgs);
-        notifyUpdated(classId);
-        activeGenerations.delete(classId);
+        persistMessages(conversationId, msgs);
+        notifyUpdated(conversationId);
+        activeGenerations.delete(conversationId);
       },
       controller.signal
     ).catch(() => {
-      const msgs = loadMessages(classId);
+      const msgs = loadMessages(conversationId);
       const idx = msgs.findIndex(m => m.id === assistantMsgId);
-      if (idx !== -1) {
-        msgs[idx] = { ...msgs[idx], isStreaming: false, status: 'failed' };
-      }
-      persistMessages(classId, msgs);
-      notifyUpdated(classId);
-      activeGenerations.delete(classId);
+      if (idx !== -1) msgs[idx] = { ...msgs[idx], isStreaming: false, status: 'failed' };
+      persistMessages(conversationId, msgs);
+      notifyUpdated(conversationId);
+      activeGenerations.delete(conversationId);
     });
   },
 
-  stopGeneration(classId: string): void {
-    const controller = activeGenerations.get(classId);
+  stopGeneration(conversationId: string): void {
+    const controller = activeGenerations.get(conversationId);
     if (controller) {
       controller.abort();
-      activeGenerations.delete(classId);
+      activeGenerations.delete(conversationId);
     }
-    const msgs = loadMessages(classId);
+    const msgs = loadMessages(conversationId);
     const last = msgs[msgs.length - 1];
     if (last && last.role === 'assistant' && last.isStreaming) {
       const updated = [...msgs.slice(0, msgs.length - 1), { ...last, isStreaming: false, status: 'completed' as const }];
-      persistMessages(classId, updated);
-      notifyUpdated(classId);
+      persistMessages(conversationId, updated);
+      notifyUpdated(conversationId);
     }
   },
 
-  wasCleared(classId: string): boolean {
-    return clearedConversations.has(classId);
+  wasCleared(conversationId: string): boolean {
+    return clearedConversations.has(conversationId);
   },
 
-  clearConversation(classId: string): void {
-    clearedConversations.add(classId);
-    if (activeGenerations.has(classId)) {
-      activeGenerations.get(classId)!.abort();
-      activeGenerations.delete(classId);
+  clearConversation(conversationId: string): void {
+    clearedConversations.add(conversationId);
+    if (activeGenerations.has(conversationId)) {
+      activeGenerations.get(conversationId)!.abort();
+      activeGenerations.delete(conversationId);
     }
-    localStorage.removeItem(buildChatKey(classId));
-    notifyUpdated(classId);
+    localStorage.removeItem(buildChatKey(conversationId));
+    notifyUpdated(conversationId);
   }
 };
 

@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { ChatEngine } from '../../services/chatEngine';
+import { ConversationEngine } from '../../services/conversationEngine';
 import { ChatMessage, ChatSource, AIStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { motion, AnimatePresence } from 'motion/react';
@@ -35,11 +36,14 @@ import { BookmarkService } from '../../services/bookmarks';
 interface ClassChatProps {
   classId: string;
   className: string;
+  conversationId?: string;
   onMessagesChange?: (messages: ChatMessage[]) => void;
+  onTitleChange?: (title: string) => void;
 }
 
-export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMessagesChange }) => {
+export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conversationId, onMessagesChange, onTitleChange }) => {
   const { user, subscriptionStatus, syncSubscription } = useAuthStore();
+  const hasGeneratedTitle = useRef(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [searchMode, setSearchMode] = useState<'lecture' | 'hybrid'>('hybrid');
@@ -98,18 +102,13 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
   messagesRef.current = messages;
 
   // Persist current messages to localStorage when leaving this conversation
-  // (unmount or classId change). Does NOT abort the AI stream — the engine
-  // keeps running in the background until completion.
-  // Uses the `wasCleared` flag introduced by ChatEngine.clearConversation()
-  // instead of checking localStorage (which can return wrong results after
-  // logout when the user-data key has been removed).
   useEffect(() => {
     return () => {
-      if (classId && messagesRef.current.length > 0 && !ChatEngine.wasCleared(classId)) {
-        ChatEngine.saveMessages(classId, messagesRef.current);
+      if (conversationId && messagesRef.current.length > 0 && !ChatEngine.wasCleared(conversationId)) {
+        ChatEngine.saveMessages(conversationId, messagesRef.current);
       }
     };
-  }, [classId]);
+  }, [conversationId]);
 
   // Sync aiStatus with the actual state of the message list.
   // This catches edge cases where the cb-chat-updated event
@@ -130,29 +129,31 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
 
   // Subscribe to live updates from the background engine
   useEffect(() => {
+    if (!conversationId) return;
     const handleChatUpdate = (e: Event) => {
       const customEvent = e as CustomEvent;
-      if (customEvent.detail === classId) {
-        setMessages(ChatEngine.getMessages(classId));
-        if (!ChatEngine.isGenerating(classId)) {
+      if (customEvent.detail === conversationId) {
+        setMessages(ChatEngine.getMessages(conversationId));
+        if (!ChatEngine.isGenerating(conversationId)) {
           setAiStatus('completed');
         }
       }
     };
     window.addEventListener('cb-chat-updated', handleChatUpdate);
     return () => window.removeEventListener('cb-chat-updated', handleChatUpdate);
-  }, [classId]);
+  }, [conversationId]);
 
-  // Load chat history on mount or when class changes
+  // Load chat history on mount or when conversation changes
   useEffect(() => {
+    if (!conversationId) return;
     setMessages([]);
     setError(null);
     currentSourcesRef.current = [];
     setShouldAutoScroll(true);
+    hasGeneratedTitle.current = false;
 
-    const history = ChatEngine.getMessages(classId);
+    const history = ChatEngine.getMessages(conversationId);
     setMessages(history);
-    // If the last message is an active stream, reflect the generating state
     if (history.length > 0) {
       const last = history[history.length - 1];
       if (last.role === 'assistant' && last.isStreaming) {
@@ -163,7 +164,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
     } else {
       setAiStatus('completed');
     }
-  }, [classId]);
+  }, [conversationId]);
 
   // Handle auto-scroll
   useEffect(() => {
@@ -174,7 +175,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
 
   // Track recent chat activity in localStorage
   useEffect(() => {
-    if (!classId || !className) return;
+    if (!classId || !className || !conversationId) return;
 
     const recentChatsKey = user?.id ? `cb_recent_chats_${user.id}` : 'cb_recent_chats_preauth';
 
@@ -189,12 +190,10 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
         }
       }
 
-      // Determine the preview text for the last activity
       let lastMsgText = 'گفتگو آغاز شد...';
       let lastMsgRole = undefined;
       
       if (messages && messages.length > 0) {
-        // Filter out any temporary / status-only items to get the actual text
         const actualMessages = messages.filter(m => m.content && m.content.trim());
         if (actualMessages.length > 0) {
           const lastMsg = actualMessages[actualMessages.length - 1];
@@ -203,11 +202,10 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
         }
       }
 
-      // Filter out existing entry for this classId to re-add it at the top
-      list = list.filter((item: any) => item.classId !== classId);
+      list = list.filter((item: any) => item.conversationId !== conversationId);
 
-      // Prepend the updated entry
       list.unshift({
+        conversationId,
         classId,
         className,
         lastInteractedAt: new Date().toISOString(),
@@ -215,16 +213,14 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
         lastMessageRole: lastMsgRole
       });
 
-      // Keep only top 10 most recent chats
       list = list.slice(0, 10);
 
       localStorage.setItem(recentChatsKey, JSON.stringify(list));
     };
 
-    // Run update with a tiny delay to ensure state and localStorage are synced
     const timer = setTimeout(updateRecentChats, 150);
     return () => clearTimeout(timer);
-  }, [classId, className, messages]);
+  }, [conversationId, classId, className, messages]);
 
   // Monitor user scrolling to disable auto-scroll when they read old messages
   const handleScroll = () => {
@@ -278,8 +274,9 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
 
   // Stop Generation
   const handleStopGeneration = () => {
-    ChatEngine.stopGeneration(classId);
-    setMessages(ChatEngine.getMessages(classId));
+    if (!conversationId) return;
+    ChatEngine.stopGeneration(conversationId);
+    setMessages(ChatEngine.getMessages(conversationId));
     setAiStatus('completed');
   };
 
@@ -307,10 +304,21 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, onMess
       setInput('');
     }
 
-    // Delegate to the background engine — the request continues even if
-    // this component unmounts.
-    ChatEngine.startGeneration(classId, className, textToSend, searchMode);
-    setMessages(ChatEngine.getMessages(classId));
+    // Auto-generate conversation title from first user message
+    if (messages.length === 0 && !hasGeneratedTitle.current && onTitleChange) {
+      hasGeneratedTitle.current = true;
+      const title = ConversationEngine.generateTitle(
+        [{ id: '', role: 'user', content: textToSend, timestamp: new Date().toISOString() }]
+      );
+      if (title !== 'گفتگوی جدید') {
+        onTitleChange(title);
+      }
+    }
+
+    // Delegate to the background engine
+    if (!conversationId) return;
+    ChatEngine.startGeneration(conversationId, classId, className, textToSend, searchMode);
+    setMessages(ChatEngine.getMessages(conversationId));
     setAiStatus('generating');
     setShouldAutoScroll(true);
   };

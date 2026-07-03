@@ -3,13 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { 
   BookOpen, 
   Trash2, 
   Plus, 
   Mic, 
-  Activity, 
   MessageSquare, 
   Clock, 
   Sparkles, 
@@ -19,7 +18,6 @@ import {
   AlertTriangle,
   FolderOpen,
   User as UserIcon,
-  RotateCw,
   Search,
   Tag,
   FileText,
@@ -29,12 +27,14 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
-import { AcademicService, ClassService, RecordingService, SubscriptionService, ChatService } from '../../services/api';
+import { AcademicService, ClassService, RecordingService, SubscriptionService } from '../../services/api';
 import { ChatEngine } from '../../services/chatEngine';
-import { Class, Course, Recording, SubscriptionStatus } from '../../types';
+import { Class, Course, Recording, SubscriptionStatus, ChatConversation } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { ClassChat } from './ClassChat';
 import { TranscriptReader } from './TranscriptReader';
+import { ConversationSidebar } from './ConversationSidebar';
+import { ConversationEngine, migrateOldChatToConversation } from '../../services/conversationEngine';
 import { useClickOutside } from '../../hooks/useClickOutside';
 
 interface ClassesScreenProps {
@@ -70,8 +70,13 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
   // Chat Conversation State
   const [chatKey, setChatKey] = useState(0);
   const [hasMessages, setHasMessages] = useState(false);
-  const [showResetChatConfirm, setShowResetChatConfirm] = useState(false);
-  const [isResetLoading, setIsResetLoading] = useState(false);
+  
+  // Conversation Management
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [conversations, setConversations] = useState<ChatConversation[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [draftActive, setDraftActive] = useState(false);
+  const [showDeleteConvConfirm, setShowDeleteConvConfirm] = useState<string | null>(null);
   
   // MD Course Catalog States
   const [courses, setCourses] = useState<Course[]>([]);
@@ -225,22 +230,112 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
     }
   };
 
-  const handleResetConversation = async () => {
+  // ── Conversation Management ──
+
+  const refreshConversations = useCallback((classId: string) => {
+    setConversations(ConversationEngine.getSortedConversations(classId));
+  }, []);
+
+  useEffect(() => {
+    if (!selectedClass) {
+      setConversations([]);
+      setActiveConversationId(null);
+      setDraftActive(false);
+      return;
+    }
+    const classId = selectedClass.id;
+    migrateOldChatToConversation(classId);
+    const existing = ConversationEngine.getSortedConversations(classId);
+    setConversations(existing);
+    const draftId = 'draft_' + Date.now();
+    setActiveConversationId(draftId);
+    setDraftActive(true);
+    setChatKey(prev => prev + 1);
+  }, [selectedClass?.id]);
+
+  useEffect(() => {
     if (!selectedClass) return;
-    setIsResetLoading(true);
-    try {
-      // Abort any in-flight AI generation and clear local state
-      ChatEngine.clearConversation(selectedClass.id);
-      // Also clear server-side / localStorage via API service
-      await ChatService.deleteConversation(selectedClass.id);
+    const classId = selectedClass.id;
+    const handler = () => {
+      setConversations(ConversationEngine.getSortedConversations(classId));
+    };
+    window.addEventListener('cb-conversations-changed', handler);
+    return () => window.removeEventListener('cb-conversations-changed', handler);
+  }, [selectedClass?.id]);
+
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) setSidebarOpen(false);
+    else setSidebarOpen(true);
+  }, [selectedClass?.id, isMobile]);
+
+  const handleSelectConversation = (convId: string) => {
+    setActiveConversationId(convId);
+    setDraftActive(false);
+    setChatKey(prev => prev + 1);
+    if (isMobile) setSidebarOpen(false);
+  };
+
+  const handleNewConversation = () => {
+    if (!selectedClass || draftActive) return;
+    const draftId = 'draft_' + Date.now();
+    setActiveConversationId(draftId);
+    setDraftActive(true);
+    setChatKey(prev => prev + 1);
+    if (isMobile) setSidebarOpen(false);
+  };
+
+  const handleTogglePin = (convId: string) => {
+    if (!selectedClass) return;
+    const result = ConversationEngine.togglePin(selectedClass.id, convId);
+    if (!result.success && result.message) setError(result.message);
+    else setError(null);
+    setConversations(ConversationEngine.getSortedConversations(selectedClass.id));
+    setShowDeleteConvConfirm(null);
+  };
+
+  const handleDeleteConversation = (convId: string) => {
+    setShowDeleteConvConfirm(convId);
+  };
+
+  const confirmDeleteConversation = async () => {
+    if (!selectedClass || !showDeleteConvConfirm) return;
+    const convId = showDeleteConvConfirm;
+    ConversationEngine.deleteConversation(selectedClass.id, convId);
+    const remaining = ConversationEngine.getSortedConversations(selectedClass.id);
+    setConversations(remaining);
+    setShowDeleteConvConfirm(null);
+    if (convId === activeConversationId) {
+      if (remaining.length > 0) {
+        setActiveConversationId(remaining[0].id);
+        setDraftActive(false);
+      } else {
+        setActiveConversationId('draft_' + Date.now());
+        setDraftActive(true);
+      }
       setChatKey(prev => prev + 1);
-      setHasMessages(false);
-      setShowResetChatConfirm(false);
-      await syncSubscription();
-    } catch (err: any) {
-      setError(err.message || 'خطا در پاک‌سازی گفتگو');
-    } finally {
-      setIsResetLoading(false);
+    }
+  };
+
+  const handleConversationTitleChange = (title: string) => {
+    if (!selectedClass || !activeConversationId) return;
+    if (draftActive) {
+      const classId = selectedClass.id;
+      const draftId = activeConversationId;
+      const messages = ChatEngine.getMessages(draftId);
+      const conv = ConversationEngine.promoteDraft(classId, draftId, title, messages);
+      setConversations(ConversationEngine.getSortedConversations(classId));
+      setActiveConversationId(conv.id);
+      setDraftActive(false);
+    } else {
+      ConversationEngine.updateTitle(selectedClass.id, activeConversationId, title);
+      setConversations(ConversationEngine.getSortedConversations(selectedClass.id));
     }
   };
 
@@ -321,10 +416,10 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
            ======================================================== */
         <div className="relative flex flex-col h-full w-full overflow-hidden">
           
-          {/* Workspace Header Nav - Premium Floating Glass Aesthetic */}
-          <div className="absolute top-2 left-2 right-2 md:top-3 md:left-4 md:right-4 z-20 flex items-center justify-between bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)] rounded-[20px] md:rounded-[26px] px-3.5 py-2.5 shrink-0 select-none transition-all duration-300">
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-2.5 min-w-0">
+          {/* Workspace Header Nav */}
+          <div className="relative z-20 shrink-0 bg-white/70 backdrop-blur-md border-b border-slate-100/80 shadow-[0_4px_20px_rgba(15,23,42,0.04)]">
+            <div className="flex items-center justify-between px-3.5 md:px-4 h-14 md:h-16">
+              <div className="flex items-center gap-2 min-w-0">
                 <button 
                   onClick={handleGoBack}
                   className="w-9 h-9 md:w-10 md:h-10 bg-white/80 hover:bg-white text-slate-600 hover:text-slate-900 rounded-[14px] md:rounded-2xl flex items-center justify-center border border-slate-100/80 hover:border-slate-200/60 cursor-pointer shadow-3xs transition-all duration-200 active:scale-95"
@@ -332,31 +427,31 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
-                <h1 className="text-xs md:text-sm font-black text-slate-800 tracking-tight line-clamp-1 max-w-[140px] xs:max-w-xs sm:max-w-none">{selectedClass.name}</h1>
+                <button
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                  className="w-9 h-9 md:w-10 md:h-10 bg-white/80 hover:bg-white text-slate-600 hover:text-indigo-600 rounded-[14px] md:rounded-2xl flex items-center justify-center border border-slate-100/80 hover:border-slate-200/60 cursor-pointer shadow-3xs transition-all duration-200 active:scale-95"
+                  title={sidebarOpen ? 'بستن لیست گفتگوها' : 'نمایش لیست گفتگوها'}
+                >
+                  <MessageSquare className="w-4.5 h-4.5" />
+                </button>
               </div>
               
-              {/* Utility action buttons grouped neatly on the left */}
+              <h1 className="text-xs md:text-sm font-black text-slate-800 tracking-tight absolute left-1/2 -translate-x-1/2 whitespace-nowrap select-none">
+                {selectedClass.name}
+              </h1>
+              
               <div className="flex items-center gap-2 shrink-0">
-                {/* Recordings Dropdown */}
                 <div className="relative shrink-0 group" data-recordings-dropdown>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowRecordingsDropdown(!showRecordingsDropdown);
-                    }}
+                    onClick={(e) => { e.stopPropagation(); setShowRecordingsDropdown(!showRecordingsDropdown); }}
                     className="w-9 h-9 md:w-10 md:h-10 bg-white/80 hover:bg-white hover:text-indigo-600 text-slate-600 border border-slate-100/80 hover:border-slate-200/60 rounded-[14px] md:rounded-2xl flex items-center justify-center cursor-pointer shadow-3xs transition-all duration-200 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20"
                     aria-label="رونوشت جلسات"
                   >
                     <FileText className="w-4.5 h-4.5" />
                   </button>
-
-                  {/* Tooltip */}
                   {!showRecordingsDropdown && (
-                    <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 hidden md:block opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 bg-slate-900/90 backdrop-blur-xs text-white text-[10px] font-bold py-1 px-2.5 rounded-lg whitespace-nowrap shadow-md z-30">
-                      رونوشت جلسات
-                    </div>
+                    <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 hidden md:block opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 bg-slate-900/90 backdrop-blur-xs text-white text-[10px] font-bold py-1 px-2.5 rounded-lg whitespace-nowrap shadow-md z-30">رونوشت جلسات</div>
                   )}
-
                   <AnimatePresence>
                     {showRecordingsDropdown && (
                       <>
@@ -368,35 +463,19 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                           className="fixed left-4 right-4 max-w-lg mx-auto top-[72px] md:absolute md:left-0 md:right-auto md:top-full md:mt-2 md:w-96 md:mx-0 md:max-w-none bg-white border border-slate-200/50 rounded-2xl shadow-[0_16px_48px_rgba(15,23,42,0.15)] z-50 overflow-hidden text-right font-sans"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          {/* Dropdown Header */}
                           <div className="px-3.5 py-2.5 border-b border-slate-100/50 bg-slate-50/50 flex items-center justify-between">
                             <span className="text-xs font-black text-slate-800 flex items-center gap-1.5">
                               <FileText className="w-3.5 h-3.5 text-indigo-600" />
                               <span>رونوشت جلسات</span>
                             </span>
-                            <button 
-                              onClick={() => {
-                                setShowRecordingsDropdown(false);
-                                onNavigate('record', { preselectClassId: selectedClass.id });
-                              }}
-                              className="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[9px] font-black rounded-lg flex items-center gap-1 transition-all shadow-3xs cursor-pointer"
-                            >
-                              <Plus className="w-3 h-3" />
-                              <span>افزودن صوت</span>
-                            </button>
+                            <button onClick={() => { setShowRecordingsDropdown(false); onNavigate('record', { preselectClassId: selectedClass.id }); }} className="px-2 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[9px] font-black rounded-lg flex items-center gap-1 transition-all shadow-3xs cursor-pointer"><Plus className="w-3 h-3" /> افزودن صوت</button>
                           </div>
-
-                          {/* Dropdown List */}
                           <div className="max-h-64 overflow-y-auto divide-y divide-slate-100/50 p-1.5">
                             {getClassRecordings(selectedClass.id).length === 0 ? (
                               <div className="text-center py-6 px-4 space-y-2">
-                                <div className="w-8 h-8 bg-slate-50 border border-slate-100/80 rounded-xl flex items-center justify-center mx-auto text-slate-350">
-                                  <FileText className="w-3.5 h-3.5" />
-                                </div>
+                                <div className="w-8 h-8 bg-slate-50 border border-slate-100/80 rounded-xl flex items-center justify-center mx-auto text-slate-350"><FileText className="w-3.5 h-3.5" /></div>
                                 <div className="text-[10px] text-slate-500 font-bold">هیچ رونوشتی بارگذاری نشده است.</div>
-                                <p className="text-[9px] text-slate-400 max-w-[200px] mx-auto leading-relaxed">
-                                  رونوشت جلسات را اضافه کنید تا RAYA پاسخ‌های دقیق‌تری ارائه دهد.
-                                </p>
+                                <p className="text-[9px] text-slate-400 max-w-[200px] mx-auto leading-relaxed">رونوشت جلسات را اضافه کنید تا RAYA پاسخ‌های دقیق‌تری ارائه دهد.</p>
                               </div>
                             ) : (
                               getClassRecordings(selectedClass.id).map((rec) => (
@@ -411,19 +490,8 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                                       </div>
                                     </div>
                                   </div>
-
                                   <div className="flex items-center justify-end gap-2 border-t border-slate-50/50 pt-1 mt-0.5">
-                                    <button
-                                      onClick={() => {
-                                        setDetailedRecording(rec);
-                                        setShowRecordingsDropdown(false);
-                                      }}
-                                      className="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200/40 hover:border-indigo-100/60 text-slate-600 hover:text-indigo-600 text-[9px] font-black rounded-lg transition-all flex items-center gap-1 cursor-pointer"
-                                      title="مشاهده رونوشت"
-                                    >
-                                      <FileText className="w-3 h-3" />
-                                      <span>مشاهده رونوشت</span>
-                                    </button>
+                                    <button onClick={() => { setDetailedRecording(rec); setShowRecordingsDropdown(false); }} className="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200/40 hover:border-indigo-100/60 text-slate-600 hover:text-indigo-600 text-[9px] font-black rounded-lg transition-all flex items-center gap-1 cursor-pointer" title="مشاهده رونوشت"><FileText className="w-3 h-3" /> مشاهده رونوشت</button>
                                   </div>
                                 </div>
                               ))
@@ -434,34 +502,34 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                     )}
                   </AnimatePresence>
                 </div>
-
-                {/* Reset Chat Button */}
-                <div className="relative group">
-                  <button
-                    onClick={() => setShowResetChatConfirm(true)}
-                    disabled={!hasMessages}
-                    className="w-9 h-9 md:w-10 md:h-10 bg-white/80 hover:bg-rose-50 hover:text-rose-600 text-slate-600 border border-slate-100/80 hover:border-rose-100/60 rounded-[14px] md:rounded-2xl flex items-center justify-center cursor-pointer shadow-3xs transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white/80 disabled:hover:text-slate-400 disabled:border-slate-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20"
-                    aria-label="پاک‌سازی گفتگو"
-                  >
-                    <Trash2 className="w-4.5 h-4.5" />
-                  </button>
-                  {/* Tooltip */}
-                  <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 hidden md:block opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 bg-slate-900/90 backdrop-blur-xs text-white text-[10px] font-bold py-1 px-2.5 rounded-lg whitespace-nowrap shadow-md z-30">
-                    پاک‌سازی گفتگو
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
-          {/* Workspace Layout - Full Height Container with Conversation */}
-          <div className="flex-1 min-h-0 flex flex-col">
-            <ClassChat 
-              key={`${selectedClass.id}-${chatKey}`}
-              classId={selectedClass.id} 
-              className={selectedClass.name}
-              onMessagesChange={(msgs) => setHasMessages(msgs.length > 0)}
+          {/* Workspace Layout with Sidebar + Chat */}
+          <div className="flex-1 min-h-0 flex">
+            <ConversationSidebar
+              conversations={conversations}
+              activeConversationId={activeConversationId}
+              isOpen={sidebarOpen}
+              isMobile={isMobile}
+              newChatDisabled={draftActive}
+              onSelect={handleSelectConversation}
+              onNewChat={handleNewConversation}
+              onTogglePin={handleTogglePin}
+              onDelete={handleDeleteConversation}
+              onClose={() => setSidebarOpen(false)}
             />
+            <div className="flex-1 min-h-0 flex flex-col min-w-0">
+              <ClassChat 
+                key={`${selectedClass.id}-${activeConversationId}-${chatKey}`}
+                classId={selectedClass.id} 
+                className={selectedClass.name}
+                conversationId={activeConversationId || ''}
+                onMessagesChange={(msgs) => setHasMessages(msgs.length > 0)}
+                onTitleChange={handleConversationTitleChange}
+              />
+            </div>
           </div>
 
         </div>
@@ -820,47 +888,35 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
       </AnimatePresence>
 
       {/* ========================================================
-         MODAL: RESET CHAT CONFIRMATION
+         MODAL: DELETE CONVERSATION CONFIRMATION
          ======================================================== */}
       <AnimatePresence>
-        {showResetChatConfirm && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-250">
-            <motion.div 
+        {showDeleteConvConfirm && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-250">
+            <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white border border-rose-100/60 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] p-6 space-y-5 text-right font-sans"
+              className="bg-white border border-rose-100/60 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.12)] p-6 space-y-5 text-right font-sans"
             >
               <div className="flex items-center gap-2 text-rose-600 font-black text-sm border-b border-rose-50 pb-3">
-                <AlertTriangle className="w-5 h-5 animate-pulse" />
-                <span>شروع مجدد گفتگو؟</span>
+                <Trash2 className="w-5 h-5" />
+                <span>حذف گفتگو</span>
               </div>
-
               <div className="space-y-3">
-                <p className="text-xs text-slate-700 leading-relaxed font-bold">
-                  آیا مایل به شروع مجدد و پاک‌سازی کامل گفتگوی این کلاس درسی هستید؟
-                </p>
-                
+                <p className="text-xs text-slate-700 leading-relaxed font-bold">آیا از حذف گفتگوی زیر اطمینان دارید؟</p>
+                <div className="bg-slate-50 border border-slate-100/80 rounded-2xl px-4 py-3">
+                  <p className="text-sm font-black text-slate-800 text-center">
+                    {conversations.find(c => c.id === showDeleteConvConfirm)?.title || 'گفتگو'}
+                  </p>
+                </div>
                 <div className="bg-rose-50 border border-rose-100/50 rounded-2xl p-4 text-[10px] text-rose-800 leading-relaxed font-semibold shadow-3xs">
-                  با این کار تمام پیام‌های گفتگوی این کلاس برای همیشه حذف خواهند شد. اطلاعات کلاس، جلسات ضبط شده و سایر داده‌های شما بدون تغییر باقی می‌مانند.
+                  این عملیات قابل بازگشت نیست. گفتگو برای همیشه حذف خواهد شد.
                 </div>
               </div>
-
               <div className="pt-4 border-t border-slate-100/50 flex items-center justify-end gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => setShowResetChatConfirm(false)}
-                  className="px-4 py-2 border border-slate-100/80 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 cursor-pointer shadow-3xs"
-                >
-                  انصراف
-                </button>
-                <Button
-                  onClick={handleResetConversation}
-                  isLoading={isResetLoading}
-                  className="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-black rounded-xl shadow-sm cursor-pointer"
-                >
-                  شروع مجدد گفتگو
-                </Button>
+                <button type="button" onClick={() => setShowDeleteConvConfirm(null)} className="px-4 py-2 border border-slate-100/80 text-slate-700 text-xs font-bold rounded-xl hover:bg-slate-50 cursor-pointer shadow-3xs">انصراف</button>
+                <button onClick={confirmDeleteConversation} className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-black rounded-xl shadow-sm cursor-pointer transition-colors">حذف گفتگو</button>
               </div>
             </motion.div>
           </div>
