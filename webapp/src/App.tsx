@@ -308,7 +308,7 @@ export default function App() {
       
       {/* Top Header */}
       {isAuthenticated && user && currentScreen === 'APP_DASHBOARD_PREVIEW' && (
-        <header className={`shrink-0 z-30 font-sans mt-4 mb-2 mx-auto w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-7xl bg-white/75 backdrop-blur-xl border border-slate-200/40 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
+        <header className={`fixed top-2 left-0 right-0 z-30 font-sans mx-auto w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-7xl bg-white/60 backdrop-blur-2xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
           <div className="flex items-center gap-3">
             <HamburgerButton />
             
@@ -358,7 +358,7 @@ export default function App() {
       )}
 
       {/* Main Container */}
-      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : currentScreen === 'APP_DASHBOARD_PREVIEW' ? "flex-1 flex flex-col overflow-hidden pt-4 md:pt-8" : "flex-1 flex flex-col justify-center py-4 md:py-8"}>
+      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : currentScreen === 'APP_DASHBOARD_PREVIEW' ? "flex-1 flex flex-col overflow-hidden" : "flex-1 flex flex-col justify-center py-4 md:py-8"}>
         
         {currentScreen === 'SPLASH' && (
           <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh] font-sans">
@@ -403,7 +403,7 @@ export default function App() {
           }>
             
             {/* 1. DESKTOP SIDEBAR (RTL: Sits on the right) */}
-            <aside className={`w-64 shrink-0 bg-white border border-slate-100/80 rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex-col justify-between h-full overflow-y-auto ${isInsideClassChat ? 'hidden' : 'hidden md:flex'}`}>
+            <aside className={`w-64 shrink-0 mt-[80px] mb-[80px] bg-white border border-slate-100/80 rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex-col justify-between overflow-y-auto ${isInsideClassChat ? 'hidden' : 'hidden md:flex'}`}>
               <div className="space-y-6">
                 
                 {/* User quick profile */}
@@ -481,7 +481,7 @@ export default function App() {
             >
               <div
                   key={activeTab}
-                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : "animate-page-enter"}
+                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : "animate-page-enter pt-[80px]"}
                 >
                   {activeTab === 'dashboard' && (
                     <DashboardScreen 

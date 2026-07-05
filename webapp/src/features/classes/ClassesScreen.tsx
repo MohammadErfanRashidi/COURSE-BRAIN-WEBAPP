@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   BookOpen, 
   Trash2, 
@@ -529,8 +530,8 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                           </div>
                         </motion.div>
                       </>
-                    )}
-                  </AnimatePresence>
+        )}
+      </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -659,8 +660,8 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                               </button>
                             </motion.div>
                           </>
-                        )}
-                      </AnimatePresence>
+        )}
+      </AnimatePresence>
                     </div>
                   </div>
 
@@ -718,13 +719,12 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
       {/* ========================================================
          MODAL: ADD CLASS FROM MD COURSE CATALOG
          ======================================================== */}
-      <AnimatePresence>
-        {showCreateModal && (
-          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-250">
+      {showCreateModal && createPortal(
+          <div key="create-class-modal" className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-[9999] p-4" onClick={() => setShowCreateModal(false)}>
             <motion.div 
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
               className="bg-white border border-slate-100/80 rounded-3xl w-full max-w-lg overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] text-right font-sans flex flex-col max-h-[85vh]"
             >
               {/* Header */}
@@ -862,20 +862,18 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
               </div>
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+        , document.body)}
 
 
       {/* ========================================================
          MODAL: DELETE CONFIRMATION
          ======================================================== */}
-      <AnimatePresence>
-        {showDeleteConfirm && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-in fade-in duration-250">
+      {showDeleteConfirm && createPortal(
+          <div key="delete-class-modal" className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-[9999] p-4" onClick={() => setShowDeleteConfirm(null)}>
             <motion.div 
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
               className="bg-white border border-rose-100/60 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.08)] p-6 space-y-5 text-right font-sans"
             >
               <div className="flex items-center gap-2 text-rose-600 font-black text-sm border-b border-rose-50 pb-3">
@@ -914,19 +912,17 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
               </div>
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+        , document.body)}
 
       {/* ========================================================
          MODAL: DELETE CONVERSATION CONFIRMATION
          ======================================================== */}
-      <AnimatePresence>
-        {showDeleteConvConfirm && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-250">
+      {showDeleteConvConfirm && createPortal(
+          <div key="delete-conversation-modal" className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4" onClick={() => setShowDeleteConvConfirm(null)}>
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
               className="bg-white border border-rose-100/60 rounded-3xl w-full max-w-md overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.12)] p-6 space-y-5 text-right font-sans"
             >
               <div className="flex items-center gap-2 text-rose-600 font-black text-sm border-b border-rose-50 pb-3">
@@ -950,8 +946,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
               </div>
             </motion.div>
           </div>
-        )}
-      </AnimatePresence>
+        , document.body)}
 
 
 
