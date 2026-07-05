@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   CheckCircle2,
   Calendar,
@@ -33,10 +33,12 @@ interface PaymentLog {
 export const SubscriptionScreen: React.FC = () => {
   const { subscriptionStatus, syncSubscription } = useAuthStore();
   const [history, setHistory] = useState<PaymentLog[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => !subscriptionStatus);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const hasFetchedRef = useRef(false);
+  const needsSkeletonRef = useRef(isLoading);
 
   const toPersianDigits = (str: string | number) => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -49,22 +51,34 @@ export const SubscriptionScreen: React.FC = () => {
 
   const activePlan = PLANS_CONFIG[UNIVERSITY_PLAN_ID];
 
-  const loadHistoryAndStatus = async () => {
-    setIsLoading(true);
-    try {
-      await syncSubscription();
-      const fetchedHistory = await SubscriptionService.getPaymentHistory();
-      setHistory(fetchedHistory);
-    } catch (err: any) {
-      setError(err.message || 'خطا در بارگذاری تاریخچه مالی');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadHistoryAndStatus();
-  }, []);
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
+
+    let cancelled = false;
+    const needsSkeleton = needsSkeletonRef.current;
+
+    async function load() {
+      if (needsSkeleton) setIsLoading(true);
+      try {
+        await syncSubscription();
+        const fetchedHistory = await SubscriptionService.getPaymentHistory();
+        if (!cancelled) {
+          setHistory(fetchedHistory);
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          setError(err.message || 'خطا در بارگذاری تاریخچه مالی');
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [syncSubscription]);
 
   const handleRenew = async () => {
     setIsActionLoading(true);

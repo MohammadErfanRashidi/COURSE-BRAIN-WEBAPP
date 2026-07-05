@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   Sparkles,
   Clock,
@@ -101,7 +101,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   const [recentChats, setRecentChats] = useState<RecentChatActivity[]>([]);
   const [allRecordings, setAllRecordings] = useState<Recording[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => !subscriptionStatus);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Time-based greeting helper
@@ -194,15 +194,21 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
     return formatPersianDuration(hours);
   };
 
+  const needsSkeletonRef = useRef(isLoading);
+
   useEffect(() => {
+    let cancelled = false;
+    const needsSkeleton = needsSkeletonRef.current;
+
     async function loadDashboardData() {
-      setIsLoading(true);
+      if (needsSkeleton) setIsLoading(true);
       try {
         await syncSubscription();
         const [fetchedClasses, fetchedRecordings] = await Promise.all([
           ClassService.getClasses(),
           RecordingService.getRecordings()
         ]);
+        if (cancelled) return;
         setClasses(fetchedClasses);
         setAllRecordings(fetchedRecordings);
 
@@ -264,12 +270,17 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
         setRecentChats(parsedChats.slice(0, 3));
       } catch (err) {
-        console.error('Failed to load dashboard data', err);
+        if (!cancelled) {
+          console.error('Failed to load dashboard data', err);
+        }
       } finally {
-        setIsLoading(false);
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
     }
     loadDashboardData();
+    return () => { cancelled = true; };
   }, [syncSubscription]);
 
   if (isLoading || !subscriptionStatus) {

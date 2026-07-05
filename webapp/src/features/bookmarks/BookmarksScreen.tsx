@@ -23,7 +23,7 @@ interface BookmarksScreenProps {
 }
 
 export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) => {
-  const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
+  const [bookmarks, setBookmarks] = useState<BookmarkItem[]>(() => BookmarkService.getBookmarks());
   const [filterType, setFilterType] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -33,8 +33,6 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
   };
 
   useEffect(() => {
-    loadBookmarks();
-    // Synchronize on storage changes
     const handleSync = () => loadBookmarks();
     window.addEventListener('cb-bookmarks-changed', handleSync);
     return () => {

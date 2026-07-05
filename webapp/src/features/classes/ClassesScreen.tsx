@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { 
   BookOpen, 
   Trash2, 
@@ -45,6 +45,10 @@ interface ClassesScreenProps {
   onCloseCreateModal?: () => void;
 }
 
+let _cachedClasses: Class[] = [];
+let _cachedRecordings: Recording[] = [];
+let _cachedCourses: Course[] = [];
+
 export const ClassesScreen: React.FC<ClassesScreenProps> = ({ 
   onNavigate, 
   openClassId, 
@@ -53,10 +57,15 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
   onCloseCreateModal
 }) => {
   const { subscriptionStatus, syncSubscription } = useAuthStore();
-  const [classes, setClasses] = useState<Class[]>([]);
-  const [recordings, setRecordings] = useState<Recording[]>([]);
-  const [selectedClass, setSelectedClass] = useState<Class | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [classes, setClasses] = useState<Class[]>(_cachedClasses);
+  const [recordings, setRecordings] = useState<Recording[]>(_cachedRecordings);
+  const [selectedClass, setSelectedClass] = useState<Class | null>(() => {
+    if (openClassId) {
+      return _cachedClasses.find(c => c.id === openClassId) || null;
+    }
+    return null;
+  });
+  const [isLoading, setIsLoading] = useState(() => _cachedClasses.length === 0);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,14 +81,14 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
   const [hasMessages, setHasMessages] = useState(false);
   
   // Conversation Management
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState<ChatConversation[]>([]);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [draftActive, setDraftActive] = useState(false);
   const [showDeleteConvConfirm, setShowDeleteConvConfirm] = useState<string | null>(null);
   
   // MD Course Catalog States
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<Course[]>(_cachedCourses);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSemesters, setExpandedSemesters] = useState<Set<number>>(new Set([1]));
 
@@ -104,8 +113,12 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
     return String(str).replace(/[0-9]/g, (w) => farsiDigits[parseInt(w)]);
   };
 
+  const dataLoadedRef = useRef(false);
+  const classesRef = useRef<Class[]>([]);
+
   const loadData = async () => {
-    setIsLoading(true);
+    const needsSkeleton = _cachedClasses.length === 0;
+    if (needsSkeleton) setIsLoading(true);
     try {
       await syncSubscription();
       const [fetchedClasses, fetchedRecordings, fetchedCourses] = await Promise.all([
@@ -116,6 +129,11 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
       setClasses(fetchedClasses);
       setRecordings(fetchedRecordings);
       setCourses(fetchedCourses);
+      classesRef.current = fetchedClasses;
+      dataLoadedRef.current = true;
+      _cachedClasses = fetchedClasses;
+      _cachedRecordings = fetchedRecordings;
+      _cachedCourses = fetchedCourses;
 
       if (openClassId) {
         const cls = fetchedClasses.find(c => c.id === openClassId);
@@ -128,13 +146,26 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
     } catch (err: any) {
       setError(err.message || 'خطا در بارگذاری اطلاعات کلاس‌ها');
     } finally {
-      setIsLoading(false);
+      if (needsSkeleton) setIsLoading(false);
     }
   };
 
   useEffect(() => {
     loadData();
     setShowRecordingsDropdown(false);
+  }, []);
+
+  useEffect(() => {
+    setShowRecordingsDropdown(false);
+    if (!dataLoadedRef.current) return;
+
+    if (!openClassId) {
+      setSelectedClass(null);
+      return;
+    }
+
+    const cls = classesRef.current.find(c => c.id === openClassId);
+    setSelectedClass(cls || null);
   }, [openClassId]);
 
   useEffect(() => {
@@ -272,7 +303,6 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
 
   useEffect(() => {
     if (isMobile) setSidebarOpen(false);
-    else setSidebarOpen(true);
   }, [selectedClass?.id, isMobile]);
 
   const handleSelectConversation = (convId: string) => {

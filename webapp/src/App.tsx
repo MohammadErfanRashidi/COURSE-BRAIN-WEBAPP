@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { useAuthStore } from './store/authStore';
 import { LoginScreen } from './features/auth/LoginScreen';
 import { OtpScreen } from './features/auth/OtpScreen';
@@ -173,32 +173,24 @@ export default function App() {
     initSession();
   }, [checkSession]);
 
-  // Reset scroll position instantly on page, tab, or selected class transitions
+  const contentSectionRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
     }
+  }, []);
 
-    const resetScrollToTop = () => {
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' as any });
-      document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'instant' as any });
-      document.body.scrollTo({ top: 0, left: 0, behavior: 'instant' as any });
-    };
-
-    // Reset instantly
-    resetScrollToTop();
-
-    // Schedule multiple reset attempts across the lifetime of the route transition (0.22s)
-    const times = [25, 50, 100, 150, 200, 250, 300, 400, 500];
-    const timers = times.map(ms => setTimeout(resetScrollToTop, ms));
-
-    return () => {
-      timers.forEach(clearTimeout);
-    };
-  }, [activeTab, currentScreen, openClassId]);
+  const prevTabRef = useRef(activeTab);
+  useEffect(() => {
+    if (prevTabRef.current !== activeTab) {
+      prevTabRef.current = activeTab;
+      requestAnimationFrame(() => {
+        const el = contentSectionRef.current;
+        if (el) el.scrollTop = 0;
+      });
+    }
+  }, [activeTab]);
 
   // Handle screen routing based on auth state changes
   useEffect(() => {
@@ -312,11 +304,11 @@ export default function App() {
   }
 
   return (
-    <div className={`bg-[#F8FAFC] text-slate-800 flex flex-col justify-between antialiased selection:bg-indigo-100 selection:text-indigo-800 ${isInsideClassChat ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
+    <div className={`bg-[#F8FAFC] text-slate-800 flex flex-col antialiased selection:bg-indigo-100 selection:text-indigo-800 ${currentScreen === 'APP_DASHBOARD_PREVIEW' ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
       
       {/* Top Header */}
       {isAuthenticated && user && currentScreen === 'APP_DASHBOARD_PREVIEW' && (
-        <header className={`sticky top-4 z-30 font-sans mt-4 mb-2 mx-auto w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-7xl bg-white/75 backdrop-blur-xl border border-slate-200/40 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
+        <header className={`shrink-0 z-30 font-sans mt-4 mb-2 mx-auto w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-7xl bg-white/75 backdrop-blur-xl border border-slate-200/40 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
           <div className="flex items-center gap-3">
             <HamburgerButton />
             
@@ -366,7 +358,7 @@ export default function App() {
       )}
 
       {/* Main Container */}
-      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : `flex-1 flex flex-col justify-center py-4 md:py-8`}>
+      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : currentScreen === 'APP_DASHBOARD_PREVIEW' ? "flex-1 flex flex-col overflow-hidden pt-4 md:pt-8" : "flex-1 flex flex-col justify-center py-4 md:py-8"}>
         
         {currentScreen === 'SPLASH' && (
           <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh] font-sans">
@@ -407,11 +399,11 @@ export default function App() {
         {currentScreen === 'APP_DASHBOARD_PREVIEW' && user && (
           <div className={isInsideClassChat 
             ? "w-full h-full flex text-right font-sans relative p-0 overflow-hidden" 
-            : `w-full max-w-7xl mx-auto px-4 md:px-6 flex gap-6 text-right font-sans relative pb-32 md:pb-0`
+            : `w-full max-w-7xl mx-auto px-4 md:px-6 flex gap-6 text-right font-sans relative flex-1 overflow-hidden`
           }>
             
             {/* 1. DESKTOP SIDEBAR (RTL: Sits on the right) */}
-            <aside className={`w-64 shrink-0 bg-white border border-slate-100/80 rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex-col justify-between min-h-[72vh] sticky top-24 self-start ${isInsideClassChat ? 'hidden' : 'hidden md:flex'}`}>
+            <aside className={`w-64 shrink-0 bg-white border border-slate-100/80 rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex-col justify-between h-full overflow-y-auto ${isInsideClassChat ? 'hidden' : 'hidden md:flex'}`}>
               <div className="space-y-6">
                 
                 {/* User quick profile */}
@@ -484,16 +476,12 @@ export default function App() {
 
             {/* 3. CORE TAB PANEL VIEW ROUTER */}
             <section
-              className={isInsideClassChat ? "flex-1 min-h-0 flex flex-col h-full w-full overflow-hidden" : "flex-1 min-h-[60vh]"}
+              ref={contentSectionRef}
+              className={isInsideClassChat ? "flex-1 min-h-0 flex flex-col h-full w-full overflow-hidden" : "flex-1 min-h-0 overflow-y-auto pb-32 md:pb-0"}
             >
-              <AnimatePresence mode="wait">
-                <motion.div
+              <div
                   key={activeTab}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : ""}
+                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : "animate-page-enter"}
                 >
                   {activeTab === 'dashboard' && (
                     <DashboardScreen 
@@ -532,8 +520,7 @@ export default function App() {
                   {activeTab === 'profile' && (
                     <ProfileScreen onNavigate={handleDashboardNavigate} />
                   )}
-                </motion.div>
-              </AnimatePresence>
+                </div>
             </section>
 
           </div>
