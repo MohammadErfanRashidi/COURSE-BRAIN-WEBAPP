@@ -36,12 +36,8 @@ import {
   User as UserIcon, 
   CreditCard, 
   LogOut, 
-  CheckCircle2, 
   BookOpen, 
-  Zap, 
   Clock,
-  Sparkles,
-  Award,
   Compass,
   Mic,
   ChevronLeft,
@@ -456,14 +452,6 @@ export default function App() {
                   <LogOut className="w-4 h-4" />
                   <span>خروج از حساب</span>
                 </button>
-
-                {/* Sidebar Footer credit */}
-                <div className="border-t border-slate-100/50 pt-4 text-center">
-                  <span className="text-[9px] text-slate-400 font-extrabold flex items-center justify-center gap-1">
-                    <Zap className="w-3 h-3 text-indigo-600" />
-                    <span>طرح دانشجویی استاندارد فعال</span>
-                  </span>
-                </div>
               </div>
             </aside>
 

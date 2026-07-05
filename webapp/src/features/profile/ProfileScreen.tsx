@@ -158,7 +158,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
               </div>
               <div className="text-right">
                  <h2 className="text-base font-black text-slate-900">{user.fullName || 'دانشجوی زیوای'}</h2>
-                <p className="text-xs text-slate-400 font-bold mt-1">شناسه یکتا: {user.id}</p>
               </div>
             </div>
 

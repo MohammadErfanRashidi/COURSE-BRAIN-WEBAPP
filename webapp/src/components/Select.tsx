@@ -47,8 +47,8 @@ export const Select: React.FC<SelectProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
   const [portalStyle, setPortalStyle] = useState<{
-    top: number; left: number; width: number; maxHeight: number;
-  }>({ top: 0, left: 0, width: 0, maxHeight: 0 });
+    top: number; left: number; width: number; maxHeight: number; openUpward: boolean;
+  }>({ top: 0, left: 0, width: 0, maxHeight: 0, openUpward: false });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -95,42 +95,29 @@ export const Select: React.FC<SelectProps> = ({
       const spaceBelow = window.innerHeight - rect.bottom - VERTICAL_GAP;
       const spaceAbove = rect.top - VERTICAL_GAP;
 
-      // Estimate the content height (each option ~44px, search bar ~56px)
-      const searchHeight = searchable ? 56 : 0;
-      const estimatedContentHeight = filteredOptions.length * 44 + searchHeight + 16;
-
       // Determine if showing above or below
       const fitsBelow = spaceBelow >= MIN_HEIGHT;
       const fitsAbove = spaceAbove >= MIN_HEIGHT;
 
       let maxHeight: number;
       let top: number;
+      let openUpward = false;
 
       if (fitsBelow && !fitsAbove) {
-        // Show below — use space below capped at 60vh
         maxHeight = Math.min(spaceBelow, MAX_HEIGHT_PX);
         top = rect.bottom + VERTICAL_GAP;
       } else if (fitsAbove && !fitsBelow) {
-        // Show above — use space above capped at 60vh
+        openUpward = true;
         maxHeight = Math.min(spaceAbove, MAX_HEIGHT_PX);
-        top = rect.top - VERTICAL_GAP - maxHeight;
-        // If top goes off-screen, clamp it
-        if (top < VERTICAL_GAP) {
-          top = VERTICAL_GAP;
-          maxHeight = rect.top - VERTICAL_GAP * 2;
-        }
+        top = rect.top - VERTICAL_GAP;
       } else {
-        // Both fit or neither fits — prefer showing below if more space, else above
         if (spaceBelow >= spaceAbove) {
           maxHeight = Math.min(spaceBelow, MAX_HEIGHT_PX);
           top = rect.bottom + VERTICAL_GAP;
         } else {
+          openUpward = true;
           maxHeight = Math.min(spaceAbove, MAX_HEIGHT_PX);
-          top = rect.top - VERTICAL_GAP - maxHeight;
-          if (top < VERTICAL_GAP) {
-            top = VERTICAL_GAP;
-            maxHeight = rect.top - VERTICAL_GAP * 2;
-          }
+          top = rect.top - VERTICAL_GAP;
         }
       }
 
@@ -142,7 +129,7 @@ export const Select: React.FC<SelectProps> = ({
         maxHeight = window.innerHeight - VERTICAL_GAP - top;
       }
 
-      // Ensure the dropdown doesn't extend above the viewport
+      // Ensure the dropdown doesn't extend above the viewport (upward mode)
       if (top < VERTICAL_GAP) {
         maxHeight = maxHeight - (VERTICAL_GAP - top);
         top = VERTICAL_GAP;
@@ -166,6 +153,7 @@ export const Select: React.FC<SelectProps> = ({
         left,
         width: dropdownWidth,
         maxHeight,
+        openUpward,
       });
     };
 
@@ -302,7 +290,7 @@ export const Select: React.FC<SelectProps> = ({
         flex items-center justify-between w-full text-right font-sans outline-none transition-colors duration-150
         ${inline
           ? 'bg-transparent border-none text-xs font-bold text-slate-700 cursor-pointer'
-          : `${size === 'sm' ? 'h-auto px-3 py-2 text-xs' : 'h-13 px-5 text-sm'} rounded-xl border bg-slate-50 text-slate-900 cursor-pointer
+          : `${size === 'sm' ? 'h-auto px-3 py-2 text-xs' : 'h-auto px-4 py-2.5 text-xs'} rounded-xl border bg-slate-50 text-slate-900 cursor-pointer
              ${error
                ? 'border-rose-200/60 focus:border-rose-500/80 focus:ring-4 focus:ring-rose-500/5'
                : isOpen
@@ -407,9 +395,9 @@ export const Select: React.FC<SelectProps> = ({
           role="listbox"
           aria-label={label}
           ref={listRef}
-          initial={{ opacity: 0, scale: 0.95, y: -4 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -4 }}
+          initial={portalStyle.openUpward ? { opacity: 0, scale: 0.95 } : { opacity: 0, scale: 0.95, y: -4 }}
+          animate={portalStyle.openUpward ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1, y: 0 }}
+          exit={portalStyle.openUpward ? { opacity: 0, scale: 0.95 } : { opacity: 0, scale: 0.95, y: -4 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
           style={{
             position: 'fixed',
@@ -418,6 +406,7 @@ export const Select: React.FC<SelectProps> = ({
             width: portalStyle.width,
             maxHeight: portalStyle.maxHeight,
             zIndex: 100,
+            ...(portalStyle.openUpward ? { y: '-100%' } : {}),
           }}
           className="bg-white border border-slate-100/80 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col"
         >
