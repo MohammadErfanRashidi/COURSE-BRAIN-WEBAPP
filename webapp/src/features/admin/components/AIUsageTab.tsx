@@ -4,13 +4,13 @@
  */
 
 import React, { useState } from 'react';
-import { 
-  Zap, 
-  Clock, 
-  CheckCircle, 
-  TrendingUp, 
-  DollarSign, 
-  Mic, 
+import {
+  Zap,
+  Clock,
+  CheckCircle,
+  TrendingUp,
+  DollarSign,
+  Mic,
   Sliders,
   AlertOctagon,
   RefreshCw,
@@ -70,7 +70,7 @@ export const AIUsageTab: React.FC = () => {
 
   return (
     <div className="space-y-6 text-right font-sans">
-      
+
       {/* Toast Alert */}
       {notification && (
         <div className="fixed bottom-6 left-6 bg-slate-900 border border-slate-800 text-white px-5 py-3.5 rounded-2xl shadow-2xl z-50 text-xs font-black flex items-center gap-2 animate-in slide-in-from-bottom-5 duration-300">
@@ -81,12 +81,12 @@ export const AIUsageTab: React.FC = () => {
 
       {/* Model Analytics Header */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[10px] font-black text-slate-400 block">کل درخواست‌های رایا (RAYA)</span>
+            <span className="text-[10px] font-black text-slate-400 block">کل درخواستهای زیوای (XIVAI)</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits('۱۲۴,۵۰۰')} کادر گفتگو</span>
-            <span className="text-[9px] text-emerald-600 font-bold block">۹۹.۹٪ پاسخ‌دهی استریم</span>
+            <span className="text-[9px] text-emerald-600 font-bold block">۹۹.۹٪ پاسخدهی استریم</span>
           </div>
           <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
             <Zap className="w-4.5 h-4.5" />
@@ -108,7 +108,7 @@ export const AIUsageTab: React.FC = () => {
           <div className="space-y-1">
             <span className="text-[10px] font-black text-slate-400 block">مدت گفتار تبدیل شده</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits(340)} ساعت صوتی</span>
-            <span className="text-[9px] text-indigo-600 font-bold block">دقت همگام‌سازی کلمات: ۹۸.۹٪</span>
+            <span className="text-[9px] text-indigo-600 font-bold block">دقت همگامسازی کلمات: ۹۸.۹٪</span>
           </div>
           <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
             <Mic className="w-4.5 h-4.5" />
@@ -132,7 +132,7 @@ export const AIUsageTab: React.FC = () => {
       <Card className="p-5 border border-slate-200/50 bg-white rounded-2xl text-right space-y-4">
         <div>
           <h4 className="text-xs font-black text-slate-800">صف پردازش صوتی هوشمند</h4>
-          <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مشاهده زنده وظایف پس‌زمینه، تکرار وظایف شکست‌خورده و مدیریت ظرفیت</span>
+          <span className="text-[9px] text-slate-400 font-bold block mt-0.5">مشاهده زنده وظایف پسزمینه، تکرار وظایف شکستخورده و مدیریت ظرفیت</span>
         </div>
 
         <div className="overflow-x-auto border border-slate-200/40 rounded-xl">
@@ -160,13 +160,13 @@ export const AIUsageTab: React.FC = () => {
                         ? 'bg-amber-50 text-amber-700 border border-amber-100/60'
                         : 'bg-indigo-50 text-indigo-700 border border-indigo-100/60'
                     }`}>
-                      {job.step === 'TRANSCRIBING' ? 'تبدیل گفتار به متن' : job.step === 'CHUNKING' ? 'قطعه‌بندی محتوا' : job.step === 'EMBEDDING' ? 'دسته‌بندی مفهومی اطلاعات' : 'پردازش ناموفق'}
+                      {job.step === 'TRANSCRIBING' ? 'تبدیل گفتار به متن' : job.step === 'CHUNKING' ? 'قطعهبندی محتوا' : job.step === 'EMBEDDING' ? 'دستهبندی مفهومی اطلاعات' : 'پردازش ناموفق'}
                     </span>
                   </td>
                   <td className="p-3">
                     <div className="flex items-center gap-2">
                       <div className="w-20 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                        <div 
+                        <div
                           className={`h-full transition-all duration-500 ${
                             job.step === 'FAILED' ? 'bg-rose-500' : 'bg-indigo-600'
                           }`}

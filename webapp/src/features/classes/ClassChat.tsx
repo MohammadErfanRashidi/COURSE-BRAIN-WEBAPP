@@ -495,7 +495,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
                   >
                     {/* Role Tag & Name above bubble */}
                     <div className={`flex items-center gap-1.5 mb-1 text-[9px] text-slate-400 font-bold px-1.5 ${isUser ? 'ml-auto' : 'mr-auto'}`}>
-                      <span>{isUser ? 'شما' : 'رایا'}</span>
+                       <span>{isUser ? 'شما' : 'زیوای'}</span>
                     </div>
 
                     {/* Chat Bubble Container Wrapper */}
@@ -629,7 +629,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
         {aiStatus !== 'completed' && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
           <div className="w-full flex flex-col select-none animate-in fade-in duration-200 mb-5">
             <div className="flex items-center gap-1.5 mb-1 text-[9px] text-slate-400 font-bold px-1.5 mr-auto">
-              <span>رایا</span>
+               <span>زیوای</span>
               <span>•</span>
               <span>در حال تفکر</span>
             </div>
@@ -692,7 +692,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
               <div>
                 <p className="font-black text-rose-900">سقف مجاز هوش مصنوعی به پایان رسیده است</p>
                 <p className="text-[10px] font-medium text-rose-700/95 mt-0.5">
-                  شما به سقف استفاده خود از هوش مصنوعی رایا در دوره فعلی رسیده‌اید. این سقف با شروع دوره جدید یا روز بعد به صورت خودکار بازنشانی خواهد شد.
+                   شما به سقف استفاده خود از هوش مصنوعی زیوای در دوره فعلی رسیده‌اید. این سقف با شروع دوره جدید یا روز بعد به صورت خودکار بازنشانی خواهد شد.
                 </p>
               </div>
             </div>

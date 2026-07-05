@@ -79,7 +79,7 @@ export default function MobileMenu({ navItems, activeTab, onNavigate, onLogout }
         <div className="space-y-6 flex-1 flex flex-col justify-between">
           <div className="space-y-6">
             <div className="pb-3 border-b border-slate-100/50 text-right">
-              <span className="text-xs font-black text-slate-800">رایا منو</span>
+              <span className="text-xs font-black text-slate-800">زیوای منو</span>
             </div>
 
             <nav className="space-y-1.5">

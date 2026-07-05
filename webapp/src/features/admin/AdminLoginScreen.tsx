@@ -66,8 +66,8 @@ export const AdminLoginScreen: React.FC<AdminLoginScreenProps> = ({ onBackToStud
           <div className="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center mx-auto shadow-md">
             <KeyRound className="w-6 h-6" />
           </div>
-          <h2 className="text-lg font-black text-slate-900">سامانه مدیریت عملیات رایا</h2>
-          <p className="text-[11px] text-slate-400 font-bold">بخش اختصاصی کارکنان و مدیران ارشد RAYA</p>
+           <h2 className="text-lg font-black text-slate-900">سامانه مدیریت عملیات زیوای</h2>
+           <p className="text-[11px] text-slate-400 font-bold">بخش اختصاصی کارکنان و مدیران ارشد زیوای</p>
         </div>
 
         {error && (

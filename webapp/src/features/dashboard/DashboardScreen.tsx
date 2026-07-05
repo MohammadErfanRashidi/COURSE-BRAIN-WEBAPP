@@ -4,17 +4,17 @@
  */
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { 
-  Sparkles, 
-  Clock, 
-  Database, 
-  BookOpen, 
-  ShieldCheck, 
-  Plus, 
-  Mic, 
-  Upload, 
-  MessageSquare, 
-  User as UserIcon, 
+import {
+  Sparkles,
+  Clock,
+  Database,
+  BookOpen,
+  ShieldCheck,
+  Plus,
+  Mic,
+  Upload,
+  MessageSquare,
+  User as UserIcon,
   ChevronLeft,
   ArrowLeft,
   Bell,
@@ -108,7 +108,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   const getGreetingText = (fullName?: string) => {
     const firstName = fullName ? fullName.trim().split(/\s+/)[0] : '';
     const hour = new Date().getHours();
-    
+
     let prefix = 'سلام';
     if (hour >= 5 && hour < 12) {
       prefix = 'صبح بخیر';
@@ -155,7 +155,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         );
       }
     } catch {
-      return 'به‌تازگی';
+      return 'بهتازگی';
     }
   };
 
@@ -227,7 +227,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         if (parsedChats.length === 0) {
           const keys = Object.keys(localStorage);
           const chatKeys = keys.filter(k => k.startsWith(chatPrefix));
-          
+
           chatKeys.forEach(key => {
             const classId = key.replace(chatPrefix, '');
             const matchingClass = fetchedClasses.find(c => c.id === classId);
@@ -255,7 +255,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
           // Sort by lastInteractedAt descending
           parsedChats.sort((a, b) => new Date(b.lastInteractedAt).getTime() - new Date(a.lastInteractedAt).getTime());
-          
+
           // Save back so it is persistent
           if (parsedChats.length > 0) {
             localStorage.setItem(recentChatsKey, JSON.stringify(parsedChats));
@@ -385,8 +385,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   // Subscription validity period calculations
   const hasSubscription = !!subscriptionStatus && subscriptionStatus.active;
   const expiresAt = subscriptionStatus?.expiresAt ? new Date(subscriptionStatus.expiresAt) : null;
-  const lastRenewalAt = subscriptionStatus?.lastRenewalAt 
-    ? new Date(subscriptionStatus.lastRenewalAt) 
+  const lastRenewalAt = subscriptionStatus?.lastRenewalAt
+    ? new Date(subscriptionStatus.lastRenewalAt)
     : (expiresAt ? new Date(expiresAt.getTime() - 30 * 24 * 3600 * 1000) : null);
 
   const now = new Date();
@@ -401,11 +401,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
     totalDurationMs = expiresAt.getTime() - lastRenewalAt.getTime();
     elapsedMs = now.getTime() - lastRenewalAt.getTime();
     const remainingMs = expiresAt.getTime() - now.getTime();
-    
+
     if (totalDurationMs > 0) {
       subRemainingPct = Math.max(0, Math.min(100, (remainingMs / totalDurationMs) * 100));
     }
-    
+
     remainingDays = Math.max(0, Math.ceil(remainingMs / (24 * 3600 * 1000)));
     elapsedDays = Math.max(0, Math.floor(elapsedMs / (24 * 3600 * 1000)));
     isExpired = now.getTime() > expiresAt.getTime();
@@ -423,11 +423,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
   return (
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
-      
+
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <motion.h1 
+          <motion.h1
             key={user?.fullName || 'guest'}
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
@@ -437,7 +437,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {getGreetingText(user?.fullName)} عزیز
           </motion.h1>
           <p className="text-xs text-slate-400 mt-1 font-medium">
-            دستیار هوش مصنوعی رایا همگام با سرفصل‌های دانشگاهی در خدمت شماست.
+            دستیار هوش مصنوعی زیوای همگام با سرفصلهای دانشگاهی در خدمت شماست.
           </p>
         </div>
       </div>
@@ -461,10 +461,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* 1. Classes Results */}
             {filteredClasses.length > 0 && (
               <div className="pt-3 first:pt-0">
-                <span className="text-[10px] font-black text-slate-400 block mb-2">کلاس‌های درسی منطبق ({toPersianDigits(filteredClasses.length)})</span>
+                <span className="text-[10px] font-black text-slate-400 block mb-2">کلاسهای درسی منطبق ({toPersianDigits(filteredClasses.length)})</span>
                 <div className="space-y-1.5">
                   {filteredClasses.map(cls => (
-                    <div 
+                    <div
                       key={cls.id}
                       onClick={() => onNavigate('classes', { openClassId: cls.id })}
                       className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
@@ -486,7 +486,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 <span className="text-[10px] font-black text-slate-400 block mb-2">جلسات ضبط شده منطبق ({toPersianDigits(filteredRecordings.length)})</span>
                 <div className="space-y-1.5">
                   {filteredRecordings.map(rec => (
-                    <div 
+                    <div
                       key={rec.id}
                       onClick={() => onNavigate('classes', { openClassId: rec.classId })}
                       className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
@@ -508,10 +508,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* 3. Transcript Results */}
             {filteredTranscripts.length > 0 && (
               <div className="pt-3 first:pt-0">
-                <span className="text-[10px] font-black text-slate-400 block mb-2">کلمات یافته‌شده در رونوشت‌ها ({toPersianDigits(filteredTranscripts.length)})</span>
+                <span className="text-[10px] font-black text-slate-400 block mb-2">کلمات یافتهشده در رونوشتها ({toPersianDigits(filteredTranscripts.length)})</span>
                 <div className="space-y-1.5">
                   {filteredTranscripts.map((snippet, idx) => (
-                    <div 
+                    <div
                       key={idx}
                       onClick={() => {
                         // Play the recording and jump to the specific start second!
@@ -551,7 +551,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
       {/* Subscription Usage Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         {/* Remaining Recording Hours */}
         <motion.div
           whileHover={{ y: -3, scale: 1.01 }}
@@ -567,16 +567,16 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           </div>
           <div className="mt-4 flex flex-col gap-2.5">
             <div className={`text-center font-black text-xs ${remainingHours <= 0 ? 'text-rose-600' : 'text-slate-900'}`}>
-              {isUnlimitedRecording 
-                ? "نامحدود" 
-                : remainingHours <= 0 
-                  ? "حد مجاز به پایان رسید" 
+              {isUnlimitedRecording
+                ? "نامحدود"
+                : remainingHours <= 0
+                  ? "حد مجاز به پایان رسید"
                   : formatPersianDuration(remainingHours)}
             </div>
-            
+
             {!isUnlimitedRecording && (
               <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div 
+                <div
                   className={`${remainingHours <= 0 ? 'bg-rose-500' : getRemainingColor(recordingRemainingPct)} h-full rounded-full transition-all duration-500`}
                   style={{ width: `${remainingHours <= 0 ? 0 : recordingRemainingPct}%` }}
                 />
@@ -593,20 +593,20 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">ظرفیت باقی‌مانده هوش مصنوعی</span>
+            <span className="text-xs font-bold text-slate-400">ظرفیت باقیمانده هوش مصنوعی</span>
             <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-2.5">
             <div className={`text-center font-black text-xs ${aiRemainingPct <= 0 ? 'text-rose-600' : 'text-slate-900'}`}>
-              {aiRemainingPct <= 0 
-                ? "حد مجاز به پایان رسید" 
-                : `${toPersianDigits(Math.round(aiRemainingPct))}٪ باقی‌مانده`}
+              {aiRemainingPct <= 0
+                ? "حد مجاز به پایان رسید"
+                : `${toPersianDigits(Math.round(aiRemainingPct))}٪ باقیمانده`}
             </div>
-            
+
             <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-              <div 
+              <div
                 className={`${aiRemainingPct <= 0 ? 'bg-rose-500' : getRemainingColor(aiRemainingPct)} h-full rounded-full transition-all duration-500`}
                 style={{ width: `${aiRemainingPct}%` }}
               />
@@ -622,23 +622,23 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">ظرفیت کلاس‌های باقی‌مانده</span>
+            <span className="text-xs font-bold text-slate-400">ظرفیت کلاسهای باقیمانده</span>
             <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <BookOpen className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-2.5">
             <div className={`text-center font-black text-xs ${remainingClasses <= 0 ? 'text-rose-600' : 'text-slate-900'}`}>
-              {isUnlimitedClasses 
-                ? "نامحدود" 
-                : remainingClasses <= 0 
-                  ? "حد مجاز به پایان رسید" 
-                  : `${toPersianDigits(remainingClasses)} کلاس باقی‌مانده`}
+              {isUnlimitedClasses
+                ? "نامحدود"
+                : remainingClasses <= 0
+                  ? "حد مجاز به پایان رسید"
+                  : `${toPersianDigits(remainingClasses)} کلاس باقیمانده`}
             </div>
-            
+
             {!isUnlimitedClasses && (
               <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div 
+                <div
                   className={`${remainingClasses <= 0 ? 'bg-rose-500' : getRemainingColor(classesRemainingPct)} h-full rounded-full transition-all duration-500`}
                   style={{ width: `${remainingClasses <= 0 ? 0 : classesRemainingPct}%` }}
                 />
@@ -657,10 +657,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400">اعتبار زمانی اشتراک</span>
             <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
-              !hasSubscription 
-                ? 'bg-slate-50 border-slate-100/80 text-slate-400' 
-                : isExpired 
-                  ? 'bg-rose-50 border-rose-100/60 text-rose-600' 
+              !hasSubscription
+                ? 'bg-slate-50 border-slate-100/80 text-slate-400'
+                : isExpired
+                  ? 'bg-rose-50 border-rose-100/60 text-rose-600'
                   : 'bg-emerald-50 border-emerald-100/60 text-emerald-600'
             }`}>
               <ShieldCheck className="w-4 h-4" />
@@ -668,19 +668,19 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           </div>
           <div className="mt-4 flex flex-col gap-2.5">
             <div className={`text-center font-black text-xs ${(!hasSubscription || isExpired) ? 'text-rose-600' : 'text-slate-900'}`}>
-              {!hasSubscription 
-                ? "بدون اشتراک فعال" 
-                : isExpired 
-                  ? "حد مجاز به پایان رسید" 
-                  : `${toPersianDigits(remainingDays)} روز باقی‌مانده`}
+              {!hasSubscription
+                ? "بدون اشتراک فعال"
+                : isExpired
+                  ? "حد مجاز به پایان رسید"
+                  : `${toPersianDigits(remainingDays)} روز باقیمانده`}
             </div>
-            
+
             {hasSubscription && (
               <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div 
+                <div
                   className={`${
-                    isExpired 
-                      ? 'bg-rose-500' 
+                    isExpired
+                      ? 'bg-rose-500'
                       : getRemainingColor(subRemainingPct)
                   } h-full rounded-full transition-all duration-500`}
                   style={{ width: `${isExpired ? 0 : subRemainingPct}%` }}
@@ -694,7 +694,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
       {/* Main Grid: Quick Actions + Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Recent Activity Section */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
@@ -703,11 +703,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
               <span>آخرین گفتگوهای شما</span>
             </h3>
             {recentChats.length > 0 && (
-              <button 
+              <button
                 onClick={() => onNavigate('classes')}
                 className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer select-none"
               >
-                <span>مشاهده همه کلاس‌ها</span>
+                <span>مشاهده همه کلاسها</span>
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
             )}
@@ -721,12 +721,12 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 </div>
                 <div className="text-sm font-black text-slate-700">هنوز گفتگوی اخیری ندارید</div>
                 <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed font-semibold">
-                  برای شروع، وارد یکی از کلاس‌های خود شوید و گفتگو با دستیار علمی و هوشمند کلاس را آغاز کنید تا در اینجا نمایش داده شود.
+                  برای شروع، وارد یکی از کلاسهای خود شوید و گفتگو با دستیار علمی و هوشمند کلاس را آغاز کنید تا در اینجا نمایش داده شود.
                 </p>
               </div>
             </Card>
           ) : (
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -737,8 +737,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                   <motion.div
                     key={chat.classId}
                     variants={itemVariants}
-                    whileHover={{ 
-                      y: -2, 
+                    whileHover={{
+                      y: -2,
                       scale: 1.005,
                       boxShadow: "0 12px 24px -10px rgba(0, 0, 0, 0.04), 0 4px 12px -4px rgba(0, 0, 0, 0.02)"
                     }}
@@ -766,7 +766,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                         <span className="text-xs sm:text-sm font-black text-slate-800 group-hover:text-indigo-600 transition-colors duration-250 block truncate">
                           گفتگو در کلاس {chat.className}
                         </span>
-                        
+
                         <p className="text-[11px] text-slate-400 group-hover:text-slate-500 transition-colors duration-250 block truncate max-w-[280px] sm:max-w-[420px] font-bold leading-relaxed">
                           {chat.lastMessageRole === 'user' ? 'شما: ' : chat.lastMessageRole === 'assistant' ? 'دستیار: ' : ''}{chat.lastMessageText}
                         </p>
@@ -785,7 +785,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                         <span className="text-[10px] text-slate-400 font-black tracking-wide shrink-0">
                           {getRelativePersianTime(chat.lastInteractedAt)}
                         </span>
-                        
+
                         <div className="w-8 h-8 bg-slate-50/60 border border-slate-100/80 text-slate-400 group-hover:text-indigo-600 group-hover:bg-indigo-50/80 group-hover:border-indigo-100/60 rounded-xl flex items-center justify-center transition-all duration-300 shadow-xs">
                           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
                         </div>
@@ -801,9 +801,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         {/* Quick Actions Panel */}
         <div className="space-y-4">
           <h3 className="text-sm font-black text-slate-800">دسترسی سریع</h3>
-          
+
           <div className="grid grid-cols-1 gap-3">
-            
+
             {/* Create Class */}
             <button
               onClick={onCreateClassTrigger}

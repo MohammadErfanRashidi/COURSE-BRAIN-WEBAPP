@@ -647,7 +647,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
               <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full font-extrabold inline-block">
                 ضبط از میکروفون مرورگر
               </span>
-              <h2 className="text-base font-black text-slate-800">ایستگاه ضبط صدای رایا</h2>
+               <h2 className="text-base font-black text-slate-800">ایستگاه ضبط صدای زیوای</h2>
               <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
                 برای شروع ضبط تدریس کلاس درس، اطمینان حاصل کنید دسترسی میکروفون فعال بوده و صدای کلاس رسا باشد.
               </p>
@@ -944,7 +944,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                     {pipelineStage === 'uploading' && (
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-[10px] font-bold text-slate-500">
-                          <span>در حال آپلود به فضای ابری رایا...</span>
+                          <span>در حال آپلود به فضای ابری زیوای...</span>
                           <span className="font-mono">{toPersianDigits(uploadProgress)}٪</span>
                         </div>
                         <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">

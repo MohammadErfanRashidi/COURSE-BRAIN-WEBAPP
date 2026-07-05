@@ -30,7 +30,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
         onActivated();
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'خطا در فعال‌سازی لایسنس تستی اشتراک.');
+      setErrorMessage(err.message || 'خطا در فعالسازی لایسنس تستی اشتراک.');
     } finally {
       setIsActivating(false);
     }
@@ -55,9 +55,9 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
         <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-3.5 border border-indigo-100/80 shadow-xs">
           <CreditCard className="w-6 h-6 text-indigo-600" />
         </div>
-        <h1 className="text-xl font-black text-slate-950">فعال‌سازی اشتراک</h1>
+        <h1 className="text-xl font-black text-slate-950">فعالسازی اشتراک</h1>
         <p className="text-xs text-slate-400 mt-2 font-medium max-w-xs leading-relaxed">
-          با فعال‌سازی اشتراک، به تمامی قابلیت‌های هوش مصنوعی رایا دسترسی پیدا کنید.
+          با فعالسازی اشتراک، به تمامی قابلیتهای هوش مصنوعی زیوای دسترسی پیدا کنید.
         </p>
       </div>
 
@@ -77,8 +77,8 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
 
           <div className="pb-5 border-b border-slate-100/50 text-right">
             <h2 className="text-base font-extrabold text-slate-800">{activePlan.planName}</h2>
-            <p className="text-xs text-slate-400 mt-1">ویژه همگام‌سازی، ویس، جزوات و چت آزمون دانشگاهی</p>
-            
+            <p className="text-xs text-slate-400 mt-1">ویژه همگامسازی، ویس، جزوات و چت آزمون دانشگاهی</p>
+
             <div className="mt-4 flex items-baseline gap-1.5">
               <span className="text-2xl font-black text-indigo-600">{formatPrice(activePlan.price)}</span>
               <span className="text-xs text-slate-400 font-medium">تومان / ماهانه</span>
@@ -88,7 +88,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
           {/* Premium Features List */}
           <div className="py-6 space-y-4 text-right">
             <h3 className="text-xs font-bold text-slate-700 tracking-tight">امکانات طرح:</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="flex items-start gap-2">
                 <div className="w-5 h-5 bg-indigo-50 rounded-md flex items-center justify-center shrink-0 mt-0.5">
@@ -116,7 +116,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
                 </div>
                 <div className="text-xs">
                   <span className="text-slate-700 font-bold">ظرفیت کامل و روزانه هوش مصنوعی</span>
-                  <span className="text-slate-400 block text-[10px] mt-0.5">ظرفیت بهینه پاسخ‌دهی و خلاصه‌سازی</span>
+                  <span className="text-slate-400 block text-[10px] mt-0.5">ظرفیت بهینه پاسخدهی و خلاصهسازی</span>
                 </div>
               </div>
 
@@ -126,7 +126,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
                 </div>
                 <div className="text-xs">
                   <span className="text-slate-700 font-bold">سیستم چت هوشمند با ارجاع به منبع</span>
-                  <span className="text-slate-400 block text-[10px] mt-0.5">پاسخ‌های دقیق مستند به مرجع</span>
+                  <span className="text-slate-400 block text-[10px] mt-0.5">پاسخهای دقیق مستند به مرجع</span>
                 </div>
               </div>
             </div>
@@ -142,11 +142,11 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
               icon={<ShieldCheck className="w-5 h-5" />}
               iconPosition="left"
             >
-              پرداخت شبیه‌سازی شده و فعال‌سازی فوری اشتراک
+              پرداخت شبیهسازی شده و فعالسازی فوری اشتراک
             </Button>
-            
+
             <p className="text-[10px] text-slate-400 text-center leading-relaxed font-bold">
-              تراکنش از طریق درگاه الکترونیکی شبیه‌سازی شده رایا انجام شده و هیچ‌گونه هزینه واقعی کسر نخواهد شد.
+              تراکنش از طریق درگاه الکترونیکی شبیهسازی شده زیوای انجام شده و هیچگونه هزینه واقعی کسر نخواهد شد.
             </p>
           </div>
         </Card>
@@ -159,7 +159,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
           </div>
           <div className="bg-slate-50/30 border border-slate-100/80 p-3 rounded-2xl flex flex-col items-center shadow-xs">
             <Hourglass className="w-4 h-4 text-indigo-600 mb-1.5" />
-            <span className="text-[9px] font-bold text-slate-700 block">فعال‌سازی آنی لایسنس</span>
+            <span className="text-[9px] font-bold text-slate-700 block">فعالسازی آنی لایسنس</span>
           </div>
           <div className="bg-slate-50/30 border border-slate-100/80 p-3 rounded-2xl flex flex-col items-center shadow-xs">
             <HelpCircle className="w-4 h-4 text-indigo-600 mb-1.5" />

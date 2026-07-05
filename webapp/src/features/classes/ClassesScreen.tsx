@@ -475,7 +475,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                               <div className="text-center py-6 px-4 space-y-2">
                                 <div className="w-8 h-8 bg-slate-50 border border-slate-100/80 rounded-xl flex items-center justify-center mx-auto text-slate-350"><FileText className="w-3.5 h-3.5" /></div>
                                 <div className="text-[10px] text-slate-500 font-bold">هیچ رونوشتی بارگذاری نشده است.</div>
-                                <p className="text-[9px] text-slate-400 max-w-[200px] mx-auto leading-relaxed">رونوشت جلسات را اضافه کنید تا RAYA پاسخ‌های دقیق‌تری ارائه دهد.</p>
+                                 <p className="text-[9px] text-slate-400 max-w-[200px] mx-auto leading-relaxed">رونوشت جلسات را اضافه کنید تا زیوای پاسخ‌های دقیق‌تری ارائه دهد.</p>
                               </div>
                             ) : (
                               getClassRecordings(selectedClass.id).map((rec) => (

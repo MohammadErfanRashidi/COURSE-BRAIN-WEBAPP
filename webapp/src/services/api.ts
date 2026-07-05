@@ -588,7 +588,7 @@ export const SubscriptionService = {
           date: new Date().toISOString(),
           status: 'success',
           refId: `IRN-${Math.floor(100000000 + Math.random() * 900000000)}`,
-          description: 'اشتراک ماهانه رایا'
+          description: 'اشتراک ماهانه زیوای'
         });
         savePurchaseHistory(purchases);
 
@@ -627,7 +627,7 @@ export const SubscriptionService = {
           date: now.toISOString(),
           status: 'success',
           refId: `IRN-${Math.floor(100000000 + Math.random() * 900000000)}`,
-          description: 'اشتراک ماهانه رایا (تمدید ۳۰ روزه)'
+          description: 'اشتراک ماهانه زیوای (تمدید ۳۰ روزه)'
         });
         savePurchaseHistory(purchases);
 

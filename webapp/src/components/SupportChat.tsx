@@ -239,7 +239,7 @@ export const SupportChat: React.FC<SupportChatProps> = ({ activeTab, isFullAppDa
                   <Headphones className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-black text-white">تیم پشتیبانی رایا</h3>
+                   <h3 className="text-xs font-black text-white">تیم پشتیبانی زیوای</h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     <span className="text-[9px] text-indigo-200 font-bold">آنلاین</span>
@@ -268,7 +268,7 @@ export const SupportChat: React.FC<SupportChatProps> = ({ activeTab, isFullAppDa
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-black text-slate-800">پشتیبانی رایا</h4>
+                     <h4 className="text-xs font-black text-slate-800">پشتیبانی زیوای</h4>
                     <p className="text-[10px] text-slate-400 font-bold mt-1 max-w-[220px] leading-relaxed">
                       سلام! چطور می‌توانم به شما کمک کنم؟ سوال خود را بپرسید.
                     </p>

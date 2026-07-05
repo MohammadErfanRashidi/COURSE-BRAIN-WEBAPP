@@ -76,9 +76,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
       {/* Brand Header */}
       <div className="text-center mb-8 flex flex-col items-center">
         <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4 border border-indigo-100/50 shadow-sm">
-          <span className="text-indigo-600 font-black text-2xl tracking-tight">RY</span>
+          <span className="text-indigo-600 font-black text-2xl tracking-tight">XIV</span>
         </div>
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">RAYA</h1>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">XIVAI | زیوای</h1>
         <p className="text-xs text-slate-500 mt-2 font-semibold">سامانه هوشمند کمک‌آموزشی دانشجویی دانشگاه‌های سراسر کشور</p>
       </div>
 
@@ -155,7 +155,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
       {/* Footer Info */}
       <div className="mt-8 text-center flex items-center justify-center gap-1.5 text-slate-400 text-xs">
         <HelpCircle className="w-3.5 h-3.5" />
-        <span>پشتیبانی دانشجویی ۲۴ ساعته رایا</span>
+        <span>پشتیبانی دانشجویی ۲۴ ساعته زیوای</span>
       </div>
     </div>
   );

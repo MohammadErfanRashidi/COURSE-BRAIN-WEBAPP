@@ -4,10 +4,10 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { 
-  CheckCircle2, 
-  Calendar, 
-  Award, 
+import {
+  CheckCircle2,
+  Calendar,
+  Award,
   AlertCircle,
   History,
   TrendingUp,
@@ -73,7 +73,7 @@ export const SubscriptionScreen: React.FC = () => {
     try {
       await SubscriptionService.renewSubscription();
       await syncSubscription();
-      setSuccessMsg('اشتراک شما با موفقیت تمدید شد. سهمیه‌های ضبط صوتی بازنشانی شدند و اعتبار حساب ۳۰ روز تمدید گردید.');
+      setSuccessMsg('اشتراک شما با موفقیت تمدید شد. سهمیههای ضبط صوتی بازنشانی شدند و اعتبار حساب ۳۰ روز تمدید گردید.');
       const updatedHistory = await SubscriptionService.getPaymentHistory();
       setHistory(updatedHistory);
     } catch (err: any) {
@@ -149,15 +149,16 @@ export const SubscriptionScreen: React.FC = () => {
   }
 
   const remainingHours = subscriptionStatus.usage.maxRecordingHours - subscriptionStatus.usage.recordingHoursUsed;
+  const remainingClasses = Math.max(subscriptionStatus.usage.maxClasses - subscriptionStatus.usage.classesCount, 0);
 
   return (
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
-      
+
       {/* Page Header */}
       <div className="border-b border-slate-100/50 pb-5">
         <h1 className="text-xl font-black text-slate-900">اشتراک و لایسنس</h1>
         <p className="text-xs text-slate-400 mt-1 font-medium">
-          وضعیت اشتراک ماهانه، سهمیه‌های مصرفی و تاریخچه تراکنش‌های خود را مشاهده کنید.
+          وضعیت اشتراک ماهانه، سهمیههای مصرفی و تاریخچه تراکنشهای خود را مشاهده کنید.
         </p>
       </div>
 
@@ -177,10 +178,10 @@ export const SubscriptionScreen: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* MAIN COLUMN: LICENSE DETAILS */}
         <div className="lg:col-span-2 space-y-6">
-          
+
           {/* Main License Card */}
           <Card className="border border-slate-100/80 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative">
             <div className="bg-indigo-600 px-6 py-5 text-white flex items-center justify-between rounded-t-3xl">
@@ -189,8 +190,8 @@ export const SubscriptionScreen: React.FC = () => {
                   <Award className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-black">اشتراک ماهانه رایا</h2>
-                  <span className="text-[10px] text-indigo-150 font-medium block mt-0.5">دسترسی کامل به قابلیت‌های پردازش صوتی و هوش مصنوعی</span>
+                  <h2 className="text-sm font-black">اشتراک ماهانه زیوای</h2>
+                  <span className="text-[10px] text-indigo-150 font-medium block mt-0.5">دسترسی کامل به قابلیتهای پردازش صوتی و هوش مصنوعی</span>
                 </div>
               </div>
               <span className="bg-white/20 text-[10px] font-bold px-3 py-1 rounded-full text-white">
@@ -199,7 +200,7 @@ export const SubscriptionScreen: React.FC = () => {
             </div>
 
             <div className="p-6 space-y-6">
-              
+
               {/* Price */}
               <div className="text-center border-b border-slate-100/50 pb-5">
                 <span className="text-2xl font-black text-slate-900">{formatPrice(activePlan.price)}</span>
@@ -214,9 +215,9 @@ export const SubscriptionScreen: React.FC = () => {
                 </h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  
+
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
-                    <span className="text-[10px] font-bold text-slate-400 block">زمان ضبط باقی‌مانده</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">زمان ضبط باقیمانده</span>
                     <span className="text-sm font-black text-indigo-600 block">
                       {formatPersianDuration(remainingHours)}
                     </span>
@@ -232,11 +233,11 @@ export const SubscriptionScreen: React.FC = () => {
                   </div>
 
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
-                    <span className="text-[10px] font-bold text-slate-400 block">کلاس‌های فعال</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">کلاس‌های باقی‌مانده</span>
                     <span className="text-sm font-black text-slate-800 block">
-                      {toPersianDigits(subscriptionStatus.usage.classesCount)} / {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس
+                      {toPersianDigits(remainingClasses)} / {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس
                     </span>
-                    <span className="text-[9px] text-slate-400 block font-bold">از حداکثر {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس مجاز</span>
+                    <span className="text-[9px] text-slate-400 block font-bold">از {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس سهمیه ماهانه</span>
                   </div>
 
                 </div>
@@ -282,7 +283,7 @@ export const SubscriptionScreen: React.FC = () => {
                   className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
                 >
                   <RotateCw className="w-3.5 h-3.5" />
-                  <span>تمدید اشتراک</span>
+                  <span>تمدید اشتراک زیوای</span>
                 </Button>
               </div>
 
@@ -295,7 +296,7 @@ export const SubscriptionScreen: React.FC = () => {
         <div className="space-y-4">
           <h3 className="text-sm font-black text-slate-800 flex items-center gap-1.5">
             <Receipt className="w-4 h-4 text-indigo-600" />
-            <span>تاریخچه تراکنش‌ها</span>
+            <span>تاریخچه تراکنشها</span>
           </h3>
 
           <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] divide-y divide-slate-100/50">
@@ -311,7 +312,7 @@ export const SubscriptionScreen: React.FC = () => {
                     <span className="text-slate-800">{log.description}</span>
                     <span className="text-emerald-700 font-black">{toPersianDigits(log.amount.toLocaleString('fa-IR'))} تومان</span>
                   </div>
-                  
+
                   <div className="flex items-center justify-between text-[10px] text-slate-400 font-bold">
                     <span>کد پیگیری: {toPersianDigits(log.refId)}</span>
                     <span>{toPersianDigits(new Date(log.date).toLocaleDateString('fa-IR'))}</span>

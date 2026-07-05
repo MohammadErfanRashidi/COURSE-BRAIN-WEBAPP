@@ -20,7 +20,7 @@ interface AcademicScreenProps {
 
 export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) => {
   const { updateUser } = useAuthStore();
-  
+
   // Form States
   const [fullName, setFullName] = useState('');
   const [selectedUniversity, setSelectedUniversity] = useState('');
@@ -119,7 +119,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
   return (
     <div className="w-full max-w-lg mx-auto px-4 flex flex-col justify-center min-h-[85vh] font-sans">
       <Card className="border border-slate-100/80 shadow-[0_24px_60px_rgba(0,0,0,0.05)] relative p-8">
-        
+
         {/* Header */}
         <div className="flex items-center gap-2 mb-8 pb-4 border-b border-slate-100/50">
           <div className="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center border border-indigo-100/60">
@@ -136,7 +136,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
           <div>
             <h3 className="text-base font-bold text-slate-800 mb-1">مشخصات فردی و تحصیلی شما</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              نام، دانشگاه و مقطع تحصیلی خود را برای شخصی‌سازی و همگام‌سازی رایا مشخص کنید.
+              نام، دانشگاه و مقطع تحصیلی خود را برای شخصیسازی و همگامسازی زیوای مشخص کنید.
             </p>
           </div>
 
@@ -206,7 +206,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
                 <span>دکترای پزشکی عمومی (MD)</span>
               </div>
               <span className="text-[9px] text-slate-400 block font-bold">
-                رایا در حال حاضر صرفاً از برنامه درسی دکترای پزشکی عمومی (MD) پشتیبانی می‌کند.
+                زیوای در حال حاضر صرفاً از برنامه درسی دکترای پزشکی عمومی (MD) پشتیبانی میکند.
               </span>
             </div>
           </div>
