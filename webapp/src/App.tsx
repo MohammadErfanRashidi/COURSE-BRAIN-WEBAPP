@@ -308,7 +308,7 @@ export default function App() {
       
       {/* Top Header */}
       {isAuthenticated && user && currentScreen === 'APP_DASHBOARD_PREVIEW' && (
-        <header className={`fixed top-2 left-0 right-0 z-30 font-sans mx-auto w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-7xl bg-white/60 backdrop-blur-2xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
+        <header className={`fixed top-[8px] left-4 right-4 z-30 font-sans bg-white/60 backdrop-blur-2xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
           <div className="flex items-center gap-3">
             <HamburgerButton />
             
@@ -399,11 +399,11 @@ export default function App() {
         {currentScreen === 'APP_DASHBOARD_PREVIEW' && user && (
           <div className={isInsideClassChat 
             ? "w-full h-full flex text-right font-sans relative p-0 overflow-hidden" 
-            : `w-full max-w-7xl mx-auto px-4 md:px-6 flex gap-6 text-right font-sans relative flex-1 overflow-hidden`
+            : `w-full px-4 md:px-6 flex gap-6 text-right font-sans relative flex-1 overflow-hidden`
           }>
             
             {/* 1. DESKTOP SIDEBAR (RTL: Sits on the right) */}
-            <aside className={`w-64 shrink-0 mt-[80px] mb-[80px] bg-white border border-slate-100/80 rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex-col justify-between overflow-y-auto ${isInsideClassChat ? 'hidden' : 'hidden md:flex'}`}>
+            <aside className={`w-64 shrink-0 mt-[104px] mb-[104px] bg-white border border-slate-100/80 rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex-col justify-between overflow-y-auto ${isInsideClassChat ? 'hidden' : 'hidden md:flex'}`}>
               <div className="space-y-6">
                 
                 {/* User quick profile */}
@@ -481,7 +481,7 @@ export default function App() {
             >
               <div
                   key={activeTab}
-                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : "animate-page-enter pt-[80px]"}
+                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : "animate-page-enter pt-[104px]"}
                 >
                   {activeTab === 'dashboard' && (
                     <DashboardScreen 
