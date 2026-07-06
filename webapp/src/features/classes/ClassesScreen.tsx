@@ -41,6 +41,7 @@ import { useClickOutside } from '../../hooks/useClickOutside';
 interface ClassesScreenProps {
   onNavigate: (tab: string, arg?: any) => void;
   openClassId?: string | null;
+  conversationId?: string | null;
   onClearClassId?: () => void;
   shouldOpenCreateModal?: boolean;
   onCloseCreateModal?: () => void;
@@ -53,6 +54,7 @@ let _cachedCourses: Course[] = [];
 export const ClassesScreen: React.FC<ClassesScreenProps> = ({ 
   onNavigate, 
   openClassId, 
+  conversationId,
   onClearClassId,
   shouldOpenCreateModal,
   onCloseCreateModal
@@ -279,11 +281,28 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
     migrateOldChatToConversation(classId);
     const existing = ConversationEngine.getSortedConversations(classId);
     setConversations(existing);
+
+    if (conversationId) {
+      const target = existing.find(c => c.id === conversationId);
+      if (target) {
+        setActiveConversationId(conversationId);
+        setDraftActive(false);
+        setChatKey(prev => prev + 1);
+        return;
+      }
+    }
+
     const draftId = 'draft_' + Date.now();
     setActiveConversationId(draftId);
     setDraftActive(true);
     setChatKey(prev => prev + 1);
-  }, [selectedClass?.id]);
+  }, [selectedClass?.id, conversationId]);
+
+  // Save last visited conversation per class
+  useEffect(() => {
+    if (!selectedClass || !activeConversationId || activeConversationId.startsWith('draft_')) return;
+    localStorage.setItem(`cb_last_conv_${selectedClass.id}`, activeConversationId);
+  }, [activeConversationId, selectedClass]);
 
   useEffect(() => {
     if (!selectedClass) return;

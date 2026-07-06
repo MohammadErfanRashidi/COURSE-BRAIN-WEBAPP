@@ -110,6 +110,7 @@ export default function App() {
   const [focusRecord, setFocusRecord] = useState(false);
   const [focusUpload, setFocusUpload] = useState(false);
   const [preselectClassId, setPreselectClassId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
 
   // Boolean flag to trigger class creation modal from the dashboard
   const [shouldOpenCreateModal, setShouldOpenCreateModal] = useState(false);
@@ -256,12 +257,14 @@ export default function App() {
     setFocusRecord(false);
     setFocusUpload(false);
     setPreselectClassId(null);
+    setConversationId(null);
 
     if (args) {
       if (args.openClassId) setOpenClassId(args.openClassId);
       if (args.focusRecord) setFocusRecord(args.focusRecord);
       if (args.focusUpload) setFocusUpload(args.focusUpload);
       if (args.preselectClassId) setPreselectClassId(args.preselectClassId);
+      if (args.conversationId) setConversationId(args.conversationId);
     }
 
     setActiveTab(tab as ActiveTab);
@@ -482,6 +485,7 @@ export default function App() {
                     <ClassesScreen 
                       onNavigate={handleDashboardNavigate} 
                       openClassId={openClassId}
+                      conversationId={conversationId}
                       onClearClassId={handleClearClassId}
                       shouldOpenCreateModal={shouldOpenCreateModal}
                       onCloseCreateModal={handleCloseCreateModal}

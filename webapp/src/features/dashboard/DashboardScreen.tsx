@@ -91,6 +91,8 @@ const getStatusConfig = (status: Recording['status']) => {
 export interface RecentChatActivity {
   classId: string;
   className: string;
+  conversationId?: string;
+  conversationTitle?: string;
   lastInteractedAt: string;
   lastMessageText: string;
   lastMessageRole?: 'user' | 'assistant';
@@ -268,7 +270,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           }
         }
 
-        setRecentChats(parsedChats.slice(0, 3));
+        setRecentChats(parsedChats.slice(0, 3).map(chat => {
+          const lastConv = localStorage.getItem(`cb_last_conv_${chat.classId}`);
+          return lastConv ? { ...chat, conversationId: lastConv } : chat;
+        }));
       } catch (err) {
         if (!cancelled) {
           console.error('Failed to load dashboard data', err);
@@ -754,11 +759,17 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                       boxShadow: "0 12px 24px -10px rgba(0, 0, 0, 0.04), 0 4px 12px -4px rgba(0, 0, 0, 0.02)"
                     }}
                     whileTap={{ scale: 0.985 }}
-                    onClick={() => onNavigate('classes', { openClassId: chat.classId })}
+                    onClick={() => {
+                      const args: any = { openClassId: chat.classId };
+                      if (chat.conversationId) args.conversationId = chat.conversationId;
+                      onNavigate('classes', args);
+                    }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        onNavigate('classes', { openClassId: chat.classId });
+                        const args: any = { openClassId: chat.classId };
+                        if (chat.conversationId) args.conversationId = chat.conversationId;
+                        onNavigate('classes', args);
                       }
                     }}
                     tabIndex={0}
