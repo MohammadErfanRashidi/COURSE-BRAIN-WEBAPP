@@ -20,6 +20,7 @@ export interface BookmarkItem {
     timestamp?: number;
     timestampText?: string;
     conversationId?: string;
+    conversationTitle?: string;
   };
 }
 

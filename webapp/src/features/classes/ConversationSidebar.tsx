@@ -91,7 +91,7 @@ export const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className={`text-[11px] font-black truncate ${isActive ? 'text-indigo-700' : 'text-slate-700'}`}>
+            <span className={`text-[11px] font-black truncate break-words ${isActive ? 'text-indigo-700' : 'text-slate-700'}`}>
               {conv.title}
             </span>
             {conv.pinned && <Pin className="w-2.5 h-2.5 text-amber-500 fill-amber-500 shrink-0" />}

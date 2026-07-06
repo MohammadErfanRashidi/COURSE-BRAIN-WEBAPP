@@ -64,6 +64,24 @@ export function migrateOldChatToConversation(classId: string): string | null {
   }
 }
 
+export function truncateTitle(text: string, maxLen: number = 20): string {
+  if (!text) return '';
+
+  const normalized = text.trim().replace(/\s+/g, ' ').replace(/\n/g, ' ');
+
+  if (!normalized) return '';
+  if (normalized.length <= maxLen) return normalized;
+
+  const truncated = normalized.substring(0, maxLen);
+  const lastSpace = truncated.lastIndexOf(' ');
+
+  if (lastSpace > maxLen / 2) {
+    return truncated.substring(0, lastSpace) + '...';
+  }
+
+  return truncated + '...';
+}
+
 export const ConversationEngine = {
   listConversations(classId: string): ChatConversation[] {
     return loadConversations(classId);
@@ -117,9 +135,8 @@ export const ConversationEngine = {
   generateTitle(messages: ChatMessage[]): string {
     const firstUserMsg = messages.find(m => m.role === 'user');
     if (!firstUserMsg) return 'گفتگوی جدید';
-    const text = firstUserMsg.content.trim();
-    if (!text) return 'گفتگوی جدید';
-    return text.length > 40 ? text.substring(0, 40) + '...' : text;
+    const title = truncateTitle(firstUserMsg.content);
+    return title || 'گفتگوی جدید';
   },
 
   togglePin(classId: string, conversationId: string): { success: boolean; message?: string } {

@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { ChatEngine } from '../../services/chatEngine';
-import { ConversationEngine } from '../../services/conversationEngine';
+import { ConversationEngine, truncateTitle } from '../../services/conversationEngine';
 import { ChatMessage, ChatSource, AIStatus } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { motion, AnimatePresence } from 'motion/react';
@@ -370,13 +370,15 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
       
       BookmarkService.addBookmark({
         type: 'response',
-        title: promptText.length > 50 ? promptText.substring(0, 50) + '...' : promptText,
+        title: truncateTitle(promptText) || `سوال کلاس ${className}`,
         description: msg.content,
         classId,
         className,
         metadata: {
           messageId: msg.id,
-          content: msg.content
+          content: msg.content,
+          conversationId: conversationId || undefined,
+          conversationTitle: undefined,
         }
       });
       setBookmarkedMessageIds(prev => [...prev, msg.id]);
