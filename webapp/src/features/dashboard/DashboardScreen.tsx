@@ -460,7 +460,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
       {/* Global Search Bar */}
       <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] text-right space-y-4">
-        <div className="group relative w-full transition-all duration-300 ease-in-out hover:-translate-y-[2px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.02)] focus-within:shadow-[0_12px_24px_rgba(79,70,229,0.03)] focus-within:-translate-y-[2px] active:scale-[0.995] rounded-2xl">
+        <div className="group relative w-full transition-all duration-300 ease-in-out hover:-translate-y-[2px] hover:shadow-[0_8px_20px_rgba(0,0,0,0.02)] focus-within:shadow-[0_12px_24px_rgba(43,89,234,0.03)] focus-within:-translate-y-[2px] active:scale-[0.995] rounded-2xl">
           <input
             type="text"
             value={searchQuery}
@@ -483,7 +483,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                     <div
                       key={cls.id}
                       onClick={() => onNavigate('classes', { openClassId: cls.id })}
-                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
+                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(43,89,234,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
                     >
                       <div className="flex items-center gap-2">
                         <BookOpen className="w-4 h-4 text-indigo-500 shrink-0" />
@@ -505,7 +505,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                     <div
                       key={rec.id}
                       onClick={() => onNavigate('classes', { openClassId: rec.classId })}
-                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
+                      className="flex items-center justify-between p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(43,89,234,0.02)] transition-all duration-300 cursor-pointer text-xs font-bold text-slate-700"
                     >
                       <div className="flex items-center gap-2">
                         <Mic className="w-4 h-4 text-indigo-500 shrink-0" />
@@ -538,7 +538,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                           usePlayerStore.getState().triggerSeek(snippet.segment.start);
                         }, 300);
                       }}
-                      className="p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(79,70,229,0.02)] transition-all duration-300 cursor-pointer text-xs text-slate-750 space-y-1.5 text-right"
+                      className="p-3.5 bg-white hover:bg-slate-50/40 border border-slate-100/85 hover:border-indigo-100/60 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(43,89,234,0.02)] transition-all duration-300 cursor-pointer text-xs text-slate-750 space-y-1.5 text-right"
                     >
                       <div className="flex items-center justify-between text-[10px] font-bold text-slate-400">
                         <div className="flex items-center gap-1 text-indigo-600">
@@ -779,7 +779,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                     {/* Right side info (RTL flow) */}
                     <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
                       <div className="relative shrink-0">
-                        <div className="w-12 h-12 bg-indigo-50/50 border border-indigo-100/50 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300 shadow-[0_2px_8px_-2px_rgba(79,70,229,0.06)]">
+                        <div className="w-12 h-12 bg-indigo-50/50 border border-indigo-100/50 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300 shadow-[0_2px_8px_-2px_rgba(43,89,234,0.06)]">
                           <MessageSquare className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                         </div>
                       </div>
@@ -829,7 +829,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* Create Class */}
             <button
               onClick={onCreateClassTrigger}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(43,89,234,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
@@ -846,7 +846,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* Record Lecture */}
             <button
               onClick={() => onNavigate('record', { focusRecord: true })}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(43,89,234,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
@@ -863,7 +863,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* Upload Audio */}
             <button
               onClick={() => onNavigate('record', { focusUpload: true })}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(43,89,234,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
@@ -880,7 +880,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             {/* View Subscription */}
             <button
               onClick={() => onNavigate('subscription')}
-              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(79,70,229,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
+              className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/40 border border-slate-100/80 rounded-2xl hover:border-indigo-100/60 hover:shadow-[0_8px_24px_rgba(43,89,234,0.03)] shadow-[0_4px_12px_rgba(0,0,0,0.01)] transition-all duration-300 group text-right cursor-pointer active:scale-99"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">

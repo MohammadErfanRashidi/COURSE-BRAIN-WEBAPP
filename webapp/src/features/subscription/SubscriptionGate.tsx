@@ -69,7 +69,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
         )}
 
         {/* Pricing Card Grid */}
-        <Card className="border-2 border-indigo-500 bg-white shadow-[0_12px_40px_rgba(79,70,229,0.06)] relative overflow-hidden rounded-3xl p-8">
+        <Card className="border-2 border-indigo-500 bg-white shadow-[0_12px_40px_rgba(43,89,234,0.06)] relative overflow-hidden rounded-3xl p-8">
           {/* Top badge */}
           <div className="absolute left-0 top-0 bg-indigo-600 text-white font-bold text-[9px] px-4 py-1.5 rounded-br-2xl uppercase tracking-wider">
             طرح پیشنهادی مصوب

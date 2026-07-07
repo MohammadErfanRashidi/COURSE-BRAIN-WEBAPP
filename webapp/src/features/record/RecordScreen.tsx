@@ -701,7 +701,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   }}
                   className={`w-24 h-24 rounded-full border flex flex-col items-center justify-center transition-all duration-300 cursor-pointer relative z-10 ${
                     !isRecording
-                      ? 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 hover:scale-105 shadow-[0_12px_40px_rgba(79,70,229,0.15)]'
+                      ? 'bg-indigo-600 border-indigo-700 text-white hover:bg-indigo-700 hover:scale-105 shadow-[0_12px_40px_rgba(43,89,234,0.15)]'
                       : isPaused
                         ? 'bg-slate-400 border-slate-500 text-white hover:bg-slate-500 shadow-[0_8px_32px_rgba(100,116,139,0.3)]'
                         : 'bg-rose-600 border-rose-700 text-white hover:bg-rose-700 shadow-[0_8px_32px_rgba(225,29,72,0.3)] animate-recording-pulse'

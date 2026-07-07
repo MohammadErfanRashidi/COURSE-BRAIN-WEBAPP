@@ -197,7 +197,7 @@ export const SupportChat: React.FC<SupportChatProps> = ({ activeTab, isFullAppDa
           onClick={toggle}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
-          className="relative w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_8px_28px_rgba(79,70,229,0.35)] border border-indigo-400/30 flex items-center justify-center cursor-pointer transition-colors duration-200 active:scale-90"
+          className="relative w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_8px_28px_rgba(43,89,234,0.35)] border border-indigo-400/30 flex items-center justify-center cursor-pointer transition-colors duration-200 active:scale-90"
           aria-label="پشتیبانی"
           title="پشتیبانی"
         >

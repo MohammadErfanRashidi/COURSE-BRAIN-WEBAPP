@@ -34,10 +34,21 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --color-border-subtle: #e2e8f0;
   --color-border-light: #cbd5e1;
-  --color-border-accent: #818cf8;
+  --color-border-accent: #7aa1f2;
   --color-border-success: #34d399;
   --color-border-warning: #fbbf24;
   --color-border-error: #f87171;
+  --color-indigo-50: #eef2fd;
+  --color-indigo-100: #dce4fb;
+  --color-indigo-150: #c7d4f9;
+  --color-indigo-200: #b3c6f7;
+  --color-indigo-300: #8aa8f3;
+  --color-indigo-400: #618aef;
+  --color-indigo-500: #3b6ceb;
+  --color-indigo-600: #2b59ea;
+  --color-indigo-700: #2247bb;
+  --color-indigo-800: #1a358c;
+  --color-indigo-900: #11235d;
 }
 
 @layer base {

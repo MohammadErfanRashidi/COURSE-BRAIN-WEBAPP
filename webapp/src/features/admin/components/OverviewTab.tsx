@@ -170,7 +170,7 @@ export const OverviewTab: React.FC = () => {
               <path
                 d="M 10,140 Q 80,120 150,90 T 300,85 T 420,55 T 490,45"
                 fill="none"
-                stroke="#4F46E5"
+                stroke="#2B59EA"
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeDasharray="1 1"
@@ -178,7 +178,7 @@ export const OverviewTab: React.FC = () => {
 
               {/* Interaction Circles */}
               <circle cx="300" cy="50" r="5" fill="#10B981" stroke="#FFFFFF" strokeWidth="2" />
-              <circle cx="490" cy="45" r="5" fill="#4F46E5" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="490" cy="45" r="5" fill="#2B59EA" stroke="#FFFFFF" strokeWidth="2" />
             </svg>
             
             {/* Days label row */}

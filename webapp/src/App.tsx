@@ -327,7 +327,7 @@ export default function App() {
               aria-label="صفحه اصلی داشبورد"
               className="flex items-center gap-3 group cursor-pointer select-none active:scale-98 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 rounded-2xl p-1 -m-1"
             >
-              <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black text-sm tracking-tight shadow-[0_4px_12px_rgba(79,70,229,0.15)] group-hover:scale-105 transition-transform duration-300">
+              <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black text-sm tracking-tight shadow-[0_4px_12px_rgba(43,89,234,0.15)] group-hover:scale-105 transition-transform duration-300">
                 XIV
               </div>
               <div>
@@ -410,7 +410,7 @@ export default function App() {
                   onClick={() => handleDashboardNavigate('profile')}
                   className="group flex items-center gap-3.5 p-3.5 bg-slate-50/40 hover:bg-slate-50/80 border border-slate-100/70 hover:border-indigo-100/40 rounded-2xl cursor-pointer transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-sm"
                 >
-                  <div className="w-10 h-10 bg-indigo-50/60 border border-indigo-100/40 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 shadow-[0_2px_8px_-2px_rgba(79,70,229,0.04)]">
+                  <div className="w-10 h-10 bg-indigo-50/60 border border-indigo-100/40 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 shadow-[0_2px_8px_-2px_rgba(43,89,234,0.04)]">
                     <UserIcon className="w-4.5 h-4.5" />
                   </div>
                   <div className="text-right overflow-hidden flex-1">
@@ -570,7 +570,7 @@ export default function App() {
               whileTap={{ scale: 0.92, y: 1 }}
               transition={{ type: 'spring', stiffness: 450, damping: 22 }}
               onClick={() => handleDashboardNavigate('record')}
-              className={`flex items-center justify-center -mt-8 w-14 h-14 rounded-full border-4 border-white shadow-[0_8px_20px_rgba(79,70,229,0.3)] cursor-pointer relative z-50 ${
+              className={`flex items-center justify-center -mt-8 w-14 h-14 rounded-full border-4 border-white shadow-[0_8px_20px_rgba(43,89,234,0.3)] cursor-pointer relative z-50 ${
                 activeTab === 'record' 
                   ? 'bg-indigo-600 text-white shadow-indigo-600/40' 
                   : 'bg-indigo-500 text-white shadow-indigo-500/30'

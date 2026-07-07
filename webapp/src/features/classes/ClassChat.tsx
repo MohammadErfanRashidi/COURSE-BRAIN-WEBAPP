@@ -663,7 +663,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
           }}
           style={{ bottom: `${composerHeight + 36}px` }}
-          className="absolute left-1/2 -translate-x-1/2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full text-xs font-black shadow-[0_12px_32px_rgba(79,70,229,0.35)] border border-indigo-400/50 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-200 z-30 cursor-pointer active:scale-95 hover:scale-105 transition-all opacity-100"
+          className="absolute left-1/2 -translate-x-1/2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full text-xs font-black shadow-[0_12px_32px_rgba(43,89,234,0.35)] border border-indigo-400/50 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-200 z-30 cursor-pointer active:scale-95 hover:scale-105 transition-all opacity-100"
         >
           <ArrowDown className="w-4 h-4 shrink-0" />
           <span>آخرین پیام</span>
