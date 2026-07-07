@@ -484,7 +484,7 @@ export default function App() {
             >
               <div
                   key={activeTab}
-                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : "animate-page-enter pt-[104px]"}
+                  className={isInsideClassChat ? "h-full w-full flex flex-col min-h-0" : "pt-[104px]"}
                 >
                   {activeTab === 'dashboard' && (
                     <DashboardScreen 

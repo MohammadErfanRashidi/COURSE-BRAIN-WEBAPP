@@ -39,29 +39,6 @@ interface DashboardScreenProps {
   onCreateClassTrigger: () => void;
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 100,
-      damping: 15,
-    },
-  },
-};
-
 const getStatusConfig = (status: Recording['status']) => {
   switch (status) {
     case 'completed':
@@ -82,7 +59,7 @@ const getStatusConfig = (status: Recording['status']) => {
       return {
         bg: 'bg-amber-50/60 border-amber-100/60 text-amber-700',
         label: 'تحلیل هوش مصنوعی...',
-        dotColor: 'bg-amber-400 animate-pulse',
+        dotColor: 'bg-amber-400',
         icon: <Loader2 className="w-3 h-3 text-amber-600 animate-spin shrink-0" />,
       };
   }
@@ -98,13 +75,33 @@ export interface RecentChatActivity {
   lastMessageRole?: 'user' | 'assistant';
 }
 
+let _cachedDashboardClasses: Class[] = [];
+let _cachedDashboardRecordings: Recording[] = [];
+
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, onCreateClassTrigger }) => {
   const { user, subscriptionStatus, syncSubscription } = useAuthStore();
-  const [recentChats, setRecentChats] = useState<RecentChatActivity[]>([]);
-  const [allRecordings, setAllRecordings] = useState<Recording[]>([]);
-  const [classes, setClasses] = useState<Class[]>([]);
+  const [allRecordings, setAllRecordings] = useState<Recording[]>(_cachedDashboardRecordings);
+  const [classes, setClasses] = useState<Class[]>(_cachedDashboardClasses);
   const [isLoading, setIsLoading] = useState(() => !subscriptionStatus);
   const [searchQuery, setSearchQuery] = useState('');
+
+  function loadCachedRecentChats(): RecentChatActivity[] {
+    try {
+      const userId = user?.id || getCurrentUserId() || '';
+      const key = userId ? `cb_recent_chats_${userId}` : 'cb_recent_chats_preauth';
+      const raw = localStorage.getItem(key);
+      if (!raw) return [];
+      const list = JSON.parse(raw);
+      return list.slice(0, 3).map((chat: any) => {
+        const lastConv = localStorage.getItem(`cb_last_conv_${chat.classId}`);
+        return lastConv ? { ...chat, conversationId: lastConv } : chat;
+      });
+    } catch {
+      return [];
+    }
+  }
+
+  const [recentChats, setRecentChats] = useState<RecentChatActivity[]>(loadCachedRecentChats);
 
   // Time-based greeting helper
   const getGreetingText = (fullName?: string) => {
@@ -213,6 +210,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
         if (cancelled) return;
         setClasses(fetchedClasses);
         setAllRecordings(fetchedRecordings);
+        _cachedDashboardClasses = fetchedClasses;
+        _cachedDashboardRecordings = fetchedRecordings;
 
         // Determine user-scoped key for recent chats
         // Use the same user ID resolution as ChatEngine for consistency
@@ -291,15 +290,21 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   if (isLoading || !subscriptionStatus) {
     return (
       <div className="space-y-8 font-sans text-right p-1">
-        {/* Welcome Banner Skeleton */}
-        <div className="flex flex-col gap-2">
-          <div className="h-6 w-48 bg-slate-200 animate-pulse rounded-lg self-start" />
-          <div className="h-4 w-72 bg-slate-100 animate-pulse rounded-md self-start" />
+        {/* Welcome Banner — always show real text */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              {getGreetingText(user?.fullName || undefined)} عزیز
+            </h1>
+            <p className="text-xs text-slate-400 mt-1 font-medium">
+              دستیار هوش مصنوعی زیوای همگام با سرفصلهای دانشگاهی در خدمت شماست.
+            </p>
+          </div>
         </div>
 
         {/* Search Bar Skeleton */}
         <div className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
-          <div className="h-11.5 bg-slate-50 border border-slate-100/50 rounded-2xl animate-pulse flex items-center justify-end px-3.5">
+          <div className="h-11.5 bg-slate-50 border border-slate-100/50 rounded-2xl flex items-center justify-end px-3.5">
             <div className="w-4.5 h-4.5 bg-slate-250 rounded-full" />
           </div>
         </div>
@@ -310,11 +315,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             <div key={i} className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col justify-between min-h-[115px]">
               <div className="flex items-center justify-between">
                 {/* Text on right (start), Icon on left (end) */}
-                <div className="h-3.5 w-24 bg-slate-150 animate-pulse rounded-md" />
-                <div className="w-8 h-8 bg-slate-100 animate-pulse rounded-xl" />
+                <div className="h-3.5 w-24 bg-slate-150 rounded-md" />
+                <div className="w-8 h-8 bg-slate-100 rounded-xl" />
               </div>
               <div className="mt-3 space-y-2">
-                <div className="h-5 w-16 bg-slate-200 animate-pulse rounded-md" />
+                <div className="h-5 w-16 bg-slate-200 rounded-md" />
                 <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden" />
               </div>
             </div>
@@ -326,8 +331,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           {/* Recent Activity (takes 2 cols) */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="h-4 w-32 bg-slate-200 animate-pulse rounded-md" />
-              <div className="h-3 w-24 bg-slate-150 animate-pulse rounded-md" />
+              <div className="h-4 w-32 bg-slate-200 rounded-md" />
+              <div className="h-3 w-24 bg-slate-150 rounded-md" />
             </div>
 
             <div className="space-y-3.5">
@@ -335,9 +340,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-slate-100/80 rounded-3xl shadow-[0_4px_12px_-4px_rgba(0,0,0,0.02)] gap-4">
                   {/* Right side info (RTL flow) */}
                   <div className="flex items-center gap-3.5 flex-1 min-w-0">
-                    <div className="w-12 h-12 bg-slate-100 border border-slate-100/50 rounded-2xl animate-pulse shrink-0" />
+                    <div className="w-12 h-12 bg-slate-100 border border-slate-100/50 rounded-2xl shrink-0" />
                     <div className="space-y-2 flex-1 min-w-0 text-right">
-                      <div className="h-3.5 w-48 bg-slate-200 animate-pulse rounded-md" />
+                      <div className="h-3.5 w-48 bg-slate-200 rounded-md" />
                       <div className="flex gap-2">
                         <div className="h-5 w-20 bg-slate-50 border border-slate-100/80 rounded-xl" />
                         <div className="h-5 w-16 bg-slate-50 border border-slate-100/80 rounded-xl" />
@@ -357,16 +362,16 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
           {/* Quick Actions Panel (takes 1 col) */}
           <div className="space-y-4">
-            <div className="h-4 w-24 bg-slate-200 animate-pulse rounded-md" />
+            <div className="h-4 w-24 bg-slate-200 rounded-md" />
 
             <div className="grid grid-cols-1 gap-3">
               {[1, 2, 3, 4].map(i => (
                 <div key={i} className="flex items-center justify-between p-4 bg-white border border-slate-100/80 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 bg-slate-100 border border-slate-100/50 rounded-xl animate-pulse shrink-0" />
+                    <div className="w-9 h-9 bg-slate-100 border border-slate-100/50 rounded-xl shrink-0" />
                     <div className="space-y-1.5 text-right">
-                      <div className="h-3 w-28 bg-slate-200 animate-pulse rounded-md" />
-                      <div className="h-2 w-36 bg-slate-100 animate-pulse rounded-md" />
+                      <div className="h-3 w-28 bg-slate-200 rounded-md" />
+                      <div className="h-2 w-36 bg-slate-100 rounded-md" />
                     </div>
                   </div>
                   <div className="w-4 h-4 bg-slate-100 rounded-full" />
@@ -443,15 +448,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <motion.h1
-            key={user?.fullName || 'guest'}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight"
-          >
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {getGreetingText(user?.fullName)} عزیز
-          </motion.h1>
+          </h1>
           <p className="text-xs text-slate-400 mt-1 font-medium">
             دستیار هوش مصنوعی زیوای همگام با سرفصلهای دانشگاهی در خدمت شماست.
           </p>
@@ -732,7 +731,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           {recentChats.length === 0 ? (
             <Card className="border border-slate-100/80 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.02)] p-8 text-center">
               <div className="py-10 space-y-4">
-                <div className="w-14 h-14 bg-slate-50/50 border border-slate-100/80 rounded-2xl flex items-center justify-center mx-auto text-slate-400 shadow-[0_4px_12px_rgba(0,0,0,0.01)] animate-pulse">
+                <div className="w-14 h-14 bg-slate-50/50 border border-slate-100/80 rounded-2xl flex items-center justify-center mx-auto text-slate-400 shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
                   <MessageSquare className="w-6 h-6 text-slate-400" />
                 </div>
                 <div className="text-sm font-black text-slate-700">هنوز گفتگوی اخیری ندارید</div>
@@ -742,17 +741,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
               </div>
             </Card>
           ) : (
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-3.5"
-            >
+            <div className="space-y-3.5">
               {recentChats.map((chat) => {
                 return (
                   <motion.div
                     key={chat.classId}
-                    variants={itemVariants}
                     whileHover={{
                       y: -2,
                       scale: 1.005,
@@ -813,10 +806,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+            </motion.div>
                 );
               })}
-            </motion.div>
+            </div>
           )}
         </div>
 
