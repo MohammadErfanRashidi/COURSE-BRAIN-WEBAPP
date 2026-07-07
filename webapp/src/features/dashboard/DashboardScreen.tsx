@@ -677,7 +677,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 ? 'bg-slate-50 border-slate-100/80 text-slate-400'
                 : isExpired
                   ? 'bg-rose-50 border-rose-100/60 text-rose-600'
-                  : 'bg-emerald-50 border-emerald-100/60 text-emerald-600'
+                  : 'bg-indigo-50 border-indigo-100/60 text-emerald-600'
             }`}>
               <ShieldCheck className="w-4 h-4" />
             </div>

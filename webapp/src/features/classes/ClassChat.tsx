@@ -706,7 +706,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
           </div>
         )}
 
-        <div className="flex flex-col bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_32px_rgba(15,23,42,0.06)] rounded-[20px] md:rounded-[26px] p-2 md:p-3 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500/40 focus-within:bg-white/95 transition-all duration-300">
+        <div className="flex flex-col bg-white/70 backdrop-blur-md border border-slate-200/30 dark:border-white/5 shadow-[0_8px_32px_rgba(15,23,42,0.06)] rounded-[20px] md:rounded-[26px] p-2 md:p-3 focus-within:ring-1 focus-within:ring-indigo-500/10 focus-within:border-indigo-500/40 focus-within:bg-white/95 transition-all duration-300">
           
           {/* Main Input Text Field */}
           <textarea

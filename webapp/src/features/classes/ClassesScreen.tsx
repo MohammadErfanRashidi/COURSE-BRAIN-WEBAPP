@@ -817,7 +817,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                               animate={{ height: 'auto', opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="divide-y divide-slate-50 overflow-hidden"
+                              className="overflow-hidden"
                             >
                               {courseList.map(course => {
                                 const alreadyAdded = classes.some(c => c.code === course.id);
@@ -828,7 +828,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                                       if (!alreadyAdded) handleCreateClass(course);
                                     }}
                                     className={`
-                                      flex items-center justify-between px-4 py-3 cursor-pointer transition-colors
+                                      flex items-center justify-between px-4 py-3 cursor-pointer transition-colors border-t border-slate-100/50 first:border-t-0
                                       ${alreadyAdded 
                                         ? 'bg-slate-50/50 text-slate-400 cursor-not-allowed' 
                                         : 'hover:bg-indigo-50/30 text-slate-800'

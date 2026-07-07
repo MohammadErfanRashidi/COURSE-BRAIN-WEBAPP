@@ -30,6 +30,7 @@ import { SupportChat } from './components/SupportChat';
 import HamburgerButton from './components/HamburgerButton';
 import MobileMenu from './components/MobileMenu';
 import { useMobileMenuStore } from './store/mobileMenuStore';
+import { useThemeStore } from './store/themeStore';
 
 import { 
   GraduationCap, 
@@ -43,7 +44,9 @@ import {
   ChevronLeft,
   Menu,
   X,
-  Bookmark
+  Bookmark,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { Recording } from './types';
 
@@ -80,6 +83,7 @@ export default function App() {
 
   // Admin Mode states
   const { isAdminAuthenticated } = useAdminAuthStore();
+  const { theme, toggle: toggleTheme } = useThemeStore();
   const [isAdminMode, setIsAdminMode] = useState(false);
 
   useEffect(() => {
@@ -307,7 +311,7 @@ export default function App() {
       
       {/* Top Header */}
       {isAuthenticated && user && currentScreen === 'APP_DASHBOARD_PREVIEW' && (
-        <header className={`fixed top-[8px] left-4 right-4 z-30 font-sans bg-white/60 backdrop-blur-2xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
+        <header className={`fixed top-[8px] left-4 right-4 z-30 font-sans bg-white/60 backdrop-blur-2xl border border-white/20 dark:border-white/5 shadow-[0_12px_36px_rgba(0,0,0,0.06)] rounded-[2rem] px-5 py-3 items-center justify-between transition-all duration-300 ${isInsideClassChat ? 'hidden' : 'flex'}`}>
           <div className="flex items-center gap-3">
             <HamburgerButton />
             
@@ -446,8 +450,16 @@ export default function App() {
 
               </div>
 
-              {/* Bottom Section - Logout and active plan */}
+              {/* Bottom Section - Theme, Logout */}
               <div className="space-y-4">
+                <button
+                  onClick={toggleTheme}
+                  className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-slate-100/80 hover:border-indigo-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
+                >
+                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  <span>{theme === 'dark' ? 'حالت روشن' : 'حالت تاریک'}</span>
+                </button>
+
                 <button
                   onClick={() => setShowLogoutConfirm(true)}
                                       className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100/80 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
@@ -570,7 +582,7 @@ export default function App() {
               whileTap={{ scale: 0.92, y: 1 }}
               transition={{ type: 'spring', stiffness: 450, damping: 22 }}
               onClick={() => handleDashboardNavigate('record')}
-              className={`flex items-center justify-center -mt-8 w-14 h-14 rounded-full border-4 border-white shadow-[0_8px_20px_rgba(43,89,234,0.3)] cursor-pointer relative z-50 ${
+              className={`flex items-center justify-center -mt-8 w-14 h-14 rounded-full border-4 border-white dark:border-white/5 shadow-[0_8px_20px_rgba(43,89,234,0.3)] cursor-pointer relative z-50 ${
                 activeTab === 'record' 
                   ? 'bg-indigo-600 text-white shadow-indigo-600/40' 
                   : 'bg-indigo-500 text-white shadow-indigo-500/30'
