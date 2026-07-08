@@ -17,7 +17,7 @@ import {
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { useAuthStore } from '../../store/authStore';
-import { SubscriptionService, PLANS_CONFIG, UNIVERSITY_PLAN_ID } from '../../services/api';
+import { SubscriptionService, PLANS_CONFIG, UNIVERSITY_PLAN_ID, getPurchaseHistory } from '../../services/api';
 import { SubscriptionStatus } from '../../types';
 import { formatPersianDuration } from '../../utils/timeFormatter';
 
@@ -32,7 +32,9 @@ interface PaymentLog {
 
 export const SubscriptionScreen: React.FC = () => {
   const { subscriptionStatus, syncSubscription } = useAuthStore();
-  const [history, setHistory] = useState<PaymentLog[]>([]);
+  const [history, setHistory] = useState<PaymentLog[]>(() => {
+    return [...getPurchaseHistory()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  });
   const [isLoading, setIsLoading] = useState(() => !subscriptionStatus);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

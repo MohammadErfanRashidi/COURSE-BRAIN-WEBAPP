@@ -157,7 +157,7 @@ interface PurchaseRecord {
   description: string;
 }
 
-function getPurchaseHistory(): PurchaseRecord[] {
+export function getPurchaseHistory(): PurchaseRecord[] {
   try {
     const cached = localStorage.getItem(getStorageKey('cb_purchase_history'));
     if (cached) return JSON.parse(cached);
