@@ -71,21 +71,21 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
     setDeletedSourceMessage(null);
 
     if (!item.classId) {
-      onNavigate('classes');
+      setDeletedSourceMessage('منبع این نشان‌شده دیگر در دسترس نیست.');
       return;
     }
 
     const classConversations = ConversationEngine.getSortedConversations(item.classId);
 
     if (classConversations.length === 0) {
-      setDeletedSourceMessage('این گفتگو حذف شده است و دیگر قابل مشاهده نیست.');
+      setDeletedSourceMessage('این کلاس حذف شده است و دیگر قابل مشاهده نیست.');
       return;
     }
 
     if (item.type === 'response' && item.metadata.conversationId) {
       const conv = classConversations.find(c => c.id === item.metadata.conversationId);
       if (!conv) {
-        setDeletedSourceMessage('این کلاس حذف شده است و دیگر قابل مشاهده نیست.');
+        setDeletedSourceMessage('این گفتگو حذف شده است و دیگر قابل مشاهده نیست.');
         return;
       }
       onNavigate('classes', { openClassId: item.classId, conversationId: item.metadata.conversationId });
@@ -129,27 +129,6 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
     return 'منبع نامشخص';
   };
 
-  const getSourceContext = (item: BookmarkItem): string | null => {
-    if (item.type === 'response') {
-      const parts: string[] = [];
-      if (item.className) parts.push(`کلاس: ${item.className}`);
-      if (item.metadata.conversationId) {
-        if (item.metadata.conversationTitle) {
-          parts.push(`گفتگو: ${item.metadata.conversationTitle}`);
-        } else {
-          parts.push('گفتگوی نشان‌شده');
-        }
-      }
-      return parts.join(' • ');
-    }
-    if (item.type === 'lecture') {
-      if (item.className) return `کلاس: ${item.className} • صوت: ${item.metadata.lectureName || item.title}`;
-      return null;
-    }
-    if (item.className) return `کلاس: ${item.className}`;
-    return null;
-  };
-
   return (
     <div className="space-y-6 text-right font-sans animate-in fade-in duration-300">
 
@@ -179,33 +158,33 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
       {/* Filter and Search Bar */}
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
         {/* Tab Filters */}
-        <div className="flex bg-slate-100/80 p-1 rounded-xl border border-slate-100/80 self-start md:self-auto text-xs font-bold text-slate-500">
+        <div className="flex bg-slate-100/80 dark:bg-white/5 p-1 rounded-full self-start md:self-auto text-xs font-bold text-slate-500 dark:text-slate-400">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
               filterType === 'all'
-                ? 'bg-white text-slate-800 border border-slate-200/40 rounded-lg shadow-xs font-black'
-                : 'hover:text-slate-700'
+                ? 'bg-white dark:bg-white/10 text-indigo-600 dark:text-slate-200 shadow-sm font-black'
+                : 'hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
             همه نشان‌شده‌ها ({toPersianDigits(bookmarks.length)})
           </button>
           <button
             onClick={() => setFilterType('response')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
               filterType === 'response'
-                ? 'bg-white text-slate-800 border border-slate-200/40 rounded-lg shadow-xs font-black'
-                : 'hover:text-slate-700'
+                ? 'bg-white dark:bg-white/10 text-indigo-600 dark:text-slate-200 shadow-sm font-black'
+                : 'hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
             پاسخ‌های هوشمند ({toPersianDigits(bookmarks.filter(b => b.type === 'response').length)})
           </button>
           <button
             onClick={() => setFilterType('lecture')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer ${
               filterType === 'lecture'
-                ? 'bg-white text-slate-800 border border-slate-200/40 rounded-lg shadow-xs font-black'
-                : 'hover:text-slate-700'
+                ? 'bg-white dark:bg-white/10 text-indigo-600 dark:text-slate-200 shadow-sm font-black'
+                : 'hover:text-slate-700 dark:hover:text-slate-300'
             }`}
           >
             جلسات صوتی ({toPersianDigits(bookmarks.filter(b => b.type === 'lecture').length)})
@@ -229,7 +208,6 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
       <div className="grid grid-cols-1 gap-4">
         {filtered.map((item) => {
           const isAi = item.type === 'response';
-          const sourceContext = getSourceContext(item);
 
           return (
             <Card key={item.id} className="border border-slate-100/80 bg-white p-5 rounded-3xl space-y-4 hover:border-indigo-100/70 hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all">
@@ -293,13 +271,6 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
                   </button>
                 </div>
               </div>
-
-              {/* Source context info */}
-              {sourceContext && (
-                <div className="text-[10px] font-bold text-slate-500 bg-slate-50/50 border border-slate-100/80 rounded-xl px-3 py-2 text-right">
-                  {sourceContext}
-                </div>
-              )}
 
               {/* Snippet / Content excerpt */}
               {item.description && (
