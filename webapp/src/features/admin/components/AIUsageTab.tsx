@@ -84,7 +84,7 @@ export const AIUsageTab: React.FC = () => {
 
         <Card className="p-4 border border-slate-200/50 bg-white rounded-2xl flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[10px] font-black text-slate-400 block">کل درخواستهای زیوای (XIVAI)</span>
+            <span className="text-[10px] font-black text-slate-400 block">کل درخواستهای زیوای (ZIVAI)</span>
             <span className="text-base font-black text-slate-800">{toPersianDigits('۱۲۴,۵۰۰')} کادر گفتگو</span>
             <span className="text-[9px] text-emerald-600 font-bold block">۹۹.۹٪ پاسخدهی استریم</span>
           </div>

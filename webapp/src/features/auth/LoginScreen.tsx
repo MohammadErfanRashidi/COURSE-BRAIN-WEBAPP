@@ -78,7 +78,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
         <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4 border border-indigo-100/50 shadow-sm">
           <span className="text-indigo-600 font-black text-2xl tracking-tight">XIV</span>
         </div>
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">XIVAI | زیوای</h1>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">ZIVAI | زیوای</h1>
         <p className="text-xs text-slate-500 mt-2 font-semibold">سامانه هوشمند کمک‌آموزشی دانشجویی دانشگاه‌های سراسر کشور</p>
       </div>
 

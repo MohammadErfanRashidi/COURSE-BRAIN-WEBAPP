@@ -100,7 +100,7 @@ export const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ onBa
              </div>
           <div>
              <div className="flex items-center gap-1.5">
-               <span className="text-xs font-black block leading-tight tracking-wider">XIVAI OPERATIONS</span>
+               <span className="text-xs font-black block leading-tight tracking-wider">ZIVAI OPERATIONS</span>
                <span className="text-[8px] bg-red-600 px-1 py-0.5 rounded-sm font-black text-white shrink-0 tracking-wide">SECURE BOARD</span>
              </div>
              <span className="text-[9px] text-slate-400 font-bold block mt-0.5">کارتابل امنیتی و مدیریت منابع تحصیلی</span>
@@ -260,7 +260,7 @@ export const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ onBa
                 </div>
 
                 <div className="border-t border-slate-100/50 pt-4 text-center">
-                  <span className="text-[9px] text-slate-400 font-extrabold block">XIVAI SECURE OPERATIONS</span>
+                  <span className="text-[9px] text-slate-400 font-extrabold block">ZIVAI SECURE OPERATIONS</span>
                 </div>
               </motion.aside>
             </motion.div>

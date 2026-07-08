@@ -331,11 +331,15 @@ export default function App() {
               aria-label="صفحه اصلی داشبورد"
               className="flex items-center gap-3 group cursor-pointer select-none active:scale-98 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 rounded-2xl p-1 -m-1"
             >
-              <div className="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black text-sm tracking-tight shadow-[0_4px_12px_rgba(43,89,234,0.15)] group-hover:scale-105 transition-transform duration-300">
-                XIV
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-[0_4px_12px_rgba(43,89,234,0.15)] group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                <img
+                  src={theme === 'dark' ? '/logos/logo-dark-1024.jpeg' : '/logos/logo-light-1024.jpeg'}
+                  alt="ZIVAI"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
-                <span className="text-xs font-black text-slate-900 block leading-tight tracking-wide group-hover:text-indigo-600 transition-colors duration-300">XIVAI | زیوای</span>
+                <span className="text-xs font-black text-slate-900 block leading-tight tracking-wide group-hover:text-indigo-600 transition-colors duration-300">ZIVAI | زیوای</span>
               </div>
             </div>
           </div>
@@ -368,7 +372,7 @@ export default function App() {
             <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center mb-6 border border-indigo-100/60 shadow-sm animate-pulse">
               <span className="text-indigo-600 font-black text-3xl">XIV</span>
             </div>
-            <h1 className="text-xl font-extrabold text-slate-800 tracking-tight animate-pulse">XIVAI | زیوای</h1>
+            <h1 className="text-xl font-extrabold text-slate-800 tracking-tight animate-pulse">ZIVAI | زیوای</h1>
             <p className="text-xs text-slate-400 mt-2 font-semibold">درحال بررسی و برقراری ارتباط با پلتفرم...</p>
           </div>
         )}
