@@ -37,7 +37,6 @@ export const SubscriptionScreen: React.FC = () => {
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const hasFetchedRef = useRef(false);
   const needsSkeletonRef = useRef(isLoading);
 
   const toPersianDigits = (str: string | number) => {
@@ -52,9 +51,6 @@ export const SubscriptionScreen: React.FC = () => {
   const activePlan = PLANS_CONFIG[UNIVERSITY_PLAN_ID];
 
   useEffect(() => {
-    if (hasFetchedRef.current) return;
-    hasFetchedRef.current = true;
-
     let cancelled = false;
     const needsSkeleton = needsSkeletonRef.current;
 
@@ -313,14 +309,15 @@ export const SubscriptionScreen: React.FC = () => {
             <span>تاریخچه تراکنشها</span>
           </h3>
 
-          <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] divide-y divide-slate-100/50">
+          <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
             {history.length === 0 ? (
               <div className="text-center py-10 space-y-2">
                 <History className="w-8 h-8 text-slate-300 mx-auto" />
                 <span className="text-xs font-bold text-slate-400 block">هیچ تراکنشی یافت نشد.</span>
               </div>
             ) : (
-              history.map((log) => (
+              <div className="divide-y divide-slate-100/50 dark:divide-white/[0.04] max-h-[320px] overflow-y-auto -mx-5 -my-5 px-5 py-5">
+                {history.map((log) => (
                 <div key={log.id} className="py-4 first:pt-0 last:pb-0 text-right space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold">
                     <span className="text-slate-800">{log.description}</span>
@@ -336,7 +333,8 @@ export const SubscriptionScreen: React.FC = () => {
                     <span className="bg-emerald-50 text-emerald-700 text-[9px] font-black px-2 py-0.5 rounded-md border border-emerald-100/60">تراکنش موفق</span>
                   </div>
                 </div>
-              ))
+              ))}
+              </div>
             )}
           </Card>
         </div>
