@@ -302,7 +302,6 @@ export const SubscriptionScreen: React.FC = () => {
         {/* SIDEBAR: PAYMENT HISTORY */}
         <div className="space-y-4">
           <h3 className="text-sm font-black text-slate-800 flex items-center gap-1.5">
-            <Receipt className="w-4 h-4 text-indigo-600" />
             <span>تاریخچه تراکنش‌ها</span>
           </h3>
 

@@ -645,9 +645,6 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 ضبط از میکروفون مرورگر
               </span>
                <h2 className="text-base font-black text-slate-800">ضبط زیوای</h2>
-              <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
-                برای شروع ضبط تدریس کلاس درس، اطمینان حاصل کنید دسترسی میکروفون فعال بوده و صدای کلاس رسا باشد.
-              </p>
             </div>
 
             {/* Title Assignment Before Recording */}

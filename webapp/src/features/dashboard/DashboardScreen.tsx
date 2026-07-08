@@ -315,7 +315,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
   if (isLoading || !subscriptionStatus) {
     return (
-      <div className="space-y-8 font-sans text-right p-1">
+      <div className="space-y-8 lg:space-y-4 font-sans text-right p-1">
         {/* Welcome Banner — always show real text */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -466,7 +466,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   };
 
   return (
-    <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
+    <div className="space-y-8 lg:space-y-4 font-sans text-right animate-in fade-in duration-300">
 
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
