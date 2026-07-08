@@ -296,9 +296,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
               {getGreetingText(user?.fullName || undefined)} عزیز
             </h1>
-            <p className="text-xs text-slate-400 mt-1 font-medium">
-              دستیار هوش مصنوعی زیوای همگام با سرفصلهای دانشگاهی در خدمت شماست.
-            </p>
           </div>
         </div>
 
@@ -451,8 +448,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {getGreetingText(user?.fullName)} عزیز
           </h1>
-          <p className="text-xs text-slate-400 mt-1 font-medium">
-            دستیار هوش مصنوعی زیوای همگام با سرفصلهای دانشگاهی در خدمت شماست.
+          <p className="text-xs text-slate-400 mt-1 font-medium">          
           </p>
         </div>
       </div>
@@ -575,7 +571,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">سهمیه ضبط صوتی این ماه</span>
+            <span className="text-xs font-bold text-slate-400">ظرفیت صوت ماه</span>
             <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
@@ -608,7 +604,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">ظرفیت باقیمانده هوش مصنوعی</span>
+            <span className="text-xs font-bold text-slate-400">ظرفیت هوش مصنوعی روز</span>
             <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
@@ -617,7 +613,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
             <div className={`text-center font-black text-xs ${aiRemainingPct <= 0 ? 'text-rose-600' : 'text-slate-900'}`}>
               {aiRemainingPct <= 0
                 ? "حد مجاز به پایان رسید"
-                : `${toPersianDigits(Math.round(aiRemainingPct))}٪ باقیمانده`}
+                : `${toPersianDigits(Math.round(aiRemainingPct))}٪ باقی‌مانده`}
             </div>
 
             <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
@@ -637,7 +633,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">ظرفیت کلاسهای باقیمانده</span>
+            <span className="text-xs font-bold text-slate-400">کلاس‌های باقی‌مانده</span>
             <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
               <BookOpen className="w-4 h-4" />
             </div>
@@ -648,7 +644,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 ? "نامحدود"
                 : remainingClasses <= 0
                   ? "حد مجاز به پایان رسید"
-                  : `${toPersianDigits(remainingClasses)} کلاس باقیمانده`}
+                  : `${toPersianDigits(remainingClasses)} کلاس باقی‌مانده`}
             </div>
 
             {!isUnlimitedClasses && (
@@ -670,7 +666,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">اعتبار زمانی اشتراک</span>
+            <span className="text-xs font-bold text-slate-400">روزهای باقی‌مانده</span>
             <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
               !hasSubscription
                 ? 'bg-slate-50 border-slate-100/80 text-slate-400'
@@ -687,7 +683,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 ? "بدون اشتراک فعال"
                 : isExpired
                   ? "حد مجاز به پایان رسید"
-                  : `${toPersianDigits(remainingDays)} روز باقیمانده`}
+                  : `${toPersianDigits(remainingDays)} روز باقی‌مانده`}
             </div>
 
             {hasSubscription && (
@@ -722,7 +718,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 onClick={() => onNavigate('classes')}
                 className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 cursor-pointer select-none"
               >
-                <span>مشاهده همه کلاسها</span>
+                <span>مشاهده همه کلاس‌ها</span>
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
             )}
@@ -830,7 +826,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 </div>
                 <div>
                   <span className="text-xs font-black text-slate-800 block">ثبت کلاس جدید</span>
-                  <span className="text-[10px] text-slate-400 block mt-0.5">افزودن کلاس فعال ترم جاری</span>
                 </div>
               </div>
               <ChevronLeft className="w-4 h-4 text-slate-450 group-hover:translate-x-[-2px] transition-transform" />
@@ -847,7 +842,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 </div>
                 <div>
                   <span className="text-xs font-black text-slate-800 block">ضبط صدای کلاس</span>
-                  <span className="text-[10px] text-slate-400 block mt-0.5">ضبط مستقیم ویس تدریس استاد</span>
                 </div>
               </div>
               <ChevronLeft className="w-4 h-4 text-slate-450 group-hover:translate-x-[-2px] transition-transform" />
@@ -864,7 +858,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 </div>
                 <div>
                   <span className="text-xs font-black text-slate-800 block">بارگذاری فایل صوتی</span>
-                  <span className="text-[10px] text-slate-400 block mt-0.5">آپلود ویس رکورد شده</span>
                 </div>
               </div>
               <ChevronLeft className="w-4 h-4 text-slate-450 group-hover:translate-x-[-2px] transition-transform" />
@@ -880,8 +873,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-slate-800 block">مدیریت لایسنس اشتراک</span>
-                  <span className="text-[10px] text-slate-400 block mt-0.5">شارژ، ارتقاء یا بررسی وضعیت مالی</span>
+                  <span className="text-xs font-black text-slate-800 block">مدیریت اشتراک</span>
                 </div>
               </div>
               <ChevronLeft className="w-4 h-4 text-slate-450 group-hover:translate-x-[-2px] transition-transform" />
