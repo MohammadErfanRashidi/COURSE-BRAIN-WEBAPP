@@ -447,11 +447,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
             
             <div className="space-y-1.5">
               <h3 className="text-sm font-black text-slate-800">
-                گفتگوی علمی هوشمند کلاس «{className}»
+                گفتگو با زیوای در کلاس «{className}»
               </h3>
-              <p className="text-xs text-slate-400 font-bold leading-relaxed">
-                این گفتگو کاملاً ایزوله و متعلق به کلاس جاری است. هر سوالی در رابطه با جلسات صوتی تدریس شده یا کتاب‌های مرجع این حوزه درسی دارید، مستقیماً از من بپرسید!
-              </p>
             </div>
 
 
