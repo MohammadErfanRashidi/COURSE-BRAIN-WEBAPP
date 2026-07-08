@@ -583,11 +583,11 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
                         <span className="text-slate-300">•</span>
 
                         {/* Separate Grey Buttons Row */}
-                        <div className="flex items-center gap-1 bg-slate-100/80 border border-slate-200/50 rounded-full px-1.5 py-0.5 shadow-3xs">
+                        <div className="flex items-center gap-1 bg-slate-100/80 dark:bg-white/5 border border-slate-200/50 dark:border-white/5 rounded-full px-1.5 py-0.5 shadow-3xs">
                           {/* Copy message */}
                           <button
                             onClick={() => handleCopyMessage(msg.id, msg.content)}
-                            className="p-1 rounded-full transition-all cursor-pointer text-slate-500 hover:bg-slate-200 hover:text-slate-850"
+                            className="p-1 rounded-full transition-all cursor-pointer text-slate-500 hover:bg-slate-200 hover:text-slate-850 dark:hover:bg-white/10 dark:text-slate-300 dark:hover:text-slate-200"
                             title="کپی کردن متن پیام"
                           >
                             {copiedMessageId === msg.id ? (
@@ -603,8 +603,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
                               onClick={() => handleToggleBookmarkMessage(msg)}
                               className={`p-1 rounded-full transition-all cursor-pointer ${
                                 bookmarkedMessageIds.includes(msg.id)
-                                  ? 'bg-amber-100 text-amber-600'
-                                  : 'text-slate-500 hover:bg-slate-200 hover:text-amber-600'
+                                  ? 'bg-amber-100 text-amber-600 dark:bg-amber-950/30 dark:text-amber-400'
+                                  : 'text-slate-500 hover:bg-slate-200 hover:text-amber-600 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-amber-400'
                               }`}
                               title={bookmarkedMessageIds.includes(msg.id) ? "حذف از نشان‌شده‌ها" : "نشانه‌گذاری پاسخ دستیار"}
                             >

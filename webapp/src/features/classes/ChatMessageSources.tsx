@@ -37,113 +37,113 @@ const sourceTypeConfig: Record<SourceType, {
     icon: FileText,
     label: 'تدریس کلاسی',
     subtitle: 'بخش منتخب تدریس صوتی کلاس',
-    color: 'text-indigo-600',
-    bgColor: 'bg-indigo-50',
-    hoverBorder: 'hover:border-indigo-100/60',
-    hoverBg: 'hover:bg-indigo-50/10',
-    iconBg: 'bg-indigo-50',
-    iconBorder: 'border-indigo-100/60',
-    iconColor: 'text-indigo-600',
-    metaColor: 'text-indigo-600',
-    metaBg: 'bg-indigo-50',
-    deepLinkColor: 'text-indigo-600',
-    deepLinkHover: 'hover:text-indigo-750',
+    color: 'text-indigo-600 dark:text-indigo-400',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/20',
+    hoverBorder: 'hover:border-indigo-100/60 dark:hover:border-indigo-800/20',
+    hoverBg: 'hover:bg-indigo-50/10 dark:hover:bg-indigo-900/10',
+    iconBg: 'bg-indigo-50 dark:bg-indigo-950/20',
+    iconBorder: 'border-indigo-100/60 dark:border-indigo-800/20',
+    iconColor: 'text-indigo-600 dark:text-indigo-400',
+    metaColor: 'text-indigo-600 dark:text-indigo-400',
+    metaBg: 'bg-indigo-50 dark:bg-indigo-950/20',
+    deepLinkColor: 'text-indigo-600 dark:text-indigo-400',
+    deepLinkHover: 'hover:text-indigo-750 dark:hover:text-indigo-300',
     deepLinkText: 'پرش به دقیقه تدریس و تحلیل رونوشت',
   },
   textbook: {
     icon: BookOpen,
     label: 'کتاب مرجع',
     subtitle: 'بخش استخراج شده از کتاب درسی',
-    color: 'text-emerald-600',
-    bgColor: 'bg-emerald-50',
-    hoverBorder: 'hover:border-emerald-100/60',
-    hoverBg: 'hover:bg-emerald-50/10',
-    iconBg: 'bg-emerald-50',
-    iconBorder: 'border-emerald-100/60',
-    iconColor: 'text-emerald-600',
-    metaColor: 'text-emerald-600',
-    metaBg: 'bg-emerald-50',
-    deepLinkColor: 'text-emerald-600',
-    deepLinkHover: 'hover:text-emerald-750',
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-50 dark:bg-emerald-950/20',
+    hoverBorder: 'hover:border-emerald-100/60 dark:hover:border-emerald-800/20',
+    hoverBg: 'hover:bg-emerald-50/10 dark:hover:bg-emerald-900/10',
+    iconBg: 'bg-emerald-50 dark:bg-emerald-950/20',
+    iconBorder: 'border-emerald-100/60 dark:border-emerald-800/20',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    metaColor: 'text-emerald-600 dark:text-emerald-400',
+    metaBg: 'bg-emerald-50 dark:bg-emerald-950/20',
+    deepLinkColor: 'text-emerald-600 dark:text-emerald-400',
+    deepLinkHover: 'hover:text-emerald-750 dark:hover:text-emerald-300',
     deepLinkText: 'نمایش صفحه کتاب در مرجع‌یاب',
   },
   pdf: {
     icon: File,
     label: 'فایل پی‌دی‌اف',
     subtitle: 'مستند استخراج شده از فایل پی‌دی‌اف',
-    color: 'text-rose-600',
-    bgColor: 'bg-rose-50',
-    hoverBorder: 'hover:border-rose-100/60',
-    hoverBg: 'hover:bg-rose-50/10',
-    iconBg: 'bg-rose-50',
-    iconBorder: 'border-rose-100/60',
-    iconColor: 'text-rose-600',
-    metaColor: 'text-rose-600',
-    metaBg: 'bg-rose-50',
-    deepLinkColor: 'text-rose-600',
-    deepLinkHover: 'hover:text-rose-750',
+    color: 'text-rose-600 dark:text-rose-400',
+    bgColor: 'bg-rose-50 dark:bg-rose-950/20',
+    hoverBorder: 'hover:border-rose-100/60 dark:hover:border-rose-800/20',
+    hoverBg: 'hover:bg-rose-50/10 dark:hover:bg-rose-900/10',
+    iconBg: 'bg-rose-50 dark:bg-rose-950/20',
+    iconBorder: 'border-rose-100/60 dark:border-rose-800/20',
+    iconColor: 'text-rose-600 dark:text-rose-400',
+    metaColor: 'text-rose-600 dark:text-rose-400',
+    metaBg: 'bg-rose-50 dark:bg-rose-950/20',
+    deepLinkColor: 'text-rose-600 dark:text-rose-400',
+    deepLinkHover: 'hover:text-rose-750 dark:hover:text-rose-300',
     deepLinkText: 'مشاهده فایل پی‌دی‌اف منبع',
   },
   slide: {
     icon: Monitor,
     label: 'اسلاید ارائه',
     subtitle: 'مطلب استخراج شده از اسلاید ارائه',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    hoverBorder: 'hover:border-purple-100/60',
-    hoverBg: 'hover:bg-purple-50/10',
-    iconBg: 'bg-purple-50',
-    iconBorder: 'border-purple-100/60',
-    iconColor: 'text-purple-600',
-    metaColor: 'text-purple-600',
-    metaBg: 'bg-purple-50',
-    deepLinkColor: 'text-purple-600',
-    deepLinkHover: 'hover:text-purple-750',
+    color: 'text-purple-600 dark:text-purple-400',
+    bgColor: 'bg-purple-50 dark:bg-purple-950/20',
+    hoverBorder: 'hover:border-purple-100/60 dark:hover:border-purple-800/20',
+    hoverBg: 'hover:bg-purple-50/10 dark:hover:bg-purple-900/10',
+    iconBg: 'bg-purple-50 dark:bg-purple-950/20',
+    iconBorder: 'border-purple-100/60 dark:border-purple-800/20',
+    iconColor: 'text-purple-600 dark:text-purple-400',
+    metaColor: 'text-purple-600 dark:text-purple-400',
+    metaBg: 'bg-purple-50 dark:bg-purple-950/20',
+    deepLinkColor: 'text-purple-600 dark:text-purple-400',
+    deepLinkHover: 'hover:text-purple-750 dark:hover:text-purple-300',
     deepLinkText: 'مشاهده اسلاید منبع',
   },
   note: {
     icon: StickyNote,
     label: 'یادداشت درسی',
     subtitle: 'یادداشت استخراج شده از جزوه درسی',
-    color: 'text-amber-600',
-    bgColor: 'bg-amber-50',
-    hoverBorder: 'hover:border-amber-100/60',
-    hoverBg: 'hover:bg-amber-50/10',
-    iconBg: 'bg-amber-50',
-    iconBorder: 'border-amber-100/60',
-    iconColor: 'text-amber-600',
-    metaColor: 'text-amber-600',
-    metaBg: 'bg-amber-50',
-    deepLinkColor: 'text-amber-600',
-    deepLinkHover: 'hover:text-amber-750',
+    color: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/20',
+    hoverBorder: 'hover:border-amber-100/60 dark:hover:border-amber-800/20',
+    hoverBg: 'hover:bg-amber-50/10 dark:hover:bg-amber-900/10',
+    iconBg: 'bg-amber-50 dark:bg-amber-950/20',
+    iconBorder: 'border-amber-100/60 dark:border-amber-800/20',
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    metaColor: 'text-amber-600 dark:text-amber-400',
+    metaBg: 'bg-amber-50 dark:bg-amber-950/20',
+    deepLinkColor: 'text-amber-600 dark:text-amber-400',
+    deepLinkHover: 'hover:text-amber-750 dark:hover:text-amber-300',
     deepLinkText: 'مشاهده یادداشت منبع',
   },
   webpage: {
     icon: Globe,
     label: 'منبع اینترنتی',
     subtitle: 'منبع استخراج شده از اینترنت',
-    color: 'text-sky-600',
-    bgColor: 'bg-sky-50',
-    hoverBorder: 'hover:border-sky-100/60',
-    hoverBg: 'hover:bg-sky-50/10',
-    iconBg: 'bg-sky-50',
-    iconBorder: 'border-sky-100/60',
-    iconColor: 'text-sky-600',
-    metaColor: 'text-sky-600',
-    metaBg: 'bg-sky-50',
-    deepLinkColor: 'text-sky-600',
-    deepLinkHover: 'hover:text-sky-750',
+    color: 'text-sky-600 dark:text-sky-400',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/20',
+    hoverBorder: 'hover:border-sky-100/60 dark:hover:border-sky-800/20',
+    hoverBg: 'hover:bg-sky-50/10 dark:hover:bg-sky-900/10',
+    iconBg: 'bg-sky-50 dark:bg-sky-950/20',
+    iconBorder: 'border-sky-100/60 dark:border-sky-800/20',
+    iconColor: 'text-sky-600 dark:text-sky-400',
+    metaColor: 'text-sky-600 dark:text-sky-400',
+    metaBg: 'bg-sky-50 dark:bg-sky-950/20',
+    deepLinkColor: 'text-sky-600 dark:text-sky-400',
+    deepLinkHover: 'hover:text-sky-750 dark:hover:text-sky-300',
     deepLinkText: 'مشاهده منبع اینترنتی',
   },
 };
 
 const badgeColors: Record<string, { bg: string; border: string; text: string }> = {
-  lecture: { bg: 'bg-indigo-50', border: 'border-indigo-100/50', text: 'text-indigo-600' },
-  textbook: { bg: 'bg-emerald-50', border: 'border-emerald-100/50', text: 'text-emerald-600' },
-  pdf: { bg: 'bg-rose-50', border: 'border-rose-100/50', text: 'text-rose-600' },
-  slide: { bg: 'bg-purple-50', border: 'border-purple-100/50', text: 'text-purple-600' },
-  note: { bg: 'bg-amber-50', border: 'border-amber-100/50', text: 'text-amber-600' },
-  webpage: { bg: 'bg-sky-50', border: 'border-sky-100/50', text: 'text-sky-600' },
+  lecture: { bg: 'bg-indigo-50 dark:bg-indigo-950/20', border: 'border-indigo-100/50 dark:border-indigo-800/20', text: 'text-indigo-600 dark:text-indigo-400' },
+  textbook: { bg: 'bg-emerald-50 dark:bg-emerald-950/20', border: 'border-emerald-100/50 dark:border-emerald-800/20', text: 'text-emerald-600 dark:text-emerald-400' },
+  pdf: { bg: 'bg-rose-50 dark:bg-rose-950/20', border: 'border-rose-100/50 dark:border-rose-800/20', text: 'text-rose-600 dark:text-rose-400' },
+  slide: { bg: 'bg-purple-50 dark:bg-purple-950/20', border: 'border-purple-100/50 dark:border-purple-800/20', text: 'text-purple-600 dark:text-purple-400' },
+  note: { bg: 'bg-amber-50 dark:bg-amber-950/20', border: 'border-amber-100/50 dark:border-amber-800/20', text: 'text-amber-600 dark:text-amber-400' },
+  webpage: { bg: 'bg-sky-50 dark:bg-sky-950/20', border: 'border-sky-100/50 dark:border-sky-800/20', text: 'text-sky-600 dark:text-sky-400' },
 };
 
 interface ChatMessageSourcesProps {
@@ -186,7 +186,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
   };
 
   return (
-    <div className="mt-4 pt-3 border-t border-slate-100/50 text-right select-none font-sans">
+    <div className="mt-4 pt-3 border-t border-slate-100/50 dark:border-t-white/5 text-right select-none font-sans">
 
       {/* Toggle */}
       <button
@@ -199,7 +199,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
           <span className="text-xs font-bold flex items-center gap-1.5 text-slate-600 group-hover:text-indigo-600 transition-colors">
             <BookMarked className="w-3.5 h-3.5" />
             <span>منابع</span>
-            <span className="text-[10px] font-black text-slate-400 bg-slate-100 border border-slate-200/40 px-1.5 py-0.2 rounded-full">
+            <span className="text-[10px] font-black text-slate-500 bg-slate-200/40 dark:bg-white/5 border border-slate-200/40 dark:border-white/5 px-1.5 py-0.2 rounded-full">
               {toPersianDigits(sources.length)}
             </span>
           </span>
@@ -254,10 +254,10 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                 return (
                   <div
                     key={idx}
-                    className={`border rounded-2xl p-4 transition-all bg-slate-50/50 text-right border-slate-200/50 ${cfg.hoverBorder} ${cfg.hoverBg}`}
+                    className={`border rounded-2xl p-4 transition-all bg-slate-50/50 dark:bg-white/[0.03] border-slate-200/50 dark:border-white/5 text-right ${cfg.hoverBorder} ${cfg.hoverBg}`}
                   >
                     {/* Source Metadata Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 border-b border-slate-100/50 text-xs font-bold text-slate-800">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 border-b border-slate-100/50 dark:border-b-white/5 text-xs font-bold text-slate-800">
                       <div className="flex items-center gap-2 min-w-0">
                         <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border ${cfg.iconBg} ${cfg.iconBorder} ${cfg.iconColor}`}>
                           <Icon className="w-3.5 h-3.5" />
@@ -295,7 +295,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                           </span>
                         )}
 
-                        <span className="flex items-center gap-1 bg-slate-100 border border-slate-200/40 text-slate-600 px-2 py-0.5 rounded-md">
+                        <span className="flex items-center gap-1 bg-slate-100 dark:bg-white/5 border border-slate-200/40 dark:border-white/5 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md">
                           <Target className="w-3 h-3 text-amber-500" />
                           <span>تطابق: {toPersianDigits(confidence)}٪</span>
                         </span>
@@ -303,7 +303,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                     </div>
 
                     {/* Excerpt Snippet */}
-                    <div className="mt-3 bg-white border border-slate-200/40 p-3 rounded-xl text-right">
+                    <div className="mt-3 bg-slate-50 dark:bg-white/[0.03] border border-slate-200/40 dark:border-white/5 p-3 rounded-xl text-right">
                       <p className="text-[11px] leading-relaxed text-slate-500 italic font-medium">
                         {toPersianDigits(excerptText)}
                       </p>
@@ -319,7 +319,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                           </span>
                         )}
                         {source.publisher && (
-                          <span className="flex items-center gap-1 bg-slate-100 border border-slate-200/40 px-2 py-0.5 rounded-md text-slate-500">
+                          <span className="flex items-center gap-1 bg-slate-100 dark:bg-white/5 border border-slate-200/40 dark:border-white/5 px-2 py-0.5 rounded-md text-slate-500 dark:text-slate-400">
                             <BookOpen className="w-3 h-3" />
                             <span>{source.publisher}</span>
                           </span>
@@ -329,7 +329,7 @@ export const ChatMessageSources: React.FC<ChatMessageSourcesProps> = ({
                             href={source.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-1 bg-slate-100 border border-slate-200/40 px-2 py-0.5 rounded-md text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 transition-colors max-w-[200px]"
+                            className="flex items-center gap-1 bg-slate-100 dark:bg-white/5 border border-slate-200/40 dark:border-white/5 px-2 py-0.5 rounded-md text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 transition-colors max-w-[200px]"
                             title={source.url}
                           >
                             <Link className="w-3 h-3 shrink-0" />
