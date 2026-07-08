@@ -15,6 +15,7 @@ import {
   Upload,
   MessageSquare,
   User as UserIcon,
+  Info,
   ChevronLeft,
   ArrowLeft,
   Bell,
@@ -30,6 +31,7 @@ import { Card } from '../../components/Card';
 import { useAuthStore } from '../../store/authStore';
 import { ClassService, RecordingService, SubscriptionService } from '../../services/api';
 import { getCurrentUserId } from '../../services/chatEngine';
+import { ConversationEngine } from '../../services/conversationEngine';
 import { Class, Recording, SubscriptionStatus } from '../../types';
 import { usePlayerStore } from '../../store/playerStore';
 import { formatPersianDuration } from '../../utils/timeFormatter';
@@ -84,6 +86,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   const [classes, setClasses] = useState<Class[]>(_cachedDashboardClasses);
   const [isLoading, setIsLoading] = useState(() => !subscriptionStatus);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deletedSourceMessage, setDeletedSourceMessage] = useState<string | null>(null);
 
   function loadCachedRecentChats(): RecentChatActivity[] {
     try {
@@ -191,6 +194,29 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
 
   const formatHours = (hours: number) => {
     return formatPersianDuration(hours);
+  };
+
+  const handleRecentChatClick = (chat: RecentChatActivity) => {
+    setDeletedSourceMessage(null);
+    if (!chat.classId) return;
+
+    const classConversations = ConversationEngine.getSortedConversations(chat.classId);
+    if (classConversations.length === 0) {
+      setDeletedSourceMessage('این گفتگو حذف شده است و دیگر قابل مشاهده نیست.');
+      return;
+    }
+
+    if (chat.conversationId) {
+      const conv = classConversations.find(c => c.id === chat.conversationId);
+      if (!conv) {
+        setDeletedSourceMessage('این گفتگو حذف شده است و دیگر قابل مشاهده نیست.');
+        return;
+      }
+      onNavigate('classes', { openClassId: chat.classId, conversationId: chat.conversationId });
+      return;
+    }
+
+    onNavigate('classes', { openClassId: chat.classId });
   };
 
   const needsSkeletonRef = useRef(isLoading);
@@ -452,6 +478,22 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           </p>
         </div>
       </div>
+
+      {/* Deleted source notification */}
+      {deletedSourceMessage && (
+        <div className="p-4 bg-amber-50 border border-amber-100/60 rounded-2xl flex items-start gap-3 text-amber-800 text-xs font-bold leading-relaxed shadow-sm dark:bg-amber-950/20 dark:border-amber-800/20 dark:text-amber-400">
+          <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <span>{deletedSourceMessage}</span>
+            <button
+              onClick={() => setDeletedSourceMessage(null)}
+              className="block mt-1 text-[10px] text-amber-700 dark:text-amber-300 font-bold hover:text-amber-900 dark:hover:text-amber-200 underline cursor-pointer"
+            >
+              بستن پیام
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Global Search Bar */}
       <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] text-right space-y-4">
@@ -748,17 +790,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                       boxShadow: "0 12px 24px -10px rgba(0, 0, 0, 0.04), 0 4px 12px -4px rgba(0, 0, 0, 0.02)"
                     }}
                     whileTap={{ scale: 0.985 }}
-                    onClick={() => {
-                      const args: any = { openClassId: chat.classId };
-                      if (chat.conversationId) args.conversationId = chat.conversationId;
-                      onNavigate('classes', args);
-                    }}
+                    onClick={() => handleRecentChatClick(chat)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        const args: any = { openClassId: chat.classId };
-                        if (chat.conversationId) args.conversationId = chat.conversationId;
-                        onNavigate('classes', args);
+                        handleRecentChatClick(chat);
                       }
                     }}
                     tabIndex={0}

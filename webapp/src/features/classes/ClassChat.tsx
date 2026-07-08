@@ -173,9 +173,13 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
     }
   }, [messages, aiStatus, shouldAutoScroll]);
 
-  // Track recent chat activity in localStorage
+  // Track recent chat activity in localStorage (only after first user message)
   useEffect(() => {
     if (!classId || !className || !conversationId) return;
+    if (!messages || messages.length === 0) return;
+
+    const hasUserMsg = messages.some(m => m.role === 'user' && m.content && m.content.trim());
+    if (!hasUserMsg) return;
 
     const recentChatsKey = user?.id ? `cb_recent_chats_${user.id}` : 'cb_recent_chats_preauth';
 
@@ -190,17 +194,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
         }
       }
 
-      let lastMsgText = 'گفتگو آغاز شد...';
-      let lastMsgRole = undefined;
-      
-      if (messages && messages.length > 0) {
-        const actualMessages = messages.filter(m => m.content && m.content.trim());
-        if (actualMessages.length > 0) {
-          const lastMsg = actualMessages[actualMessages.length - 1];
-          lastMsgText = lastMsg.content;
-          lastMsgRole = lastMsg.role;
-        }
-      }
+      const actualMessages = messages.filter(m => m.content && m.content.trim());
+      const lastMsg = actualMessages[actualMessages.length - 1];
 
       list = list.filter((item: any) => item.conversationId !== conversationId);
 
@@ -209,8 +204,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
         classId,
         className,
         lastInteractedAt: new Date().toISOString(),
-        lastMessageText: lastMsgText,
-        lastMessageRole: lastMsgRole
+        lastMessageText: lastMsg?.content || 'گفتگو آغاز شد...',
+        lastMessageRole: lastMsg?.role as any,
       });
 
       list = list.slice(0, 10);
