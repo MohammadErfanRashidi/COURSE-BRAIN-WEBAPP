@@ -172,12 +172,8 @@ export const BookmarksScreen: React.FC<BookmarksScreenProps> = ({ onNavigate }) 
       {/* Header Panel */}
       <div>
         <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <Bookmark className="w-5.5 h-5.5 text-indigo-600 fill-indigo-100" />
-          <span>مخزن نشان‌شده‌ها و علاقه‌مندی‌ها</span>
+          <span>نشان‌شده‌ها</span>
         </h1>
-        <p className="text-xs text-slate-400 mt-1 font-medium">
-          تمامی جلسات تدریس، پیام‌های هوش مصنوعی و رونوشت‌های نشان‌شده خود را در این بخش یکپارچه مدیریت کنید.
-        </p>
       </div>
 
       {/* Filter and Search Bar */}

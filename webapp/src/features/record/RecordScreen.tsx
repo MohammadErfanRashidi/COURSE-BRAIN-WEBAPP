@@ -594,11 +594,8 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
     <div className="font-sans text-right space-y-6 animate-in fade-in duration-300">
       
       {/* Header */}
-      <div className="border-b border-slate-100/50 pb-5">
+      <div className="pb-5">
         <h1 className="text-xl font-black text-slate-900">پردازش و بارگذاری تدریس صوتی</h1>
-        <p className="text-xs text-slate-400 mt-1 font-medium">
-          جلسات صوتی کلاس درس را ضبط کنید یا فایل‌های پیش‌فرض استاد را جهت پیاده‌سازی متنی هوشمند بارگذاری نمایید.
-        </p>
       </div>
 
       {/* ERROR TOAST */}
@@ -647,7 +644,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
               <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full font-extrabold inline-block">
                 ضبط از میکروفون مرورگر
               </span>
-               <h2 className="text-base font-black text-slate-800">ایستگاه ضبط صدای زیوای</h2>
+               <h2 className="text-base font-black text-slate-800">ضبط زیوای</h2>
               <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
                 برای شروع ضبط تدریس کلاس درس، اطمینان حاصل کنید دسترسی میکروفون فعال بوده و صدای کلاس رسا باشد.
               </p>
@@ -734,7 +731,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 )}
 
                 <div className="flex items-center justify-center gap-3 text-[10px] text-slate-400 font-bold mt-1">
-                  <span>کیفیت ضبط: عالی (AAC 128kbps)</span>
+                  <span>کیفیت ضبط: عالی</span>
                   <span>•</span>
                   <span className="flex items-center gap-1">
                     <span className={`w-2 h-2 rounded-full ${microphoneStatus === 'granted' ? 'bg-emerald-500' : 'bg-slate-350'}`} />
@@ -848,7 +845,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
             
             <div className="text-center space-y-1.5">
               <span className="text-[10px] text-indigo-600 bg-indigo-50 border border-indigo-100/60 px-3 py-1 rounded-full font-extrabold inline-block">
-                بارگذاری تدریس صوتی ضبط شده خارجی
+                بارگذاری صوت از پیش ضبط شده
               </span>
               <h2 className="text-base font-black text-slate-800">بارگذاری صوت تدریس</h2>
               <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
@@ -883,9 +880,6 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 </div>
                 
                 <span className="text-xs font-black text-slate-800">بارگذاری یا درگ صوتی به اینجا</span>
-                <p className="text-[10px] text-slate-400 mt-1.5 leading-normal max-w-xs">
-                  فایل صوتی استاد را با فرمت پشتیبانی شده در این گیت رها کنید تا آماده رونوشت شود.
-                </p>
               </div>
             ) : (
               /* FILE SELECTED VIEW & PROCESSING STAGE INDICATORS */

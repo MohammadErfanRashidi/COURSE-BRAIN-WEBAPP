@@ -165,11 +165,8 @@ export const SubscriptionScreen: React.FC = () => {
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
 
       {/* Page Header */}
-      <div className="border-b border-slate-100/50 pb-5">
-        <h1 className="text-xl font-black text-slate-900">اشتراک و لایسنس</h1>
-        <p className="text-xs text-slate-400 mt-1 font-medium">
-          وضعیت اشتراک ماهانه، سهمیههای مصرفی و تاریخچه تراکنشهای خود را مشاهده کنید.
-        </p>
+      <div className="pb-5">
+        <h1 className="text-xl font-black text-slate-900">اشتراک</h1>
       </div>
 
       {/* FEEDBACK TOASTS */}
@@ -201,7 +198,7 @@ export const SubscriptionScreen: React.FC = () => {
                 </div>
                 <div>
                   <h2 className="text-sm font-black">اشتراک ماهانه زیوای</h2>
-                  <span className="text-[10px] text-indigo-150 font-medium block mt-0.5">دسترسی کامل به قابلیتهای پردازش صوتی و هوش مصنوعی</span>
+                  <span className="text-[10px] text-indigo-150 font-medium block mt-0.5">دستری کامل به زیوای</span>
                 </div>
               </div>
               <span className="bg-white/20 text-[10px] font-bold px-3 py-1 rounded-full text-white">
@@ -237,7 +234,7 @@ export const SubscriptionScreen: React.FC = () => {
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
                     <span className="text-[10px] font-bold text-slate-400 block">ظرفیت هوش مصنوعی امروز</span>
                     <span className="text-sm font-black text-slate-800 block">
-                      {toPersianDigits(Math.max(0, Math.min(100, Math.round(((subscriptionStatus.usage.maxDailyTokens - subscriptionStatus.usage.dailyTokensUsed) / subscriptionStatus.usage.maxDailyTokens) * 100))))}٪ در دسترس
+                      {toPersianDigits(Math.max(0, Math.min(100, Math.round(((subscriptionStatus.usage.maxDailyTokens - subscriptionStatus.usage.dailyTokensUsed) / subscriptionStatus.usage.maxDailyTokens) * 100))))}٪
                     </span>
                     <span className="text-[9px] text-slate-400 block font-bold">از {toPersianDigits(subscriptionStatus.usage.maxDailyTokens)} سهمیه ورودی روزانه</span>
                   </div>
@@ -245,7 +242,7 @@ export const SubscriptionScreen: React.FC = () => {
                   <div className="border border-slate-100/80 rounded-2xl p-4 text-right space-y-1.5 bg-slate-50/20">
                     <span className="text-[10px] font-bold text-slate-400 block">کلاس‌های باقی‌مانده</span>
                     <span className="text-sm font-black text-slate-800 block">
-                      {toPersianDigits(remainingClasses)} / {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس
+                      {toPersianDigits(remainingClasses)} / {toPersianDigits(subscriptionStatus.usage.maxClasses)}
                     </span>
                     <span className="text-[9px] text-slate-400 block font-bold">از {toPersianDigits(subscriptionStatus.usage.maxClasses)} کلاس سهمیه ماهانه</span>
                   </div>
@@ -306,7 +303,7 @@ export const SubscriptionScreen: React.FC = () => {
         <div className="space-y-4">
           <h3 className="text-sm font-black text-slate-800 flex items-center gap-1.5">
             <Receipt className="w-4 h-4 text-indigo-600" />
-            <span>تاریخچه تراکنشها</span>
+            <span>تاریخچه تراکنش‌ها</span>
           </h3>
 
           <Card className="border border-slate-100/80 bg-white rounded-3xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">

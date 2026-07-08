@@ -123,11 +123,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
     <div className="space-y-8 font-sans text-right animate-in fade-in duration-300">
       
       {/* Profile Header */}
-      <div className="border-b border-slate-100/50 pb-5">
+      <div className="pb-5">
         <h1 className="text-xl font-black text-slate-900">پروفایل دانشجویی</h1>
-        <p className="text-xs text-slate-400 mt-1 font-medium">
-          اطلاعات شخصی، تحصیلی و مدیریت حساب کاربری خود را مشاهده و ویرایش کنید.
-        </p>
       </div>
 
       {/* Error / Success Toasts */}
