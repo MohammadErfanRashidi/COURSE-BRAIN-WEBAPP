@@ -561,10 +561,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-xl font-black text-slate-900">کلاس‌های درسی من</h1>
-              <p className="text-xs text-slate-400 mt-1 font-medium">
-                کلاس‌های ترم فعال جاری خود را در این بخش مدیریت کنید.
-              </p>
+              <h1 className="text-xl font-black text-slate-900">کلاس‌های من</h1>
             </div>
 
             <button
@@ -658,19 +655,12 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
                       <div className="w-9 h-9 bg-indigo-50 group-hover:bg-indigo-100 border border-indigo-100/50 text-indigo-600 rounded-xl flex items-center justify-center shrink-0 transition-colors">
                         <BookOpen className="w-4.5 h-4.5" />
                       </div>
-                      
-                      <span className="text-[10px] text-slate-450 font-bold pl-8">
-                        {cls.code ? toPersianDigits(cls.code) : 'کد ثبت نشده'}
-                      </span>
                     </div>
 
                     <div className="mt-4 text-right">
                       <h3 className="text-sm font-black text-slate-800 group-hover:text-indigo-600 transition-colors">
                         {cls.name}
                       </h3>
-                      <p className="text-[10px] text-slate-400 mt-1 font-bold">
-                        استاد: {cls.instructor || 'مشخص نشده'}
-                      </p>
                     </div>
                   </div>
 
