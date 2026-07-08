@@ -766,7 +766,7 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
           <div className="flex items-center justify-between gap-3 shrink-0 pt-2.5 px-1 md:px-1.5 pb-0.5" dir="rtl">
             
             {/* Segmented Knowledge Source Selector */}
-            <div className="flex items-center gap-1 border border-slate-200/50 bg-slate-100/80 rounded-full p-1 h-8 md:h-9 select-none shrink-0 shadow-3xs">
+            <div className="flex items-center gap-1 bg-slate-100/80 dark:bg-white/5 rounded-full p-1 h-8 md:h-9 select-none shrink-0">
               <button
                 type="button"
                 onClick={() => {
@@ -775,8 +775,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
                 disabled={aiStatus !== 'completed' || isLimitReached}
                 className={`px-3 md:px-3.5 py-1 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap active:scale-95 text-[10px] md:text-[11px] font-bold flex items-center gap-1 ${
                   searchMode === 'lecture' 
-                    ? 'bg-white text-indigo-600 shadow-xs border border-slate-200/40 font-black' 
-                    : 'text-slate-400 hover:text-slate-700'
+                    ? 'bg-white dark:bg-white/10 text-indigo-600 dark:text-indigo-400 shadow-sm font-black' 
+                    : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                 }`}
               >
                 <FileText className="w-3 h-3 md:w-3.5 md:h-3.5" />
@@ -790,8 +790,8 @@ export const ClassChat: React.FC<ClassChatProps> = ({ classId, className, conver
                 disabled={aiStatus !== 'completed' || isLimitReached}
                 className={`px-3 md:px-3.5 py-1 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap active:scale-95 text-[10px] md:text-[11px] font-bold flex items-center gap-1 ${
                   searchMode === 'hybrid' 
-                    ? 'bg-white text-indigo-600 shadow-xs border border-slate-200/40 font-black' 
-                    : 'text-slate-400 hover:text-slate-700'
+                    ? 'bg-white dark:bg-white/10 text-indigo-600 dark:text-indigo-400 shadow-sm font-black' 
+                    : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                 }`}
               >
                 <Layers className="w-3 h-3 md:w-3.5 md:h-3.5" />

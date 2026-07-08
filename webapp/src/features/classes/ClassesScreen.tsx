@@ -322,8 +322,8 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
   }, []);
 
   useEffect(() => {
-    if (isMobile) setSidebarOpen(false);
-  }, [selectedClass?.id, isMobile]);
+    setSidebarOpen(false);
+  }, [selectedClass?.id]);
 
   const handleSelectConversation = (convId: string) => {
     setActiveConversationId(convId);
