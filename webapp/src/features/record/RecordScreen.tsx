@@ -614,7 +614,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
         <button
           onClick={() => { setActiveTab('record'); setError(null); }}
           className={`flex-1 py-2.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-            activeTab === 'record' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+            activeTab === 'record' ? 'bg-white dark:bg-white/10 text-indigo-700 dark:text-indigo-400 shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
           <Mic className="w-4 h-4" />
@@ -623,7 +623,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
         <button
           onClick={() => { setActiveTab('upload'); setError(null); }}
           className={`flex-1 py-2.5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-            activeTab === 'upload' ? 'bg-white text-indigo-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+            activeTab === 'upload' ? 'bg-white dark:bg-white/10 text-indigo-700 dark:text-indigo-400 shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
           <Upload className="w-4 h-4" />
@@ -662,7 +662,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   localStorage.setItem('cb_temp_recording_name', e.target.value);
                 }}
                 placeholder="مثال: جلسه سوم ریاضی مهندسی"
-                className="w-full bg-white border border-slate-200/40 rounded-xl px-4 py-2.5 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold disabled:bg-slate-50 disabled:text-slate-400"
+                className="w-full bg-white dark:bg-white/[0.05] border border-slate-200/40 dark:border-white/5 rounded-xl px-4 py-2.5 text-xs text-slate-750 dark:text-slate-200 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold disabled:bg-slate-50 dark:disabled:bg-white/[0.02] disabled:text-slate-400 dark:disabled:text-slate-500"
               />
             </div>
 
@@ -863,8 +863,8 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center ${
                   dragActive 
-                    ? 'border-indigo-500 bg-indigo-50/20 shadow-md' 
-                    : 'border-slate-200/50 bg-slate-50/10 hover:border-indigo-200/80 hover:bg-slate-50/30'
+                    ? 'border-indigo-500 bg-indigo-50/20 shadow-md dark:border-indigo-400 dark:bg-indigo-950/20' 
+                    : 'border-slate-200/50 bg-slate-50/10 hover:border-indigo-200/80 hover:bg-slate-50/30 dark:border-white/10 dark:bg-white/[0.02] dark:hover:border-indigo-500/30 dark:hover:bg-white/[0.04]'
                 }`}
               >
                 <input
@@ -875,16 +875,16 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                   className="hidden"
                 />
                 
-                <div className="w-12 h-12 bg-white border border-slate-100/80 rounded-2xl flex items-center justify-center shadow-xs text-slate-400 mb-4">
+                <div className="w-12 h-12 bg-white dark:bg-white/[0.05] border border-slate-100/80 dark:border-white/5 rounded-2xl flex items-center justify-center shadow-xs text-slate-400 dark:text-slate-500 mb-4">
                   <Upload className="w-6 h-6 text-indigo-600" />
                 </div>
                 
-                <span className="text-xs font-black text-slate-800">بارگذاری یا درگ صوتی به اینجا</span>
+                <span className="text-xs font-black text-slate-800 dark:text-slate-300">بارگذاری یا درگ صوتی به اینجا</span>
               </div>
             ) : (
               /* FILE SELECTED VIEW & PROCESSING STAGE INDICATORS */
-              <Card className="border border-slate-100/80 bg-white p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100/50">
+              <Card className="border border-slate-100/80 dark:border-white/5 bg-white dark:bg-white/[0.03] p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100/50 dark:border-b-white/5">
                   <div className="flex items-center gap-2.5">
                     <div className="w-9 h-9 bg-indigo-50 border border-indigo-100/60 rounded-xl flex items-center justify-center text-indigo-600">
                       <FileAudio className="w-4.5 h-4.5" />
