@@ -8,6 +8,7 @@ import { Phone, ArrowLeft, Info, HelpCircle } from 'lucide-react';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
+import { useThemeStore } from '../../store/themeStore';
 import { AuthService } from '../../services/api';
 
 interface LoginScreenProps {
@@ -19,6 +20,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [demoCode, setDemoCode] = useState<string | null>(null);
+  const { theme } = useThemeStore();
 
   const validatePhone = (num: string): boolean => {
     // Iranian mobile pattern: starting with 09 followed by 9 digits
@@ -75,8 +77,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
     <div className="w-full max-w-md mx-auto px-4 flex flex-col justify-center min-h-[85vh] font-sans">
       {/* Brand Header */}
       <div className="text-center mb-8 flex flex-col items-center">
-        <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4 border border-indigo-100/50 shadow-sm">
-          <span className="text-indigo-600 font-black text-2xl tracking-tight">XIV</span>
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-sm overflow-hidden">
+          <img
+            src={theme === 'dark' ? '/logos/logo-dark-1024.jpeg' : '/logos/logo-light-1024.jpeg'}
+            alt="ZIVAI"
+            className="w-full h-full object-cover"
+          />
         </div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">ZIVAI | زیوای</h1>
         <p className="text-xs text-slate-500 mt-2 font-semibold">سامانه هوشمند کمک‌آموزشی دانشجویی دانشگاه‌های سراسر کشور</p>

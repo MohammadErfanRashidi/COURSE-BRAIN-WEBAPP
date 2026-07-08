@@ -395,11 +395,11 @@ export default function App() {
         )}
 
         {currentScreen === 'ACADEMIC_SETUP' && (
-          <AcademicScreen onComplete={handleAcademicSetupComplete} />
+          <AcademicScreen onComplete={handleAcademicSetupComplete} onBack={() => setCurrentScreen('WELCOME_TOUR')} />
         )}
 
         {currentScreen === 'SUBSCRIPTION_GATE' && (
-          <SubscriptionGate onActivated={handleSubscriptionActive} />
+          <SubscriptionGate onActivated={handleSubscriptionActive} onBack={() => setCurrentScreen('ACADEMIC_SETUP')} />
         )}
 
         {/* FULL AUTHENTICATED SaaS DASHBOARD WITH PERSISTENT LAYOUT AND AUDIO PLAYER */}

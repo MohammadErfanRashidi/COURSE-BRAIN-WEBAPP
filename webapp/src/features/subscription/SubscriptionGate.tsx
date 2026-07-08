@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { CreditCard, Check, ShieldCheck, HelpCircle, Activity, Hourglass } from 'lucide-react';
+import { CreditCard, Check, ShieldCheck, HelpCircle, Activity, Hourglass, ChevronRight } from 'lucide-react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { SubscriptionService, PLANS_CONFIG, UNIVERSITY_PLAN_ID } from '../../services/api';
@@ -12,9 +12,10 @@ import { useAuthStore } from '../../store/authStore';
 
 interface SubscriptionGateProps {
   onActivated: () => void;
+  onBack: () => void;
 }
 
-export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated }) => {
+export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated, onBack }) => {
   const { user, updateUser, syncSubscription } = useAuthStore();
   const [isActivating, setIsActivating] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -52,10 +53,17 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated 
     <div className="w-full max-w-xl mx-auto px-4 flex flex-col justify-center min-h-[90vh] font-sans">
       {/* Visual Header Banner */}
       <div className="text-center mb-8 flex flex-col items-center">
+        <button
+          onClick={onBack}
+          className="self-start px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-slate-100/80 rounded-lg flex items-center gap-1 transition-all cursor-pointer mb-2"
+        >
+          <ChevronRight className="w-3.5 h-3.5" />
+          <span>بازگشت</span>
+        </button>
         <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-3.5 border border-indigo-100/80 shadow-xs">
           <CreditCard className="w-6 h-6 text-indigo-600" />
         </div>
-        <h1 className="text-xl font-black text-slate-950">فعالسازی اشتراک</h1>
+        <h1 className="text-xl font-black text-slate-900">فعالسازی اشتراک</h1>
         <p className="text-xs text-slate-400 mt-2 font-medium max-w-xs leading-relaxed">
           با فعالسازی اشتراک، به تمامی قابلیتهای هوش مصنوعی زیوای دسترسی پیدا کنید.
         </p>

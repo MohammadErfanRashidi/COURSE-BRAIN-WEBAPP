@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { GraduationCap, AlertTriangle, CheckCircle, User } from 'lucide-react';
+import { GraduationCap, AlertTriangle, CheckCircle, User, ChevronRight } from 'lucide-react';
 import { Card } from '../../components/Card';
 import { Button } from '../../components/Button';
 import { Select } from '../../components/Select';
@@ -16,10 +16,11 @@ const OTHER_UNIVERSITY_ID = 'other';
 
 interface AcademicScreenProps {
   onComplete: () => void;
+  onBack: () => void;
 }
 
-export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) => {
-  const { updateUser } = useAuthStore();
+export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete, onBack }) => {
+  const { user, updateUser } = useAuthStore();
 
   // Form States
   const [fullName, setFullName] = useState('');
@@ -53,6 +54,16 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
     }
     loadMasterData();
   }, []);
+
+  // Pre-fill form from existing profile data when returning from subscription
+  useEffect(() => {
+    const profile = user?.academicProfile;
+    if (profile) {
+      if (user.fullName) setFullName(user.fullName);
+      if (profile.universityId) setSelectedUniversity(profile.universityId);
+      if (profile.customUniversityName) setCustomUniversityName(profile.customUniversityName);
+    }
+  }, [user]);
 
   const handleOnboardingSubmit = async () => {
     setFormError('');
@@ -121,14 +132,23 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete }) =>
       <Card className="border border-slate-100/80 shadow-[0_24px_60px_rgba(0,0,0,0.05)] relative p-8">
 
         {/* Header */}
-        <div className="flex items-center gap-2 mb-8 pb-4 border-b border-slate-100/50">
-          <div className="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center border border-indigo-100/60">
-            <GraduationCap className="w-4 h-4 text-indigo-600" />
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100/50">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center border border-indigo-100/60">
+              <GraduationCap className="w-4 h-4 text-indigo-600" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-slate-800">تشکیل پرونده تحصیلی</h2>
+              <p className="text-[10px] text-slate-400 font-bold">مرحله {toPersianDigits(1)} از {toPersianDigits(1)}</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-sm font-bold text-slate-800">تشکیل پرونده تحصیلی</h2>
-            <p className="text-[10px] text-slate-400 font-bold">مرحله {toPersianDigits(1)} از {toPersianDigits(1)}</p>
-          </div>
+          <button
+            onClick={onBack}
+            className="px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-slate-100/80 rounded-lg flex items-center gap-1 transition-all cursor-pointer"
+          >
+            <ChevronRight className="w-3.5 h-3.5" />
+            <span>بازگشت</span>
+          </button>
         </div>
 
         {/* Single Step: Academic Data Setup */}
