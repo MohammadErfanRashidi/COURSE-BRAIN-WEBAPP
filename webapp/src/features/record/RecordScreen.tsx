@@ -723,7 +723,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                 {/* 89 Minute Warning Alert banner */}
                 {recordingSeconds >= 5340 && recordingSeconds < 5400 && (
                   <div className="bg-amber-50 text-amber-800 text-[10px] font-bold py-1 px-3 border border-amber-100/60 rounded-lg max-w-xs mx-auto animate-bounce mt-2">
-                    ⚠️ ضبط صوتی تا یک دقیقه دیگر به طور خودکار متوقف خواهد شد.
+                    ضبط صوتی تا یک دقیقه دیگر به طور خودکار متوقف خواهد شد.
                   </div>
                 )}
 
@@ -777,7 +777,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                     <div className="space-y-4">
                       
                       <div className="bg-slate-50 rounded-2xl p-4 text-[11px] leading-relaxed font-semibold text-slate-650 space-y-1 text-right">
-                        <div>🎧 فایل صوتی با موفقیت ضبط شد.</div>
+                        <div>فایل صوتی با موفقیت ضبط شد.</div>
                         <div>نام فایل: <span className="text-slate-800 font-bold">{recordingName}</span></div>
                         <div>مدت زمان ضبط: <span className="text-slate-850 font-bold">{formatTime(recordingSeconds)}</span></div>
                         <div>حجم صوتی تقریبی: <span className="text-slate-850 font-bold">{toPersianDigits((recordedBlob.size / (1024 * 1024)).toFixed(1))} مگابایت</span></div>
@@ -1112,8 +1112,8 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                         case 'embedding': return 'دسته‌بندی مفهومی اطلاعات';
                         case 'indexing': return 'ذخیره‌سازی هوشمند اطلاعات';
                         case 'saving_metadata': return 'به‌روزرسانی نهایی اطلاعات کلاس';
-                        case 'completed': return 'فرآیند با موفقیت پایان یافت 🎉';
-                        case 'failed': return 'خطایی رخ داد؛ پردازش لغو شد ❌';
+                        case 'completed': return 'فرآیند با موفقیت پایان یافت ✔️';
+                        case 'failed': return 'خطایی رخ داد؛ پردازش لغو شد';
                         default: return 'در حال تحلیل متن و صوت...';
                       }
                     })();
@@ -1121,20 +1121,20 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                     const isRunning = !['completed', 'failed'].includes(job.stage);
 
                     return (
-                      <Card key={job.id} className="border border-slate-200/50 bg-white p-5 rounded-2xl space-y-4 relative overflow-hidden">
+                      <Card key={job.id} className="border border-slate-200/50 dark:border-white/5 bg-white dark:bg-white/[0.03] p-5 rounded-2xl space-y-4 relative overflow-hidden">
                         
                         {/* Background progress tint for premium touch */}
                         {isRunning && (
                           <div 
-                            className="absolute inset-y-0 right-0 bg-indigo-50/15 transition-all duration-1000 ease-out z-0"
+                            className="absolute inset-y-0 right-0 bg-indigo-50/15 dark:bg-indigo-500/[0.06] transition-all duration-1000 ease-out z-0"
                             style={{ width: `${pct}%` }}
                           />
                         )}
 
-                        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100/50">
+                        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100/50 dark:border-white/5">
                           <div className="text-right">
-                            <span className="text-xs font-black text-slate-800 block">{job.name}</span>
-                            <div className="flex items-center gap-2 mt-1 text-[9px] text-slate-400 font-bold">
+                            <span className="text-xs font-black text-slate-800 dark:text-slate-200 block">{job.name}</span>
+                            <div className="flex items-center gap-2 mt-1 text-[9px] text-slate-400 dark:text-slate-500 font-bold">
                               <span>کلاس: {job.className}</span>
                               <span>•</span>
                               <span>حجم: {toPersianDigits((job.fileSize / (1024 * 1024)).toFixed(1))} مگابایت</span>
@@ -1157,7 +1157,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                                 ناموفق
                               </span>
                             ) : (
-                              <div className="flex items-center gap-1.5 text-[10px] text-indigo-600 font-black">
+                              <div className="flex items-center gap-1.5 text-[10px] text-indigo-600 dark:text-indigo-400 font-black">
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                 <span>موقعیت در صف: {toPersianDigits(job.queuePosition)}</span>
                               </div>
@@ -1168,15 +1168,15 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                         {/* Real-time Stage & Progress Bar */}
                         <div className="relative z-10 space-y-2">
                           <div className="flex justify-between items-center text-[10px] font-bold">
-                            <span className={isRunning ? "text-indigo-600" : "text-slate-500"}>
+                            <span className={isRunning ? "text-indigo-600 dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}>
                               {stageLabel}
                             </span>
-                            <span className="font-mono text-slate-700">
+                            <span className="font-mono text-slate-700 dark:text-slate-300">
                               {toPersianDigits(pct)}٪
                             </span>
                           </div>
 
-                          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden relative">
+                          <div className="w-full bg-slate-100 dark:bg-white/5 h-2 rounded-full overflow-hidden relative">
                             <div 
                               className={`h-full rounded-full transition-all duration-1000 ease-out ${
                                 job.stage === 'failed' ? 'bg-rose-500' : 
@@ -1187,7 +1187,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
                           </div>
 
                           {/* Extra Metadata Row */}
-                          <div className="flex items-center justify-between text-[9px] text-slate-400 font-bold pt-1">
+                          <div className="flex items-center justify-between text-[9px] text-slate-400 dark:text-slate-500 font-bold pt-1">
                             <span>زمان سپری شده: {toPersianDigits(job.elapsedTime)} ثانیه</span>
                             {isRunning && (
                               <span>تخمین زمان باقی‌مانده: {toPersianDigits(job.estimatedTimeRemaining)} ثانیه</span>
