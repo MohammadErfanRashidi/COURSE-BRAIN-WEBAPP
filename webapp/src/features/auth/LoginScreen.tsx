@@ -77,13 +77,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
     <div className="w-full max-w-md mx-auto px-4 flex flex-col justify-center min-h-[85vh] font-sans">
       {/* Brand Header */}
       <div className="text-center mb-8 flex flex-col items-center">
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-sm overflow-hidden">
-          <img
-            src={theme === 'dark' ? '/logos/logo-dark-1024.jpeg' : '/logos/logo-light-1024.jpeg'}
-            alt="ZIVAI"
-            className="w-full h-full object-cover"
+        <img
+            src="/final-fr.png"
+            alt="ZivAI"
+            className="w-16 h-16 object-contain mb-4"
           />
-        </div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">ZivAI</h1>
       </div>
 

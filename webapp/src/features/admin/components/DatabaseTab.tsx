@@ -144,7 +144,7 @@ export const DatabaseTab: React.FC = () => {
               </div>
               <div>Collection Name: {selectedCollection}</div>
               <div>Distance Metric: Cosine</div>
-               <div>Dimensionality: 1536 (Ollama / ZIVAI Embedding Compatibility)</div>
+               <div>Dimensionality: 1536 (Ollama / ZivAI Embedding Compatibility)</div>
               <div>Auto Ingestion Trigger: Enabled</div>
             </div>
           )}

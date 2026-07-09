@@ -331,13 +331,11 @@ export default function App() {
               aria-label="صفحه اصلی داشبورد"
               className="flex items-center gap-3 group cursor-pointer select-none active:scale-98 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 rounded-2xl p-1 -m-1"
             >
-              <div className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-[0_4px_12px_rgba(43,89,234,0.15)] group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                <img
-                  src={theme === 'dark' ? '/logos/logo-dark-1024.jpeg' : '/logos/logo-light-1024.jpeg'}
+              <img
+                  src="/final-fr.png"
                   alt="ZivAI"
-                  className="w-full h-full object-cover"
+                  className="w-10 h-10 object-contain group-hover:scale-105 transition-transform duration-300"
                 />
-              </div>
               <div>
                 <span className="text-xs font-black text-slate-900 block leading-tight tracking-wide group-hover:text-indigo-600 transition-colors duration-300">ZivAI</span>
               </div>
