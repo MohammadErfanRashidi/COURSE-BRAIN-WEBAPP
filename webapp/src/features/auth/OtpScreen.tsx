@@ -183,10 +183,11 @@ export const OtpScreen: React.FC<OtpScreenProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* 6 Digit Inputs */}
-          <div className="flex justify-between gap-2.5 dir-ltr" onPaste={handlePaste}>
+          <div dir="ltr" className="flex justify-between gap-2.5" onPaste={handlePaste}>
             {code.map((digit, index) => (
               <input
                 key={index}
+                dir="ltr"
                 type="text"
                 inputMode="numeric"
                 pattern="[0-9]*"

@@ -64,9 +64,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated,
           <CreditCard className="w-6 h-6 text-indigo-600" />
         </div>
         <h1 className="text-xl font-black text-slate-900">فعالسازی اشتراک</h1>
-        <p className="text-xs text-slate-400 mt-2 font-medium max-w-xs leading-relaxed">
-          با فعالسازی اشتراک، به تمامی قابلیتهای هوش مصنوعی زیوای دسترسی پیدا کنید.
-        </p>
       </div>
 
       <div className="space-y-6">
@@ -85,8 +82,6 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated,
 
           <div className="pb-5 border-b border-slate-100/50 text-right">
             <h2 className="text-base font-extrabold text-slate-800">{activePlan.planName}</h2>
-            <p className="text-xs text-slate-400 mt-1">ویژه همگامسازی، ویس، جزوات و چت آزمون دانشگاهی</p>
-
             <div className="mt-4 flex items-baseline gap-1.5">
               <span className="text-2xl font-black text-indigo-600">{formatPrice(activePlan.price)}</span>
               <span className="text-xs text-slate-400 font-medium">تومان / ماهانه</span>
@@ -123,8 +118,8 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated,
                   <Check className="w-3 h-3 text-indigo-600" />
                 </div>
                 <div className="text-xs">
-                  <span className="text-slate-700 font-bold">ظرفیت کامل و روزانه هوش مصنوعی</span>
-                  <span className="text-slate-400 block text-[10px] mt-0.5">ظرفیت بهینه پاسخدهی و خلاصهسازی</span>
+                  <span className="text-slate-700 font-bold">ظرفیت روزانه هوش مصنوعی</span>
+                  <span className="text-slate-400 block text-[10px] mt-0.5">ظرفیت بهینه پاسخدهی و خلاصه‌سازی</span>
                 </div>
               </div>
 
@@ -134,7 +129,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated,
                 </div>
                 <div className="text-xs">
                   <span className="text-slate-700 font-bold">سیستم چت هوشمند با ارجاع به منبع</span>
-                  <span className="text-slate-400 block text-[10px] mt-0.5">پاسخهای دقیق مستند به مرجع</span>
+                  <span className="text-slate-400 block text-[10px] mt-0.5">پاسخ‌های دقیق مستند به مرجع</span>
                 </div>
               </div>
             </div>
@@ -150,12 +145,9 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({ onActivated,
               icon={<ShieldCheck className="w-5 h-5" />}
               iconPosition="left"
             >
-              پرداخت شبیهسازی شده و فعالسازی فوری اشتراک
+              پرداخت و فعالسازی فوری اشتراک
             </Button>
 
-            <p className="text-[10px] text-slate-400 text-center leading-relaxed font-bold">
-              تراکنش از طریق درگاه الکترونیکی شبیهسازی شده زیوای انجام شده و هیچگونه هزینه واقعی کسر نخواهد شد.
-            </p>
           </div>
         </Card>
 

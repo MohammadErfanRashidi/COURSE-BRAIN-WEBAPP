@@ -179,10 +179,10 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete, onBa
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="مثال: امیرحسین علوی"
                   required
+                  placeholder="نام و نام خانوادگی"
                   className="w-full bg-slate-50 border border-slate-200/40 rounded-2xl pr-10 pl-4 py-3 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
-                  dir="auto"
+                  dir="rtl"
                 />
               </div>
             </div>
@@ -213,7 +213,7 @@ export const AcademicScreen: React.FC<AcademicScreenProps> = ({ onComplete, onBa
                   placeholder="نام دانشگاه خود را وارد کنید"
                   required
                   className="w-full bg-slate-50 border border-slate-200/40 rounded-2xl px-4 py-3 text-xs text-slate-750 outline-none focus:border-indigo-500/80 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-200 font-bold"
-                  dir="auto"
+                  dir="rtl"
                 />
               </div>
             )}

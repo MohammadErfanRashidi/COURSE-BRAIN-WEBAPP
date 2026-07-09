@@ -84,8 +84,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
             className="w-full h-full object-cover"
           />
         </div>
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">ZIVAI | زیوای</h1>
-        <p className="text-xs text-slate-500 mt-2 font-semibold">سامانه هوشمند کمک‌آموزشی دانشجویی دانشگاه‌های سراسر کشور</p>
+        <h1 className="text-2xl font-black text-slate-900 tracking-tight">ZivAI</h1>
       </div>
 
       <Card>

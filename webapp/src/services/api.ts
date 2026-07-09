@@ -47,7 +47,7 @@ const MOCK_UNIVERSITIES: University[] = [
   { id: '7', name: 'دانشگاه صنعتی اصفهان', city: 'اصفهان' },
   { id: '8', name: 'دانشگاه علوم پزشکی تهران', city: 'تهران' },
   { id: '9', name: 'دانشگاه آزاد اسلامی', city: '' },
-  { id: OTHER_UNIVERSITY_ID, name: 'سایر (Others)', city: '' },
+  { id: OTHER_UNIVERSITY_ID, name: 'سایر', city: '' },
 ];
 
 const MD_COURSES: Course[] = [

@@ -25,14 +25,14 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onComplete }) => {
 
   const slides: Slide[] = [
     {
-      title: 'زیوای',
+      title: 'ZivAI',
       description: 'به زیوای خوش آمدید، اینجا میتونی هوش مصنوعی رو کنارت داشته باشی تا اونجا که حواست نیست حواسش باشه!',
       icon: <GraduationCap className="w-10 h-10 text-indigo-600 animate-bounce" />,
       color: 'text-indigo-600 border-indigo-100/60',
       bgColor: 'bg-indigo-50/60'
     },
     {
-      title: 'ضبط خودکار و پیاده‌سازی ویس استاد',
+      title: 'ضبط خودکار و پیاده‌سازی ویس تدریس',
       description: 'دیگر نیازی به نوشتن جزوه سر کلاس نیست. صدای استاد را در کلاس درس ضبط یا آپلود کنید. سیستم قدرتمند پردازش صوتی ما در کسری از ثانیه ویس را به متن تایپ‌شده و ساختاریافته تبدیل می‌کند.',
       icon: <Mic className="w-10 h-10 text-indigo-600" />,
       color: 'text-indigo-600 border-indigo-100/60',
