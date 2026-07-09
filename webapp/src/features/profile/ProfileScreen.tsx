@@ -43,10 +43,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Form State
-  const [fullName, setFullName] = useState('');
-  const [selectedUniversity, setSelectedUniversity] = useState('');
-  const [customUniversityName, setCustomUniversityName] = useState('');
+  // Form State — initialized from cached user data so first render has correct values
+  const [fullName, setFullName] = useState(user?.fullName || '');
+  const [selectedUniversity, setSelectedUniversity] = useState(user?.academicProfile?.universityId || '');
+  const [customUniversityName, setCustomUniversityName] = useState(user?.academicProfile?.customUniversityName || '');
 
   const toPersianDigits = (str: string | number) => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -57,19 +57,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
   const isOtherSelected = selectedUniversity === OTHER_UNIVERSITY_ID;
 
   useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
+    async function loadUniversities() {
       try {
         const uniList = await AcademicService.getUniversities();
         setUniversities(uniList);
-
-        if (user) {
-          setFullName(user.fullName || '');
-          if (user.academicProfile) {
-            setSelectedUniversity(user.academicProfile.universityId);
-            setCustomUniversityName(user.academicProfile.customUniversityName || '');
-          }
-        }
       } catch (err: any) {
         setError(err.message || 'خطا در دریافت اطلاعات دانشگاهی');
       } finally {
@@ -77,7 +68,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
       }
     }
 
-    loadData();
+    loadUniversities();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    setFullName(user.fullName || '');
+    if (user.academicProfile) {
+      setSelectedUniversity(user.academicProfile.universityId);
+      setCustomUniversityName(user.academicProfile.customUniversityName || '');
+    }
   }, [user]);
 
   const handleSaveProfile = async (e: React.FormEvent) => {
@@ -180,17 +180,24 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
                 <h3 className="text-xs font-black text-slate-800">مشخصات تحصیلی</h3>
               </div>
 
-              {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {isLoading ? (
+                  <>
+                    <div className="space-y-1.5 sm:col-span-2">
                       <div className="h-3 w-20 bg-slate-200 animate-pulse rounded-md" />
                       <div className="h-11 w-full bg-slate-50 border border-slate-100/50 animate-pulse rounded-xl" />
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="space-y-1.5">
+                      <div className="h-3 w-20 bg-slate-200 animate-pulse rounded-md" />
+                      <div className="h-11 w-full bg-slate-50 border border-slate-100/50 animate-pulse rounded-xl" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="h-3 w-20 bg-slate-200 animate-pulse rounded-md" />
+                      <div className="h-11 w-full bg-slate-50 border border-slate-100/50 animate-pulse rounded-xl" />
+                    </div>
+                  </>
+                ) : (
+                  <>
                   
                   {/* Full Name Input */}
                   <div className="space-y-1.5 sm:col-span-2">
@@ -247,8 +254,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
                     </div>
                   )}
 
-                </div>
+                </>
               )}
+
+              </div>
 
               <div className="pt-4 border-t border-slate-100/50 flex justify-end">
                 <Button
