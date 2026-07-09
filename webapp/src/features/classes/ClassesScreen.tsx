@@ -561,7 +561,7 @@ export const ClassesScreen: React.FC<ClassesScreenProps> = ({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-xl font-black text-slate-900">کلاس‌های من</h1>
+              <h1 className="text-xl font-black text-slate-900">کلاس‌ها</h1>
             </div>
 
             <button

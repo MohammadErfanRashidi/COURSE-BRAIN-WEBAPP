@@ -595,7 +595,7 @@ export const RecordScreen: React.FC<RecordScreenProps> = ({
       
       {/* Header */}
       <div className="pb-5">
-        <h1 className="text-xl font-black text-slate-900">پردازش و بارگذاری تدریس صوتی</h1>
+        <h1 className="text-xl font-black text-slate-900">ضبط و بارگذاری</h1>
       </div>
 
       {/* ERROR TOAST */}

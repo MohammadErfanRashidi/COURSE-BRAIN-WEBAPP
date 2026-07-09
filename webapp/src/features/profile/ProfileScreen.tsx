@@ -124,7 +124,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate }) => {
       
       {/* Profile Header */}
       <div className="pb-5">
-        <h1 className="text-xl font-black text-slate-900">پروفایل دانشجویی</h1>
+        <h1 className="text-xl font-black text-slate-900">پروفایل</h1>
       </div>
 
       {/* Error / Success Toasts */}

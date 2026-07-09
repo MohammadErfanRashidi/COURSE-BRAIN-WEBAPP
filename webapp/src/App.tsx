@@ -290,12 +290,12 @@ export default function App() {
 
   // Sidebar navigation options list
   const navItems = useMemo(() => [
-    { id: 'dashboard', label: 'داشبورد خانه', icon: Compass },
-    { id: 'classes', label: 'کلاس‌های من', icon: BookOpen },
+    { id: 'dashboard', label: 'خانه', icon: Compass },
+    { id: 'classes', label: 'کلاس‌ها', icon: BookOpen },
     { id: 'record', label: 'ضبط و بارگذاری', icon: Mic },
-    { id: 'bookmarks', label: 'نشان‌شده‌های من', icon: Bookmark },
-    { id: 'subscription', label: 'اشتراک و لایسنس', icon: CreditCard },
-    { id: 'profile', label: 'پروفایل دانشجویی', icon: UserIcon },
+    { id: 'bookmarks', label: 'نشان‌شده‌ها', icon: Bookmark },
+    { id: 'subscription', label: 'اشتراک', icon: CreditCard },
+    { id: 'profile', label: 'پروفایل', icon: UserIcon },
   ], []);
 
   if (isAdminMode) {
@@ -469,7 +469,7 @@ export default function App() {
                                       className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100/80 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>خروج از حساب</span>
+                  <span>خروج</span>
                 </button>
               </div>
             </aside>
