@@ -3,37 +3,33 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
-  Sparkles,
-  Clock,
-  Database,
-  BookOpen,
-  ShieldCheck,
-  Plus,
-  Mic,
-  Upload,
-  MessageSquare,
-  User as UserIcon,
-  Info,
-  ChevronLeft,
-  ArrowLeft,
-  Bell,
   Activity,
-  Search,
-  X,
-  CheckCircle2,
   AlertCircle,
-  Loader2
+  ArrowLeft,
+  BookOpen,
+  CheckCircle2,
+  ChevronLeft,
+  Clock,
+  Info,
+  Loader2,
+  MessageSquare,
+  Mic,
+  Plus,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Upload
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card } from '../../components/Card';
-import { useAuthStore } from '../../store/authStore';
-import { ClassService, RecordingService, SubscriptionService } from '../../services/api';
+import { ClassService, RecordingService } from '../../services/api';
 import { getCurrentUserId } from '../../services/chatEngine';
 import { ConversationEngine } from '../../services/conversationEngine';
-import { Class, Recording, SubscriptionStatus } from '../../types';
+import { useAuthStore } from '../../store/authStore';
 import { usePlayerStore } from '../../store/playerStore';
+import { Class, Recording } from '../../types';
 import { formatPersianDuration } from '../../utils/timeFormatter';
 
 interface DashboardScreenProps {
@@ -815,7 +811,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                         </span>
 
                         <p className="text-[11px] text-slate-400 group-hover:text-slate-500 transition-colors duration-250 block truncate max-w-[280px] sm:max-w-[420px] font-bold leading-relaxed">
-                          {chat.lastMessageRole === 'user' ? 'شما: ' : chat.lastMessageRole === 'assistant' ? 'دستیار: ' : ''}{chat.lastMessageText}
+                          {chat.lastMessageRole === 'user' ? 'شما: ' : chat.lastMessageRole === 'assistant' ? 'زیوای: ' : ''}{chat.lastMessageText}
                         </p>
                       </div>
                     </div>
