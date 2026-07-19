@@ -20,6 +20,9 @@ import { SubscriptionScreen } from './features/subscription/SubscriptionScreen';
 import { ProfileScreen } from './features/profile/ProfileScreen';
 import { BookmarksScreen } from './features/bookmarks/BookmarksScreen';
 
+// Landing page
+import { LandingPage } from './features/landing/LandingPage';
+
 // Admin Operations Dashboard
 import { useAdminAuthStore } from './store/adminAuthStore';
 import { AdminLoginScreen } from './features/admin/AdminLoginScreen';
@@ -51,6 +54,7 @@ import {
 import { Recording } from './types';
 
 type ScreenState = 
+  | 'LANDING'
   | 'SPLASH' 
   | 'LOGIN' 
   | 'OTP' 
@@ -201,7 +205,7 @@ export default function App() {
     }
 
     if (!isAuthenticated) {
-      setCurrentScreen('LOGIN');
+      setCurrentScreen('LANDING');
       setPhoneForOtp('');
       setSimulatedOtpCode('');
       return;
@@ -224,6 +228,10 @@ export default function App() {
     setSimulatedOtpCode(simCode);
     setCurrentScreen('OTP');
   };
+
+  const navigateToLogin = useCallback(() => {
+    setCurrentScreen('LOGIN');
+  }, []);
 
   const handleOtpVerified = () => {
     setActiveTab('dashboard');
@@ -363,8 +371,12 @@ export default function App() {
       )}
 
       {/* Main Container */}
-      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : currentScreen === 'APP_DASHBOARD_PREVIEW' ? "flex-1 flex flex-col overflow-hidden" : "flex-1 flex flex-col justify-center py-4 md:py-8"}>
-        
+      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : currentScreen === 'APP_DASHBOARD_PREVIEW' ? "flex-1 flex flex-col overflow-hidden" : currentScreen === 'LANDING' ? "flex-1" : "flex-1 flex flex-col justify-center py-4 md:py-8"}>
+
+        {currentScreen === 'LANDING' && (
+          <LandingPage onNavigate={navigateToLogin} />
+        )}
+
         {currentScreen === 'SPLASH' && (
           <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh] font-sans">
             <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center mb-6 border border-indigo-100/60 shadow-sm animate-pulse">
@@ -376,7 +388,7 @@ export default function App() {
         )}
 
         {currentScreen === 'LOGIN' && (
-          <LoginScreen onCodeSent={handlePhoneSubmitted} />
+          <LoginScreen onCodeSent={handlePhoneSubmitted} onBack={() => setCurrentScreen('LANDING')} />
         )}
 
         {currentScreen === 'OTP' && (

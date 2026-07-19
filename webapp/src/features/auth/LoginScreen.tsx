@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Phone, ArrowLeft, Info, HelpCircle } from 'lucide-react';
+import { Phone, ArrowLeft, Info, HelpCircle, ChevronLeft } from 'lucide-react';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
@@ -13,9 +13,10 @@ import { AuthService } from '../../services/api';
 
 interface LoginScreenProps {
   onCodeSent: (phoneNumber: string, code: string) => void;
+  onBack?: () => void;
 }
 
-export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent, onBack }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -86,6 +87,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent }) => {
       </div>
 
       <Card>
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="mb-4 flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            بازگشت به صفحه اصلی
+          </button>
+        )}
         <div className="mb-6">
           <h2 className="text-lg font-bold text-slate-800">ورود یا ثبت‌نام</h2>
           <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">
