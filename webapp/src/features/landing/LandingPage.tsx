@@ -17,7 +17,7 @@ interface LandingPageProps {
 
 export function LandingPage({ onNavigate }: LandingPageProps) {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-transparent z-[1]">
+    <div className="relative min-h-screen overflow-x-hidden bg-black z-[1]">
       <div
         className="fixed inset-0 w-full h-full pointer-events-none z-[-3]"
         style={{ background: 'var(--bg-primary)' }}

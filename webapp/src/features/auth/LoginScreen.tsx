@@ -8,7 +8,6 @@ import { Phone, ArrowLeft, Info, HelpCircle, ChevronLeft } from 'lucide-react';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
-import { useThemeStore } from '../../store/themeStore';
 import { AuthService } from '../../services/api';
 
 interface LoginScreenProps {
@@ -21,7 +20,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onCodeSent, onBack }) 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [demoCode, setDemoCode] = useState<string | null>(null);
-  const { theme } = useThemeStore();
 
   const validatePhone = (num: string): boolean => {
     // Iranian mobile pattern: starting with 09 followed by 9 digits

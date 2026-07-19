@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback, type ComponentType } from 'react';
 import { createPortal } from 'react-dom';
-import { LogOut, ChevronLeft, X, Sun, Moon } from 'lucide-react';
+import { LogOut, ChevronLeft, X } from 'lucide-react';
 import { useMobileMenuStore } from '../store/mobileMenuStore';
-import { useThemeStore } from '../store/themeStore';
 
 interface NavItem {
   id: string;
@@ -20,7 +19,6 @@ interface MobileMenuProps {
 export default function MobileMenu({ navItems, activeTab, onNavigate, onLogout }: MobileMenuProps) {
   const isOpen = useMobileMenuStore((s) => s.isOpen);
   const close = useMobileMenuStore((s) => s.close);
-  const { theme, toggle: toggleTheme } = useThemeStore();
   const [showBlur, setShowBlur] = useState(false);
 
   useEffect(() => {
@@ -110,14 +108,6 @@ export default function MobileMenu({ navItems, activeTab, onNavigate, onLogout }
           </div>
 
           <div className="space-y-4">
-            <button
-              onClick={() => { toggleTheme(); close(); }}
-              className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-slate-100/80 hover:border-indigo-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              <span>{theme === 'dark' ? 'حالت روشن' : 'حالت تاریک'}</span>
-            </button>
-
             <button
               onClick={handleLogout}
               className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100/80 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"

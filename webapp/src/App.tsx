@@ -33,7 +33,6 @@ import { SupportChat } from './components/SupportChat';
 import HamburgerButton from './components/HamburgerButton';
 import MobileMenu from './components/MobileMenu';
 import { useMobileMenuStore } from './store/mobileMenuStore';
-import { useThemeStore } from './store/themeStore';
 
 import { 
   GraduationCap, 
@@ -47,9 +46,7 @@ import {
   ChevronLeft,
   Menu,
   X,
-  Bookmark,
-  Sun,
-  Moon
+  Bookmark
 } from 'lucide-react';
 import { Recording } from './types';
 
@@ -87,7 +84,6 @@ export default function App() {
 
   // Admin Mode states
   const { isAdminAuthenticated } = useAdminAuthStore();
-  const { theme, toggle: toggleTheme } = useThemeStore();
   const [isAdminMode, setIsAdminMode] = useState(false);
 
   useEffect(() => {
@@ -371,7 +367,7 @@ export default function App() {
       )}
 
       {/* Main Container */}
-      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : currentScreen === 'APP_DASHBOARD_PREVIEW' ? "flex-1 flex flex-col overflow-hidden" : currentScreen === 'LANDING' ? "flex-1" : "flex-1 flex flex-col justify-center py-4 md:py-8"}>
+      <main className={isInsideClassChat ? "flex-1 flex flex-col h-full w-full overflow-hidden" : currentScreen === 'APP_DASHBOARD_PREVIEW' ? "flex-1 flex flex-col overflow-hidden" : currentScreen === 'LANDING' ? "flex-1 bg-black" : "flex-1 flex flex-col justify-center py-4 md:py-8"}>
 
         {currentScreen === 'LANDING' && (
           <LandingPage onNavigate={navigateToLogin} />
@@ -464,16 +460,8 @@ export default function App() {
 
               </div>
 
-              {/* Bottom Section - Theme, Logout */}
+              {/* Bottom Section - Logout */}
               <div className="space-y-4">
-                <button
-                  onClick={toggleTheme}
-                  className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-slate-800 hover:bg-slate-50 border border-slate-100/80 hover:border-indigo-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
-                >
-                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                  <span>{theme === 'dark' ? 'حالت روشن' : 'حالت تاریک'}</span>
-                </button>
-
                 <button
                   onClick={() => setShowLogoutConfirm(true)}
                                       className="w-full px-4 py-3 rounded-xl text-xs font-black text-slate-500 hover:text-rose-600 hover:bg-rose-50 border border-slate-100/80 hover:border-rose-100/50 transition-all flex items-center gap-2.5 cursor-pointer active:scale-95 duration-200 select-none"
