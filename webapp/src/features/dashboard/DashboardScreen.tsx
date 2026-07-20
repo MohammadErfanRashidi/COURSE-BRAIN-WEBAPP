@@ -439,6 +439,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   const lastRenewalAt = subscriptionStatus?.lastRenewalAt
     ? new Date(subscriptionStatus.lastRenewalAt)
     : (expiresAt ? new Date(expiresAt.getTime() - 30 * 24 * 3600 * 1000) : null);
+  const isFreeTier = hasSubscription && subscriptionStatus?.planTier === 'free';
 
   const now = new Date();
   let totalDurationMs = 0;
@@ -715,27 +716,37 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">روزهای باقی‌مانده</span>
+            <span className="text-xs font-bold text-slate-400">اعتبار اشتراک</span>
             <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
               !hasSubscription
                 ? 'bg-slate-50 border-slate-100/80 text-slate-400'
-                : isExpired
-                  ? 'bg-rose-50 border-rose-100/60 text-rose-600'
-                  : 'bg-indigo-50 border-indigo-100/60 text-emerald-600'
+                : isFreeTier
+                  ? 'bg-emerald-50 border-emerald-100/60 text-emerald-600'
+                  : isExpired
+                    ? 'bg-rose-50 border-rose-100/60 text-rose-600'
+                    : 'bg-indigo-50 border-indigo-100/60 text-emerald-600'
             }`}>
               <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-2.5">
-            <div className={`text-center font-black text-xs ${(!hasSubscription || isExpired) ? 'text-rose-600' : 'text-slate-900'}`}>
-              {!hasSubscription
-                ? "بدون اشتراک فعال"
-                : isExpired
-                  ? "حد مجاز به پایان رسید"
-                  : `${toPersianDigits(remainingDays)} روز باقی‌مانده`}
+            <div className={`text-center font-black text-xs ${
+              isFreeTier
+                ? 'text-emerald-600'
+                : !hasSubscription || isExpired
+                  ? 'text-rose-600'
+                  : 'text-slate-900'
+            }`}>
+              {isFreeTier
+                ? "بدون انقضا"
+                : !hasSubscription
+                  ? "بدون اشتراک فعال"
+                  : isExpired
+                    ? "حد مجاز به پایان رسید"
+                    : `${toPersianDigits(remainingDays)} روز باقی‌مانده`}
             </div>
 
-            {hasSubscription && (
+            {hasSubscription && !isFreeTier && (
               <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                 <div
                   className={`${

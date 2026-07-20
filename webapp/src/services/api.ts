@@ -625,9 +625,9 @@ export const SubscriptionService = {
         const sub = loadSubscriptionForCurrentUser();
         sub.active = true;
         sub.isCancelled = false;
-        sub.autoRenew = true;
+        sub.autoRenew = selectedPlanId !== 'plan_free_v1';
         sub.lastRenewalAt = new Date().toISOString();
-        sub.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        sub.expiresAt = selectedPlanId === 'plan_free_v1' ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
         sub.planId = selectedPlanId;
         sub.planName = plan.planName;
         sub.planTier = plan.tier;
@@ -727,6 +727,8 @@ export const SubscriptionService = {
         sub.usage.maxDailyTokens = plan.maxDailyTokens;
         sub.usage.maxDailyMessages = plan.maxDailyMessages;
         sub.usage.monthlyTranscriptionMinutesLimit = plan.monthlyTranscriptionMinutes;
+        sub.expiresAt = planId === 'plan_free_v1' ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        sub.autoRenew = planId !== 'plan_free_v1';
         
         saveSimulatedSubscription(sub);
         return sub;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   CheckCircle2,
-  Calendar,
   Award,
   AlertCircle,
   History,
@@ -235,16 +234,30 @@ export const SubscriptionScreen: React.FC = () => {
                 <div className="text-lg font-black">{activePlan.planName}</div>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
-                <div className="text-[9px] font-bold text-indigo-150">اعتبار باقی‌مانده</div>
-                <div className="text-sm font-black">{toPersianDigits(daysRemaining)} روز</div>
+            {activePlan.tier !== 'free' && (
+              <div className="flex items-center gap-3">
+                <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
+                  <div className="text-[9px] font-bold text-indigo-150">اعتبار باقی‌مانده</div>
+                  <div className="text-sm font-black">{toPersianDigits(daysRemaining)} روز</div>
+                </div>
+                <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
+                  <div className="text-[9px] font-bold text-indigo-150">اعتبار تا</div>
+                  <div className="text-sm font-black">
+                    {subscriptionStatus.expiresAt ? toPersianDigits(new Date(subscriptionStatus.expiresAt).toLocaleDateString('fa-IR', { month: 'short', day: 'numeric' })) : 'نامحدود'}
+                  </div>
+                </div>
+                <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
+                  <div className="text-[9px] font-bold text-indigo-150">قیمت ماهانه</div>
+                  <div className="text-sm font-black">{formatPrice(activePlan.price)} تومان</div>
+                </div>
               </div>
+            )}
+            {activePlan.tier === 'free' && (
               <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
                 <div className="text-[9px] font-bold text-indigo-150">قیمت ماهانه</div>
-                <div className="text-sm font-black">{activePlan.price === 0 ? 'رایگان' : `${formatPrice(activePlan.price)} تومان`}</div>
+                <div className="text-sm font-black">رایگان</div>
               </div>
-            </div>
+            )}
           </div>
           {activePlan.tier !== 'free' && (
             <div className="pt-3 border-t border-white/10">
@@ -379,17 +392,6 @@ export const SubscriptionScreen: React.FC = () => {
                   </Button>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* License Expiry */}
-          <div className="border-t border-slate-100/50 pt-4">
-            <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold">
-              <Calendar className="w-4 h-4 text-slate-400" />
-              <span>اعتبار تا:</span>
-              <span className="text-slate-800 font-bold">
-                {subscriptionStatus.expiresAt ? toPersianDigits(new Date(subscriptionStatus.expiresAt).toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' })) : 'نامحدود'}
-              </span>
             </div>
           </div>
 
