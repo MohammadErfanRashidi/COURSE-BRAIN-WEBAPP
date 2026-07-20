@@ -10,6 +10,7 @@ export interface User {
   isNewUser: boolean;
   onboardingCompleted: boolean;
   hasActiveSubscription: boolean;
+  subscriptionTier?: 'free' | 'pro' | 'power';
   academicProfile?: AcademicProfile;
   createdAt: string;
 }
@@ -73,10 +74,13 @@ export interface SubscriptionPlan {
   price: number; // in Tomans
   durationDays: number;
   features: string[];
+  tier: 'free' | 'pro' | 'power';
   limits: {
     maxClasses: number;
     maxRecordingHours: number;
     maxDailyTokens: number;
+    maxDailyMessages: number;
+    monthlyTranscriptionMinutes: number;
     pdfUploadAllowed: boolean;
     imageUploadAllowed: boolean;
   };
@@ -86,6 +90,7 @@ export interface SubscriptionStatus {
   active: boolean;
   planId: string;
   planName: string;
+  planTier: 'free' | 'pro' | 'power';
   expiresAt: string | null;
   lastRenewalAt?: string;
   isCancelled?: boolean;
@@ -95,9 +100,14 @@ export interface SubscriptionStatus {
     maxClasses: number;
     recordingHoursUsed: number;
     maxRecordingHours: number;
+    monthlyTranscriptionMinutesUsed: number;
+    monthlyTranscriptionMinutesLimit: number;
     dailyTokensUsed: number;
     maxDailyTokens: number;
+    dailyMessagesSentCount: number;
+    maxDailyMessages: number;
     lastDailyReset?: string;
+    lastMonthlyReset?: string;
   };
 }
 

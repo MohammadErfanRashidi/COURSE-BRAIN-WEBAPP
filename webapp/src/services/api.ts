@@ -173,33 +173,45 @@ function savePurchaseHistory(records: PurchaseRecord[]): void {
 
 export const UNIVERSITY_PLAN_ID = 'plan_university_v1';
 
-export const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours: number; maxClasses: number; maxDailyTokens: number; price: number }> = {
-  plan_starter_v1: {
-    planName: 'طرح آغازین (Starter)',
+export const PLANS_CONFIG: Record<string, { planName: string; tier: 'free' | 'pro' | 'power'; maxRecordingHours: number; maxClasses: number; maxDailyTokens: number; maxDailyMessages: number; monthlyTranscriptionMinutes: number; price: number }> = {
+  plan_free_v1: {
+    planName: 'شروع رایگان',
+    tier: 'free',
+    maxRecordingHours: 0.25,
+    maxClasses: 1,
+    maxDailyTokens: 0,
+    maxDailyMessages: 5,
+    monthlyTranscriptionMinutes: 15,
+    price: 0
+  },
+  plan_pro_v1: {
+    planName: 'حرفه‌ای',
+    tier: 'pro',
     maxRecordingHours: 10,
     maxClasses: 5,
     maxDailyTokens: 60000,
-    price: 39000
+    maxDailyMessages: 30,
+    monthlyTranscriptionMinutes: 600,
+    price: 600000
   },
-  plan_pro_v1: {
-    planName: 'طرح پیشرفته (Pro)',
+  plan_power_v1: {
+    planName: 'کاربر پیشرفته',
+    tier: 'power',
     maxRecordingHours: 30,
-    maxClasses: 15,
+    maxClasses: 10,
     maxDailyTokens: 150000,
-    price: 79000
-  },
-  plan_premium_v1: {
-    planName: 'طرح ویژه (Premium)',
-    maxRecordingHours: 100,
-    maxClasses: 100,
-    maxDailyTokens: 500000,
-    price: 149000
+    maxDailyMessages: 100,
+    monthlyTranscriptionMinutes: 1800,
+    price: 1400000
   },
   [UNIVERSITY_PLAN_ID]: {
     planName: 'طرح استاندارد دانشگاهی (تک‌کاربره)',
+    tier: 'pro',
     maxRecordingHours: 10,
     maxClasses: 5,
     maxDailyTokens: 60000,
+    maxDailyMessages: 30,
+    monthlyTranscriptionMinutes: 600,
     price: 499999
   }
 };
@@ -207,6 +219,11 @@ export const PLANS_CONFIG: Record<string, { planName: string; maxRecordingHours:
 // Daily reset: returns YYYY-MM-DD in Asia/Tehran timezone
 function getTodayDateString(): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(new Date());
+}
+
+// Monthly reset: returns YYYY-MM in Asia/Tehran timezone
+function getMonthString(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran', year: 'numeric', month: '2-digit' }).format(new Date());
 }
 
 let simulatedSubscription: SubscriptionStatus | null = null;
@@ -226,6 +243,16 @@ function loadSubscriptionForCurrentUser(): SubscriptionStatus {
       if (simulatedUser) {
         parsed.active = simulatedUser.hasActiveSubscription;
       }
+      
+      // Ensure new fields exist on legacy cached subscriptions
+      const plan = PLANS_CONFIG[parsed.planId] || PLANS_CONFIG.plan_free_v1;
+      if (!parsed.planTier) parsed.planTier = plan.tier;
+      if (parsed.usage.maxDailyMessages === undefined) parsed.usage.maxDailyMessages = plan.maxDailyMessages;
+      if (parsed.usage.dailyMessagesSentCount === undefined) parsed.usage.dailyMessagesSentCount = 0;
+      if (parsed.usage.monthlyTranscriptionMinutesUsed === undefined) parsed.usage.monthlyTranscriptionMinutesUsed = 0;
+      if (parsed.usage.monthlyTranscriptionMinutesLimit === undefined) parsed.usage.monthlyTranscriptionMinutesLimit = plan.monthlyTranscriptionMinutes;
+      if (!parsed.usage.lastMonthlyReset) parsed.usage.lastMonthlyReset = getMonthString();
+      
       simulatedSubscription = parsed;
       lastSubscriptionUserId = uid;
       return simulatedSubscription;
@@ -234,20 +261,26 @@ function loadSubscriptionForCurrentUser(): SubscriptionStatus {
   
   const newSub: SubscriptionStatus = {
     active: simulatedUser?.hasActiveSubscription || false,
-    planId: 'plan_starter_v1',
-    planName: 'طرح آغازین (Starter)',
+    planId: 'plan_free_v1',
+    planName: PLANS_CONFIG.plan_free_v1.planName,
+    planTier: 'free',
     expiresAt: null,
     lastRenewalAt: undefined,
     autoRenew: false,
     isCancelled: false,
     usage: {
       classesCount: 0,
-      maxClasses: 5,
+      maxClasses: PLANS_CONFIG.plan_free_v1.maxClasses,
       recordingHoursUsed: 0,
-      maxRecordingHours: 10,
+      maxRecordingHours: PLANS_CONFIG.plan_free_v1.maxRecordingHours,
+      monthlyTranscriptionMinutesUsed: 0,
+      monthlyTranscriptionMinutesLimit: PLANS_CONFIG.plan_free_v1.monthlyTranscriptionMinutes,
       dailyTokensUsed: 0,
-      maxDailyTokens: 60000,
+      maxDailyTokens: PLANS_CONFIG.plan_free_v1.maxDailyTokens,
+      dailyMessagesSentCount: 0,
+      maxDailyMessages: PLANS_CONFIG.plan_free_v1.maxDailyMessages,
       lastDailyReset: getTodayDateString(),
+      lastMonthlyReset: getMonthString(),
     }
   };
   localStorage.setItem(key, JSON.stringify(newSub));
@@ -524,20 +557,41 @@ export const SubscriptionService = {
           sub.active = simulatedUser.hasActiveSubscription;
         }
         
+        const plan = PLANS_CONFIG[sub.planId] || PLANS_CONFIG.plan_free_v1;
+        
         // Recalculate recording usage hours dynamically based on current billing cycle (since lastRenewalAt)
         const recs = getSimulatedRecordings();
         const lastRenewal = sub.lastRenewalAt || new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString();
         const currentBillingCycleRecs = recs.filter(r => new Date(r.createdAt).getTime() >= new Date(lastRenewal).getTime());
         const totalSeconds = currentBillingCycleRecs.reduce((sum, r) => sum + r.duration, 0);
-        sub.usage.recordingHoursUsed = Number((totalSeconds / 3600).toFixed(1));
+        const totalMinutes = Number((totalSeconds / 60).toFixed(1));
         
-        // Daily AI token reset
+        sub.usage.recordingHoursUsed = Number((totalSeconds / 3600).toFixed(1));
+        sub.usage.monthlyTranscriptionMinutesUsed = totalMinutes;
+        
+        // Ensure plan limits are synced
+        sub.usage.maxRecordingHours = plan.maxRecordingHours;
+        sub.usage.maxClasses = plan.maxClasses;
+        sub.usage.maxDailyTokens = plan.maxDailyTokens;
+        sub.usage.maxDailyMessages = plan.maxDailyMessages;
+        sub.usage.monthlyTranscriptionMinutesLimit = plan.monthlyTranscriptionMinutes;
+        sub.planTier = plan.tier;
+        
+        // Daily reset: AI tokens + daily messages
         const todayStr = getTodayDateString();
         if (sub.usage.lastDailyReset !== todayStr) {
           sub.usage.dailyTokensUsed = 0;
+          sub.usage.dailyMessagesSentCount = 0;
           sub.usage.lastDailyReset = todayStr;
         }
 
+        // Monthly reset: transcription minutes
+        const monthStr = getMonthString();
+        if (sub.usage.lastMonthlyReset !== monthStr) {
+          sub.usage.monthlyTranscriptionMinutesUsed = 0;
+          sub.usage.lastMonthlyReset = monthStr;
+        }
+        
         // Sync active classes count
         const classes = getSimulatedClasses();
         sub.usage.classesCount = classes.length;
@@ -548,19 +602,23 @@ export const SubscriptionService = {
     );
   },
 
-  activateDemoSubscription: async (): Promise<{ success: boolean; user: User }> => {
+  activateDemoSubscription: async (planId?: string): Promise<{ success: boolean; user: User }> => {
     return apiCall(
       async () => {
-        const response = await api.post<{ success: boolean; user: User }>('/subscription/activate-demo');
+        const response = await api.post<{ success: boolean; user: User }>('/subscription/activate-demo', { planId });
         localStorage.setItem(USER_DATA_KEY, JSON.stringify(response.data.user));
         return response.data;
       },
       () => {
         if (!simulatedUser) throw new Error('کاربر یافت نشد. مجددا وارد شوید.');
 
+        const selectedPlanId = planId || UNIVERSITY_PLAN_ID;
+        const plan = PLANS_CONFIG[selectedPlanId] || PLANS_CONFIG.plan_pro_v1;
+
         const updatedUser: User = {
           ...simulatedUser,
           hasActiveSubscription: true,
+          subscriptionTier: plan.tier,
         };
 
         simulatedUser = updatedUser;
@@ -570,6 +628,14 @@ export const SubscriptionService = {
         sub.autoRenew = true;
         sub.lastRenewalAt = new Date().toISOString();
         sub.expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+        sub.planId = selectedPlanId;
+        sub.planName = plan.planName;
+        sub.planTier = plan.tier;
+        sub.usage.maxRecordingHours = plan.maxRecordingHours;
+        sub.usage.maxClasses = plan.maxClasses;
+        sub.usage.maxDailyTokens = plan.maxDailyTokens;
+        sub.usage.maxDailyMessages = plan.maxDailyMessages;
+        sub.usage.monthlyTranscriptionMinutesLimit = plan.monthlyTranscriptionMinutes;
         
         localStorage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
         localStorage.setItem(`cb_user_${updatedUser.phoneNumber}`, JSON.stringify(updatedUser));
@@ -578,17 +644,20 @@ export const SubscriptionService = {
         const initialClasses = getSimulatedClasses();
         sub.usage.classesCount = initialClasses.length;
         sub.usage.recordingHoursUsed = 0;
+        sub.usage.monthlyTranscriptionMinutesUsed = 0;
+        sub.usage.dailyTokensUsed = 0;
+        sub.usage.dailyMessagesSentCount = 0;
         saveSimulatedSubscription(sub);
 
         // Record the purchase
         const purchases = getPurchaseHistory();
         purchases.push({
           id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-          amount: PLANS_CONFIG[UNIVERSITY_PLAN_ID]?.price || 499999,
+          amount: plan.price,
           date: new Date().toISOString(),
           status: 'success',
           refId: `IRN-${Math.floor(100000000 + Math.random() * 900000000)}`,
-          description: 'اشتراک ماهانه زیوای'
+          description: `اشتراک ${plan.planName} زیوای`
         });
         savePurchaseHistory(purchases);
 
@@ -613,17 +682,20 @@ export const SubscriptionService = {
         sub.expiresAt = extendedExpiry;
         sub.lastRenewalAt = now.toISOString();
         sub.usage.recordingHoursUsed = 0;
+        sub.usage.monthlyTranscriptionMinutesUsed = 0;
         sub.usage.dailyTokensUsed = 1200;
+        sub.usage.dailyMessagesSentCount = 0;
         sub.isCancelled = false;
         sub.autoRenew = true;
         
         saveSimulatedSubscription(sub);
 
         // Record the renewal as a new purchase
+        const plan = PLANS_CONFIG[sub.planId] || PLANS_CONFIG.plan_pro_v1;
         const purchases = getPurchaseHistory();
         purchases.push({
           id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-          amount: PLANS_CONFIG[UNIVERSITY_PLAN_ID]?.price || 499999,
+          amount: plan.price,
           date: now.toISOString(),
           status: 'success',
           refId: `IRN-${Math.floor(100000000 + Math.random() * 900000000)}`,
@@ -649,9 +721,12 @@ export const SubscriptionService = {
         const sub = loadSubscriptionForCurrentUser();
         sub.planId = planId;
         sub.planName = plan.planName;
+        sub.planTier = plan.tier;
         sub.usage.maxRecordingHours = plan.maxRecordingHours;
         sub.usage.maxClasses = plan.maxClasses;
         sub.usage.maxDailyTokens = plan.maxDailyTokens;
+        sub.usage.maxDailyMessages = plan.maxDailyMessages;
+        sub.usage.monthlyTranscriptionMinutesLimit = plan.monthlyTranscriptionMinutes;
         
         saveSimulatedSubscription(sub);
         return sub;
@@ -701,9 +776,11 @@ export const ClassService = {
         return response.data;
       },
       () => {
+        const sub = loadSubscriptionForCurrentUser();
         const currentClasses = getSimulatedClasses();
-        if (currentClasses.length >= 5) {
-          throw new Error('شما به حداکثر ۵ کلاس مجاز در طرح جاری رسیده‌اید.');
+        
+        if (currentClasses.length >= sub.usage.maxClasses) {
+          throw new Error(`شما به حداکثر ${sub.usage.maxClasses} کلاس مجاز در طرح "${sub.planName}" رسیده‌اید. برای ساخت کلاس بیشتر، اشتراک خود را ارتقا دهید.`);
         }
 
         const newClass: Class = {
@@ -790,6 +867,14 @@ export const RecordingService = {
         const classes = getSimulatedClasses();
         const assignedClass = classes.find(c => c.id === data.classId);
         if (!assignedClass) throw new Error('کلاس اختصاص‌یافته معتبر نیست.');
+
+        const sub = loadSubscriptionForCurrentUser();
+        const newRecordingMinutes = data.duration / 60;
+        const projectedTotal = sub.usage.monthlyTranscriptionMinutesUsed + newRecordingMinutes;
+        
+        if (projectedTotal > sub.usage.monthlyTranscriptionMinutesLimit) {
+          throw new Error(`ظرفیت تبدیل صوت این ماه شما به پایان رسیده است. (${sub.usage.monthlyTranscriptionMinutesLimit} دقیقه در ماه). برای ارتقا به اشتراک بالاتر از بخش «مدیریت اشتراک» اقدام کنید.`);
+        }
 
         const newRec: Recording = {
           id: `rec_${Math.random().toString(36).substring(2, 9)}`,
@@ -1026,6 +1111,25 @@ export const ChatService = {
       
       // RUN SIMULATOR FALLBACK
       try {
+        const sub = loadSubscriptionForCurrentUser();
+        
+        // Daily message limit guard
+        const todayStr = getTodayDateString();
+        if (sub.usage.lastDailyReset !== todayStr) {
+          sub.usage.dailyMessagesSentCount = 0;
+          sub.usage.lastDailyReset = todayStr;
+          saveSimulatedSubscription(sub);
+        }
+        
+        if (sub.usage.dailyMessagesSentCount >= sub.usage.maxDailyMessages) {
+          onError(new Error(`شما به سقف روزانه ${sub.usage.maxDailyMessages} پیام در طرح "${sub.planName}" رسیده‌اید. فردا دوباره تلاش کنید.`));
+          return;
+        }
+        
+        // Increment daily message count
+        sub.usage.dailyMessagesSentCount += 1;
+        saveSimulatedSubscription(sub);
+        
         let simulatedResponse = '';
         let simulatedSources: ChatSource[] = [];
         let estimatedTokens = 0;

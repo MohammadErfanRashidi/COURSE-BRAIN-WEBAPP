@@ -108,7 +108,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // Update hasActiveSubscription on user object if changed
       const currentUser = get().user;
       if (currentUser && currentUser.hasActiveSubscription !== status.active) {
-        const updatedUser = { ...currentUser, hasActiveSubscription: status.active };
+        const updatedUser = { ...currentUser, hasActiveSubscription: status.active, subscriptionTier: status.planTier };
         set({ user: updatedUser });
         localStorage.setItem('cb_user_data', JSON.stringify(updatedUser));
       }

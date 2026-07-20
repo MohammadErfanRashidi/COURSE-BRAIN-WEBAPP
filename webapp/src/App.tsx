@@ -251,6 +251,10 @@ export default function App() {
     setCurrentScreen('APP_DASHBOARD_PREVIEW');
   };
 
+  const handlePlanSelected = () => {
+    handleSubscriptionActive();
+  };
+
   const handleDashboardNavigate = useCallback((tab: string, args?: any) => {
     // Block navigation away from record if recording is active
     const recordingState = (window as any).__cbRecordingActive;
@@ -405,7 +409,7 @@ export default function App() {
         )}
 
         {currentScreen === 'SUBSCRIPTION_GATE' && (
-          <SubscriptionGate onActivated={handleSubscriptionActive} onBack={() => setCurrentScreen('ACADEMIC_SETUP')} />
+          <SubscriptionGate onActivated={handlePlanSelected} onBack={() => setCurrentScreen('ACADEMIC_SETUP')} />
         )}
 
         {/* FULL AUTHENTICATED SaaS DASHBOARD WITH PERSISTENT LAYOUT AND AUDIO PLAYER */}

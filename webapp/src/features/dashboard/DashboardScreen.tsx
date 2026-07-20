@@ -422,6 +422,17 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
   const classesRemainingPct = Math.max(0, Math.min(100, Math.round((remainingClasses / subscriptionStatus.usage.maxClasses) * 100)));
   const isUnlimitedClasses = subscriptionStatus.usage.maxClasses >= 100;
 
+  // Daily messages remaining
+  const remainingDailyMessages = Math.max(0, subscriptionStatus.usage.maxDailyMessages - subscriptionStatus.usage.dailyMessagesSentCount);
+  const dailyMessagesRemainingPct = Math.max(0, Math.min(100, Math.round((remainingDailyMessages / subscriptionStatus.usage.maxDailyMessages) * 100)));
+  const isUnlimitedMessages = subscriptionStatus.usage.maxDailyMessages >= 999;
+
+  const dailyMessagesLabel = isUnlimitedMessages
+    ? "نامحدود"
+    : remainingDailyMessages <= 0
+      ? "حد مجاز به پایان رسید"
+      : `${toPersianDigits(remainingDailyMessages)} از ${toPersianDigits(subscriptionStatus.usage.maxDailyMessages)} پیام باقی‌مانده`;
+
   // Subscription validity period calculations
   const hasSubscription = !!subscriptionStatus && subscriptionStatus.active;
   const expiresAt = subscriptionStatus?.expiresAt ? new Date(subscriptionStatus.expiresAt) : null;
@@ -599,7 +610,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
       </Card>
 
       {/* Subscription Usage Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
 
         {/* Remaining Recording Hours */}
         <motion.div
@@ -634,35 +645,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
           </div>
         </motion.div>
 
-        {/* Remaining AI Capacity */}
-        <motion.div
-          whileHover={{ y: -3, scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400">ظرفیت هوش مصنوعی روز</span>
-            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
-              <Sparkles className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-4 flex flex-col gap-2.5">
-            <div className={`text-center font-black text-xs ${aiRemainingPct <= 0 ? 'text-rose-600' : 'text-slate-900'}`}>
-              {aiRemainingPct <= 0
-                ? "حد مجاز به پایان رسید"
-                : `${toPersianDigits(Math.round(aiRemainingPct))}٪ باقی‌مانده`}
-            </div>
-
-            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-              <div
-                className={`${aiRemainingPct <= 0 ? 'bg-rose-500' : getRemainingColor(aiRemainingPct)} h-full rounded-full transition-all duration-500`}
-                style={{ width: `${aiRemainingPct}%` }}
-              />
-            </div>
-          </div>
-        </motion.div>
-
         {/* Classes Remaining */}
         <motion.div
           whileHover={{ y: -3, scale: 1.01 }}
@@ -690,6 +672,35 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate, on
                 <div
                   className={`${remainingClasses <= 0 ? 'bg-rose-500' : getRemainingColor(classesRemainingPct)} h-full rounded-full transition-all duration-500`}
                   style={{ width: `${remainingClasses <= 0 ? 0 : classesRemainingPct}%` }}
+                />
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Daily Messages Remaining */}
+        <motion.div
+          whileHover={{ y: -3, scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="border border-slate-100/80 p-5 rounded-3xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.04)] hover:border-indigo-100/70 transition-all relative overflow-hidden flex flex-col justify-between min-h-[125px] select-none text-right cursor-default"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-400">پیام‌های باقی‌مانده امروز</span>
+            <div className="w-8 h-8 bg-indigo-50 border border-indigo-100/60 text-indigo-600 rounded-xl flex items-center justify-center">
+              <MessageSquare className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-4 flex flex-col gap-2.5">
+            <div className={`text-center font-black text-xs ${remainingDailyMessages <= 0 ? 'text-rose-600' : 'text-slate-900'}`}>
+              {dailyMessagesLabel}
+            </div>
+
+            {!isUnlimitedMessages && (
+              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                <div
+                  className={`${remainingDailyMessages <= 0 ? 'bg-rose-500' : getRemainingColor(dailyMessagesRemainingPct)} h-full rounded-full transition-all duration-500`}
+                  style={{ width: `${remainingDailyMessages <= 0 ? 0 : dailyMessagesRemainingPct}%` }}
                 />
               </div>
             )}
