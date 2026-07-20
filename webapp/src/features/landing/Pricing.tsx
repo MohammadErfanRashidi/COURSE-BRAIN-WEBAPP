@@ -62,7 +62,6 @@ interface PricingProps {
 }
 
 export function Pricing({ onNavigate }: PricingProps) {
-  const [yearly, setYearly] = useState(true);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -80,65 +79,46 @@ export function Pricing({ onNavigate }: PricingProps) {
           <span className="c3-watermark-line-2">آسان‌تر شد.</span>
         </div>
       </div>
-      <div className="c3-toggle-wrap">
-        <span className={`text-sm font-medium transition-colors ${yearly ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>سالانه</span>
-        <button
-          className={`c3-toggle flex items-center px-1 ${yearly ? 'active' : ''}`}
-          style={{
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)'
-          }}
-          onClick={() => setYearly(!yearly)}
-        >
-          <div className="w-5 h-5 bg-[var(--text-primary)] rounded-full transition-transform duration-300" style={{ transform: yearly ? 'translateX(0)' : 'translateX(-24px)' }}></div>
-        </button>
-        <span className={`text-sm font-medium transition-colors ${!yearly ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}`}>ماهانه</span>
-      </div>
 
       <div className="c3-grid" ref={gridRef}>
-        {/* Free Plan */}
+        {/* برنامه رایگان */}
         <PricingCard index={0}>
-          <div className="c3-tier-small">پایه</div>
-          <div className="c3-tier-large">رایگان</div>
+          <div className="c3-tier-small">شروع رایگان</div>
+          <div className="c3-tier-large">۰ تومان / ماه</div>
           <div className="c3-desc">برای آشنایی با امکانات پایه دستیار هوشمند زیوای.</div>
           <ul className="c3-list flex-1">
-            <li><div className="c3-check"><CheckIcon /></div>تا ۲ ساعت ضبط در ماه</li>
-            <li><div className="c3-check"><CheckIcon /></div>پشتیبانی از ۱ کلاس</li>
-            <li><div className="c3-check"><CheckIcon /></div>تبدیل صوت به متن پایه</li>
-            <li><div className="c3-check"><CheckIcon /></div>دسترسی به داشبورد</li>
-            <li><div className="c3-check"><CheckIcon /></div>بدون تولید آزمون</li>
+            <li><div className="c3-check"><CheckIcon /></div>۱۵ دقیقه تبدیل گفتار به متن در ماه</li>
+            <li><div className="c3-check"><CheckIcon /></div>چت هوش مصنوعی با متن پیاده‌شده و منابع کلاس‌های شما</li>
           </ul>
-          <button className="c3-btn" onClick={onNavigate}>انتخاب طرح</button>
+          <button className="c3-btn" onClick={onNavigate}>شروع کنید</button>
         </PricingCard>
 
-        {/* Standard Plan */}
+        {/* برنامه حرفه‌ای - محبوب‌ترین */}
         <PricingCard className="c3-card-pro" index={1}>
-          <div className="c3-tier-small">طرح دانشجویی</div>
-          <div className="c3-tier-large">{yearly ? '۴,۹۹۹,۹۹۹ ت / سال' : '۴۹۹,۹۹۹ ت / ماه'}</div>
+          <div className="relative">
+            <span className="inline-block px-3 py-1 rounded-full bg-[#285BE8] text-white text-[10px] font-black tracking-wide mb-3">محبوب‌ترین</span>
+          </div>
+          <div className="c3-tier-small">حرفه‌ای</div>
+          <div className="c3-tier-large">۶۰۰,۰۰۰ تومان / ماه</div>
           <div className="c3-desc">مناسب برای پوشش کامل نیازهای یک ترم تحصیلی.</div>
           <ul className="c3-list flex-1">
-            <li><div className="c3-check"><CheckIcon /></div>۱۰ ساعت ضبط در ماه</li>
-            <li><div className="c3-check"><CheckIcon /></div>پشتیبانی از ۵ کلاس</li>
-            <li><div className="c3-check"><CheckIcon /></div>۶۰,۰۰۰ توکن روزانه</li>
-            <li><div className="c3-check"><CheckIcon /></div>پرسش‌وپاسخ (حالت کلاس و ترکیبی)</li>
-            <li><div className="c3-check"><CheckIcon /></div>تولید خودکار کوئیز</li>
+            <li><div className="c3-check"><CheckIcon /></div>۱۰ ساعت تبدیل گفتار به متن در ماه</li>
+            <li><div className="c3-check"><CheckIcon /></div>چت نامحدود هوش مصنوعی (RAG) با فایل‌های شما</li>
+            <li><div className="c3-check"><CheckIcon /></div>دسترسی به پایگاه داده وسیع کلاس‌ها و دانشگاه‌ها</li>
           </ul>
-          <button className="c3-btn" onClick={onNavigate}>انتخاب طرح</button>
+          <button className="c3-btn" onClick={onNavigate}>ارتقا به حساب حرفه‌ای</button>
         </PricingCard>
 
-        {/* Pro Plan */}
+        {/* برنامه کاربر پیشرفته */}
         <PricingCard index={2}>
-          <div className="c3-tier-small">طرح حرفه‌ای</div>
-          <div className="c3-tier-large">{yearly ? '۹,۹۹۹,۹۹۹ ت / سال' : '۹۹۹,۹۹۹ ت / ماه'}</div>
+          <div className="c3-tier-small">کاربر پیشرفته</div>
+          <div className="c3-tier-large">۱,۴۰۰,۰۰۰ تومان / ماه</div>
           <div className="c3-desc">برای دانشجویانی که به منابع و ساعات بیشتری نیاز دارند.</div>
           <ul className="c3-list flex-1">
-            <li><div className="c3-check"><CheckIcon /></div>ساعات ضبط نامحدود</li>
-            <li><div className="c3-check"><CheckIcon /></div>کلاس‌های نامحدود</li>
-            <li><div className="c3-check"><CheckIcon /></div>توکن روزانه نامحدود</li>
-            <li><div className="c3-check"><CheckIcon /></div>دسترسی به منابع تکمیلی پزشکی</li>
-            <li><div className="c3-check"><CheckIcon /></div>پشتیبانی ۲۴ ساعته اختصاصی</li>
+            <li><div className="c3-check"><CheckIcon /></div>۳۰ ساعت تبدیل گفتار به متن در ماه</li>
+            <li><div className="c3-check"><CheckIcon /></div>چت نامحدود هوش مصنوعی (RAG) با فایل‌های شما</li>
           </ul>
-          <button className="c3-btn" onClick={onNavigate}>انتخاب طرح</button>
+          <button className="c3-btn" onClick={onNavigate}>خرید حساب پیشرفته</button>
         </PricingCard>
       </div>
     </section>
