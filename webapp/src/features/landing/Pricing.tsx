@@ -1,5 +1,4 @@
-import React, { useState, useRef, useLayoutEffect, ReactNode } from 'react';
-import { motion } from 'motion/react';
+import React, { ReactNode, useLayoutEffect, useRef, useState } from 'react';
 
 interface PricingCardProps {
   children: ReactNode;
@@ -88,7 +87,10 @@ export function Pricing({ onNavigate }: PricingProps) {
           <div className="c3-desc">برای آشنایی با امکانات پایه دستیار هوشمند زیوای.</div>
           <ul className="c3-list flex-1">
             <li><div className="c3-check"><CheckIcon /></div>۱۵ دقیقه تبدیل گفتار به متن در ماه</li>
-            <li><div className="c3-check"><CheckIcon /></div>چت هوش مصنوعی با متن پیاده‌شده و منابع کلاس‌های شما</li>
+            <li><div className="c3-check"><CheckIcon /></div>چت با فایل‌های صوتی کلاس‌ها</li>
+            <li><div className="c3-check"><CheckIcon /></div>دسترسی به پایگاه داده</li>
+            <li><div className="c3-check"><CheckIcon /></div>امکان ساخت تنها ۱ کلاس</li>
+            <li><div className="c3-check"><CheckIcon /></div>سقف ارسال ۵ پیام در روز</li>
           </ul>
           <button className="c3-btn" onClick={onNavigate}>شروع کنید</button>
         </PricingCard>
@@ -103,8 +105,10 @@ export function Pricing({ onNavigate }: PricingProps) {
           <div className="c3-desc">مناسب برای پوشش کامل نیازهای یک ترم تحصیلی.</div>
           <ul className="c3-list flex-1">
             <li><div className="c3-check"><CheckIcon /></div>۱۰ ساعت تبدیل گفتار به متن در ماه</li>
-            <li><div className="c3-check"><CheckIcon /></div>چت نامحدود هوش مصنوعی (RAG) با فایل‌های شما</li>
-            <li><div className="c3-check"><CheckIcon /></div>دسترسی به پایگاه داده وسیع کلاس‌ها و دانشگاه‌ها</li>
+            <li><div className="c3-check"><CheckIcon /></div>چت با فایل‌های صوتی کلاس‌ها</li>
+            <li><div className="c3-check"><CheckIcon /></div>دسترسی به پایگاه داده</li>
+            <li><div className="c3-check"><CheckIcon /></div>امکان ساخت تا ۵ کلاس</li>
+            <li><div className="c3-check"><CheckIcon /></div>سقف ارسال ۳۰ پیام در روز</li>
           </ul>
           <button className="c3-btn" onClick={onNavigate}>ارتقا به حساب حرفه‌ای</button>
         </PricingCard>
@@ -116,7 +120,10 @@ export function Pricing({ onNavigate }: PricingProps) {
           <div className="c3-desc">برای دانشجویانی که به منابع و ساعات بیشتری نیاز دارند.</div>
           <ul className="c3-list flex-1">
             <li><div className="c3-check"><CheckIcon /></div>۳۰ ساعت تبدیل گفتار به متن در ماه</li>
-            <li><div className="c3-check"><CheckIcon /></div>چت نامحدود هوش مصنوعی (RAG) با فایل‌های شما</li>
+            <li><div className="c3-check"><CheckIcon /></div>چت با فایل‌های صوتی کلاس‌ها</li>
+            <li><div className="c3-check"><CheckIcon /></div>دسترسی به پایگاه داده</li>
+            <li><div className="c3-check"><CheckIcon /></div>امکان ساخت تا ۱۰ کلاس</li>
+            <li><div className="c3-check"><CheckIcon /></div>سقف ارسال ۱۰۰ پیام در روز</li>
           </ul>
           <button className="c3-btn" onClick={onNavigate}>خرید حساب پیشرفته</button>
         </PricingCard>
