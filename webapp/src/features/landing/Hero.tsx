@@ -18,7 +18,7 @@ export function Hero({ onNavigate }: HeroProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tighter leading-none"
+        className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tighter leading-none"
       >
         <span className="block animate-shiny mt-1 md:mt-2">ZivAI</span>
       </motion.h1>

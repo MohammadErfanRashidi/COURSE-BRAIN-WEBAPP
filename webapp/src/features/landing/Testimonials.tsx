@@ -23,7 +23,7 @@ export function Testimonials() {
   ];
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-20 md:py-28 relative z-[1]">
+    <section className="max-w-6xl mx-auto px-6 py-16 md:py-20 relative z-[1]">
       <div className="grid md:grid-cols-3 gap-6">
         {testimonials.map((t, i) => (
           <div key={i} className="liquid-glass rounded-2xl p-6 flex flex-col justify-between">

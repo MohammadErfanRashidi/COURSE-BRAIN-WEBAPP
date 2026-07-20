@@ -25,14 +25,14 @@ export function FinalCTA() {
   };
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-20 md:py-32 relative z-[1] w-full" dir="rtl">
+    <section className="max-w-6xl mx-auto px-6 py-16 md:py-24 relative z-[1] w-full" dir="rtl">
       {/* Background Ambient Glow */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] max-w-[1200px] h-[600px] pointer-events-none opacity-20 blur-[140px] z-[-1] rounded-full"
         style={{ background: 'radial-gradient(circle, rgba(40,91,232,0.4) 0%, rgba(49,59,89,0.2) 50%, transparent 100%)' }}
       />
 
-      <div className="grid lg:grid-cols-12 gap-8 md:gap-12 items-stretch">
+      <div className="grid lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
 
         {/* LEFT PANEL: Contact Information Card */}
           <div

@@ -79,7 +79,7 @@ export function FAQ() {
       >
         <div className="flex flex-col items-center text-center mb-16">
           <SectionEyebrow label="پشتیبانی" tag="سوالات متداول" />
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-tighter mt-6 mb-4 text-[var(--text-primary)]">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tighter mt-6 mb-4 text-[var(--text-primary)]">
             سوالات متداول.
           </h2>
           <p className="text-[var(--text-muted)] max-w-md mx-auto">

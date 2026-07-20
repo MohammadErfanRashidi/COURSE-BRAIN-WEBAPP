@@ -13,13 +13,13 @@ import { SectionEyebrow } from './Shared';
 
 export function FeatureTriage() {
   return (
-    <section className="max-w-6xl mx-auto px-6 py-20 md:py-28 relative z-[1] w-full min-w-0 overflow-hidden">
-      <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center w-full min-w-0">
+    <section className="max-w-6xl mx-auto px-6 py-16 md:py-20 relative z-[1] w-full min-w-0 overflow-hidden">
+      <div className="grid md:grid-cols-2 gap-8 md:gap-10 items-center w-full min-w-0">
           <div
             className="w-full min-w-0"
           >
           <SectionEyebrow label="امکانات کلیدی" tag="دستیار دانشگاهی" />
-          <h2 className="mt-5 text-3xl md:text-5xl font-semibold tracking-tight leading-[1.02] text-[var(--text-primary)]">
+          <h2 className="mt-5 text-3xl md:text-4xl font-semibold tracking-tight leading-[1.02] text-[var(--text-primary)]">
             جزوات خود را <br /> هوشمندانه مرور کنید.
           </h2>
           <p className="mt-6 text-[var(--text-muted)] text-base leading-[1.6] max-w-md">

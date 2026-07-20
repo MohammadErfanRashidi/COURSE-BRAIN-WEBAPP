@@ -57,9 +57,9 @@ export function Navbar({ onNavigate }: NavbarProps) {
 
   return (
     <>
-      <div className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${scrolled ? 'py-2 px-4' : 'py-4 px-4'}`}>
+      <div className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${scrolled ? 'py-2 px-4' : 'py-3 px-4'}`}>
           <nav
-              className="max-w-6xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between rounded-2xl transition-all duration-300"
+              className="max-w-6xl mx-auto px-5 md:px-8 h-14 flex items-center justify-between rounded-2xl transition-all duration-300"
           style={{
             background: 'var(--nav-bg)',
             backdropFilter: 'blur(20px)',
@@ -71,7 +71,7 @@ export function Navbar({ onNavigate }: NavbarProps) {
           <div>
             <img src="/final-fr.png" alt="ZivAI Logo" className="w-8 h-8 object-contain" />
           </div>
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             {links.map((link, i) => (
               <a
                 key={link.id}
